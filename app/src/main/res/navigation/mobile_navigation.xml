@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home_fragment">
+
+    <fragment
+        android:id="@+id/navigation_home_fragment"
+        android:name="com.btl_ptit.hotelbooking.view.fragment.HomeFragment"
+        android:label="Home Page"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/navigation_my_booking_fragment"
+        android:name="com.btl_ptit.hotelbooking.view.fragment.MyBookingFragment"
+        android:label="My Booking"
+        tools:layout="@layout/fragment_my_booking" />
+    <fragment
+        android:id="@+id/navigation_favourite_fragment"
+        android:name="com.btl_ptit.hotelbooking.view.fragment.FavouriteFragment"
+        android:label="Favourite"
+        tools:layout="@layout/fragment_favourite" />
+    <fragment
+        android:id="@+id/navigation_profile_fragment"
+        android:name="com.btl_ptit.hotelbooking.view.fragment.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
+
+</navigation>
