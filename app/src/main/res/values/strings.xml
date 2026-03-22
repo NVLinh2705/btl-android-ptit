@@ -2,10 +2,12 @@
     <string name="app_name">Hotel Booking PTIT</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="home">Home</string>
-    <string name="my_booking">My booking</string>
-    <string name="favourite">Favourite</string>
-    <string name="profile">Profile</string>
+    <string name="home"><b>Home</b></string>
+    <string name="my_booking"><b>My booking</b></string>
+    <string name="favourite"><b>Favourite</b></string>
+    <string name="profile"><b>Profile</b></string>
     <string name="delete">Delete</string>
     <string name="detail">Detail</string>
+    <string name="trending_destinations">Trending destinations</string>
+    <string name="see_all"><u>See All</u></string>
 </resources>

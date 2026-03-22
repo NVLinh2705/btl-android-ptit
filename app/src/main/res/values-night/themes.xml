@@ -51,6 +51,9 @@
         <item name="colorOnOutlineContainer">@color/colorOnOutlineContainer</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:statusBarColor">?attr/colorSurface</item>
+
+        <item name="fontFamily">@font/plus_jakarta</item>
+        <item name="android:fontFamily">@font/plus_jakarta</item>
     </style>
 
     <style name="Theme.HotelBookingPTIT" parent="AppTheme" />
@@ -64,5 +67,8 @@
         <item name="colorSecondary">@color/md_theme_secondary</item>
         <item name="colorSecondaryVariant">@color/md_theme_tertiary</item>
         <item name="colorOnSecondary">@color/md_theme_tertiary</item>
+
+        <item name="fontFamily">@font/plus_jakarta</item>
+        <item name="android:fontFamily">@font/plus_jakarta</item>
     </style>
 </resources>
