@@ -1,4 +1,4 @@
-package com.btl_ptit.hotelbooking.data.model;
+package com.btl_ptit.hotelbooking.data.dto;
 
 public class LoginRequest {
     private String email;

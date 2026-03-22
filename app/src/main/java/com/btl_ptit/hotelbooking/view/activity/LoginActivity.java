@@ -11,12 +11,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.btl_ptit.hotelbooking.data.model.LoginRequest;
-import com.btl_ptit.hotelbooking.data.model.LoginResponse;
+import com.btl_ptit.hotelbooking.data.dto.LoginRequest;
+import com.btl_ptit.hotelbooking.data.dto.LoginResponse;
 import com.btl_ptit.hotelbooking.data.model.User;
-import com.btl_ptit.hotelbooking.data.remote.SupabaseAuthService;
+import com.btl_ptit.hotelbooking.data.remote.api_services.SupabaseAuthService;
 import com.btl_ptit.hotelbooking.data.remote.SupabaseClient;
-import com.btl_ptit.hotelbooking.data.remote.SupabaseRestService;
+import com.btl_ptit.hotelbooking.data.remote.api_services.SupabaseRestService;
 import com.btl_ptit.hotelbooking.data.session.SessionManager;
 import com.btl_ptit.hotelbooking.databinding.ActivityLoginBinding;
 
@@ -110,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (userId == null || userId.trim().isEmpty()) {
                     Toast.makeText(LoginActivity.this, "Login ok, missing user id", Toast.LENGTH_SHORT).show();
                     // still save tokens only
-                    new SessionManager(LoginActivity.this).saveSession(body.getAccessToken(), body.getRefreshToken(), null);
+                    new SessionManager().saveSession(body.getAccessToken(), body.getRefreshToken(), null);
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finish();
                     return;
@@ -128,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
                                 user = resp.body().get(0);
                             }
 
-                            new SessionManager(LoginActivity.this).saveSession(
+                            new SessionManager().saveSession(
                                 body.getAccessToken(),
                                 body.getRefreshToken(),
                                 user
@@ -142,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(Call<List<User>> call, Throwable t) {
                             // Still allow entering app even if profile fetch fails
-                            new SessionManager(LoginActivity.this).saveSession(body.getAccessToken(), body.getRefreshToken(), null);
+                            new SessionManager().saveSession(body.getAccessToken(), body.getRefreshToken(), null);
                             Toast.makeText(LoginActivity.this, "Login ok, profile fetch failed", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();

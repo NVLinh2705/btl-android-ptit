@@ -1,4 +1,4 @@
-package com.btl_ptit.hotelbooking.data.model;
+package com.btl_ptit.hotelbooking.data.dto;
 
 import com.google.gson.annotations.SerializedName;
 

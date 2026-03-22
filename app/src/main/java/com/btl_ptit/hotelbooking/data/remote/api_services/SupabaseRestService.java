@@ -1,4 +1,4 @@
-package com.btl_ptit.hotelbooking.data.remote;
+package com.btl_ptit.hotelbooking.data.remote.api_services;
 
 import com.btl_ptit.hotelbooking.data.model.User;
 

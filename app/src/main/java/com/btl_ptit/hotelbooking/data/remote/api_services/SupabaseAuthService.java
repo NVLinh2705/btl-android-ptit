@@ -1,7 +1,7 @@
-package com.btl_ptit.hotelbooking.data.remote;
+package com.btl_ptit.hotelbooking.data.remote.api_services;
 
-import com.btl_ptit.hotelbooking.data.model.LoginRequest;
-import com.btl_ptit.hotelbooking.data.model.LoginResponse;
+import com.btl_ptit.hotelbooking.data.dto.LoginRequest;
+import com.btl_ptit.hotelbooking.data.dto.LoginResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

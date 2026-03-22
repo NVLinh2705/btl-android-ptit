@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.Nullable;
 
+import com.btl_ptit.hotelbooking.MyApplication;
 import com.btl_ptit.hotelbooking.data.model.User;
 
 public class SessionManager {
@@ -20,8 +21,8 @@ public class SessionManager {
 
     private final SharedPreferences prefs;
 
-    public SessionManager(Context context) {
-        this.prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+    public SessionManager() {
+        this.prefs = MyApplication.getAppContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
 
     public void saveSession(String accessToken, String refreshToken, @Nullable User user) {
