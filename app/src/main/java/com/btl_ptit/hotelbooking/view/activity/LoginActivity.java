@@ -14,7 +14,9 @@ import androidx.core.view.WindowInsetsCompat;
 import com.btl_ptit.hotelbooking.data.model.LoginRequest;
 import com.btl_ptit.hotelbooking.data.model.LoginResponse;
 import com.btl_ptit.hotelbooking.data.model.User;
+import com.btl_ptit.hotelbooking.data.remote.SupabaseAuthService;
 import com.btl_ptit.hotelbooking.data.remote.SupabaseClient;
+import com.btl_ptit.hotelbooking.data.remote.SupabaseRestService;
 import com.btl_ptit.hotelbooking.data.session.SessionManager;
 import com.btl_ptit.hotelbooking.databinding.ActivityLoginBinding;
 
@@ -27,6 +29,8 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
+    private SupabaseRestService restService;
+    private SupabaseAuthService authService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,9 @@ public class LoginActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        authService= SupabaseClient.createService(SupabaseAuthService.class);
+        restService = SupabaseClient.createService(SupabaseRestService.class);
+
 
         setupListeners();
     }
@@ -83,9 +90,11 @@ public class LoginActivity extends AppCompatActivity {
 
         if (!isValid) return;
 
+
+
         LoginRequest request = new LoginRequest(email, password);
 
-        SupabaseClient.getAuthService().signIn("password", request).enqueue(new Callback<LoginResponse>() {
+        authService.signIn("password", request).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (!response.isSuccessful() || response.body() == null) {
@@ -110,8 +119,7 @@ public class LoginActivity extends AppCompatActivity {
                 String idEq = "eq." + userId;
                 String select = "email,phone,full_name,avatar_url,created_at,is_active";
 
-                SupabaseClient.getRestService()
-                    .getUserById(bearer, idEq, select)
+                restService.getUserById(bearer, idEq, select)
                     .enqueue(new Callback<List<User>>() {
                         @Override
                         public void onResponse(Call<List<User>> call, Response<List<User>> resp) {
