@@ -1,5 +1,6 @@
 package com.btl_ptit.hotelbooking.data.remote;
 
+import com.btl_ptit.hotelbooking.interceptor.HttpClientInterceptor;
 import com.btl_ptit.hotelbooking.interceptor.request.AddAuthTokenInterceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -13,21 +14,6 @@ public class SupabaseClient {
     private static final String API_KEY = com.btl_ptit.hotelbooking.BuildConfig.SUPABASE_KEY;
 
     private static volatile Retrofit retrofit;
-    private static volatile OkHttpClient client;
-
-    public static OkHttpClient getClient() {
-        if (client == null) {
-            synchronized (SupabaseClient.class) {
-                if (client == null) {
-
-                    client = new OkHttpClient.Builder()
-                            .addInterceptor(new AddAuthTokenInterceptor())
-                            .build();
-                }
-            }
-        }
-        return client;
-    }
 
     private static Retrofit getRetrofit() {
         if(retrofit == null) {
@@ -35,7 +21,7 @@ public class SupabaseClient {
                 if(retrofit == null) {
                     retrofit = new Retrofit.Builder()
                             .baseUrl(BASE_URL)
-                            .client(SupabaseClient.getClient())
+                            .client(HttpClientInterceptor.getClient())
                             .addConverterFactory(GsonConverterFactory.create())
                             .build();
                 }
