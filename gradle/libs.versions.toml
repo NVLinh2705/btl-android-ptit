@@ -13,6 +13,7 @@ constraintlayout = "2.2.1"
 material3 = "1.4.0"
 navigationFragment = "2.9.7"
 navigationUi = "2.9.7"
+pagingRuntime = "3.4.2"
 retrofit = "3.0.0"
 
 [libraries]
@@ -31,6 +32,8 @@ material3 = { module = "androidx.compose.material3:material3", version.ref = "ma
 circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circleimageview" }
 navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
 navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigationUi" }
+paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "pagingRuntime" }
+paging-rxjava3 = { module = "androidx.paging:paging-rxjava3", version.ref = "pagingRuntime" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 
 [plugins]

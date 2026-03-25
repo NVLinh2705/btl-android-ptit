@@ -5,6 +5,8 @@ import com.btl_ptit.hotelbooking.interceptor.logging.AppLoggingInterceptor;
 import com.btl_ptit.hotelbooking.interceptor.request.AddAuthTokenInterceptor;
 import com.btl_ptit.hotelbooking.utils.Constants;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.OkHttpClient;
 
 public class HttpClientInterceptor {
@@ -16,6 +18,10 @@ public class HttpClientInterceptor {
                 if (client == null) {
 
                     client = new OkHttpClient.Builder()
+                            .connectTimeout(10, TimeUnit.SECONDS)
+                            .readTimeout(30, TimeUnit.SECONDS)
+                            .writeTimeout(30, TimeUnit.SECONDS)
+                            .retryOnConnectionFailure(true)
                             .addInterceptor(new AddAuthTokenInterceptor())
                             .addInterceptor(new AppLoggingInterceptor(Constants.LOG_ENABLED))
                             .build();
