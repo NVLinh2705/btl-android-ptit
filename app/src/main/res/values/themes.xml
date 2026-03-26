@@ -49,6 +49,7 @@
         <item name="colorOnOutline">@color/colorOnOutline</item>
         <item name="colorOutlineContainer">@color/colorOutlineContainer</item>
         <item name="colorOnOutlineContainer">@color/colorOnOutlineContainer</item>
+        <!-- Default status bar styling for most screens -->
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:statusBarColor">?attr/colorSurface</item>
 
@@ -57,6 +58,15 @@
     </style>
 
     <style name="Theme.HotelBookingPTIT" parent="AppTheme" />
+
+    <!-- Used on HotelDetailActivity to match the blue toolbar background -->
+    <style name="Theme.HotelBookingPTIT.HotelDetail" parent="Theme.HotelBookingPTIT">
+        <item name="android:statusBarColor">#0B4AA2</item>
+        <!-- Dark blue background -> use light (white) status bar icons -->
+        <item name="android:windowLightStatusBar">false</item>
+        <!-- Ensure toolbar icons are white by default if not tinted programmatically -->
+        <item name="colorControlNormal">@android:color/white</item>
+    </style>
 
     <style name="Theme.App.BottomNavMaterial2" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!-- Primary brand color. -->

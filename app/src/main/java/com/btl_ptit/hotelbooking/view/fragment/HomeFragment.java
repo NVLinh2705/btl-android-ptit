@@ -1,6 +1,7 @@
 package com.btl_ptit.hotelbooking.view.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,9 +9,11 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.btl_ptit.hotelbooking.R;
 import com.btl_ptit.hotelbooking.databinding.FragmentHomeBinding;
+import com.btl_ptit.hotelbooking.view.activity.HotelDetailActivity;
 import com.google.android.material.appbar.AppBarLayout;
 
 
@@ -19,6 +22,8 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding mFragmentHomeBinding;
     private Context mContext;
     private String TAG = "HomeFragmentTAG";
+
+    private Button btn;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -52,6 +57,10 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        mFragmentHomeBinding.btn.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, HotelDetailActivity.class);
+            startActivity(intent);
+        });
         return view;
     }
 }
