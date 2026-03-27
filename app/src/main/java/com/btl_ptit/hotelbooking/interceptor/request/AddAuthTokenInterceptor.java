@@ -36,12 +36,13 @@ public class AddAuthTokenInterceptor implements Interceptor {
         String authHeader = original.header("Authorization");
         if (authHeader != null && !authHeader.trim().isEmpty()) {
             requestWithToken.header("Authorization", authHeader);
-        } else {
-            String accessToken = this.sharedPreferences.getString(Constants.KEY_ACCESS_TOKEN, null);
-            if (accessToken != null && !accessToken.trim().isEmpty()) {
-                requestWithToken.header("Authorization", accessToken);
-            }
         }
+//        else {
+//            String accessToken = this.sharedPreferences.getString(Constants.KEY_ACCESS_TOKEN, null);
+//            if (accessToken != null && !accessToken.trim().isEmpty()) {
+//                requestWithToken.header("Authorization", accessToken);
+//            }
+//        }
 
         return chain.proceed(requestWithToken.build());
     }

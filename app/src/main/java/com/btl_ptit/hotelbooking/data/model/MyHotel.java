@@ -36,4 +36,14 @@ public class MyHotel {
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+        MyHotel myHotel = (MyHotel) other;
+        return getId().equals(myHotel.getId()) &&
+                getName().equals(myHotel.getName()) &&
+                getAvatar().equals(myHotel.getAvatar());
+    }
 }

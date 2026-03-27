@@ -10,6 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.List;
 
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MockApiClient {
@@ -27,6 +28,7 @@ public class MockApiClient {
                             .baseUrl(BASE_URL)
                             .client(HttpClientInterceptor.getClient())
                             .addConverterFactory(GsonConverterFactory.create(gson))
+                            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                             .build();
                 }
             }

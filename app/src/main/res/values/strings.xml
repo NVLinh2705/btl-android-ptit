@@ -10,4 +10,6 @@
     <string name="detail">Detail</string>
     <string name="trending_destinations">Trending destinations</string>
     <string name="see_all"><u>See All</u></string>
+    <string name="retry_label">An error has occurred, please try again!</string>
+    <string name="txt_retry">Retry</string>
 </resources>

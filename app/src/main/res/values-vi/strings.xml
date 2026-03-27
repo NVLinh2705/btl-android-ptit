@@ -9,4 +9,6 @@
     <string name="detail">Chi tiết</string>
     <string name="trending_destinations">Điểm đến nổi tiếng</string>
     <string name="see_all"><u>Xem thêm</u></string>
+    <string name="retry_label">Đã có lỗi xảy ra. Vui lòng thử lại!</string>
+    <string name="txt_retry">Thử lại</string>
 </resources>

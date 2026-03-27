@@ -45,27 +45,27 @@ public class MyBookingFragment extends Fragment {
         mFragmentMyBookingBinding.btnMyBooking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                hotelRestService.getListHotel(1, 10).enqueue(new Callback<List<MyHotel>>() {
-                    @Override
-                    public void onResponse(Call<List<MyHotel>> call, Response<List<MyHotel>> response) {
-                        if (!response.isSuccessful() || response.body() == null) {
-                            Toast.makeText(getActivity(), "Call MockAPI Failed!!!", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        List<MyHotel> listMyHotel = response.body();
-                        String result = "";
-                        for (MyHotel myHotel : listMyHotel) {
-                            result += myHotel.getName() + " - " + myHotel.getAvatar() + " - " + myHotel.getId() + "\n";
-                        }
-                        Log.d(TAG, "onResponse: " + result);
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<MyHotel>> call, Throwable t) {
-
-                    }
-                });
+//                hotelRestService.getListHotel(1, 10).enqueue(new Callback<List<MyHotel>>() {
+//                    @Override
+//                    public void onResponse(Call<List<MyHotel>> call, Response<List<MyHotel>> response) {
+//                        if (!response.isSuccessful() || response.body() == null) {
+//                            Toast.makeText(getActivity(), "Call MockAPI Failed!!!", Toast.LENGTH_SHORT).show();
+//                            return;
+//                        }
+//
+//                        List<MyHotel> listMyHotel = response.body();
+//                        String result = "";
+//                        for (MyHotel myHotel : listMyHotel) {
+//                            result += myHotel.getName() + " - " + myHotel.getAvatar() + " - " + myHotel.getId() + "\n";
+//                        }
+//                        Log.d(TAG, "onResponse: " + result);
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<List<MyHotel>> call, Throwable t) {
+//
+//                    }
+//                });
             }
         });
 
