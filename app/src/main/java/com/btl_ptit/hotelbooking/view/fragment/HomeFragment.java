@@ -1,6 +1,7 @@
 package com.btl_ptit.hotelbooking.view.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -13,11 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.btl_ptit.hotelbooking.R;
+import com.btl_ptit.hotelbooking.data.model.MyHotel;
 import com.btl_ptit.hotelbooking.data.remote.MockApiClient;
 import com.btl_ptit.hotelbooking.data.remote.api_services.HotelRestService;
 import com.btl_ptit.hotelbooking.data.repository.MyHotelRepository;
 import com.btl_ptit.hotelbooking.databinding.FragmentHomeBinding;
+import com.btl_ptit.hotelbooking.listener.OnHotelClickListener;
 import com.btl_ptit.hotelbooking.utils.paging.MyHotelComparator;
+import com.btl_ptit.hotelbooking.view.activity.HotelDetailActivity;
 import com.btl_ptit.hotelbooking.view.adapter.HotelAdapter;
 import com.btl_ptit.hotelbooking.view.adapter.HotelLoadStateAdapter;
 import com.btl_ptit.hotelbooking.view_model.paging.HotelViewModel;
@@ -90,7 +94,13 @@ public class HomeFragment extends Fragment {
     }
 
     private void initHotelAdapter() {
-        mHotelAdapter = new HotelAdapter(new MyHotelComparator(), requireContext());
+        mHotelAdapter = new HotelAdapter(new MyHotelComparator(), requireContext(), new OnHotelClickListener() {
+            @Override
+            public void onHotelClick(MyHotel hotel) {
+                Intent intent = new Intent(mContext, HotelDetailActivity.class);
+                startActivity(intent);
+            }
+        });
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 requireContext(),
                 LinearLayoutManager.HORIZONTAL,

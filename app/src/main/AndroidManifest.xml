@@ -14,6 +14,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HotelBookingPTIT">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+        <activity
+            android:name=".view.activity.HotelDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.HotelBookingPTIT.HotelDetail" />
         <activity
             android:name=".view.activity.LoginActivity"
             android:exported="true">

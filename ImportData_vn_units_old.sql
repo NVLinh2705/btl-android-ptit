@@ -27,6 +27,9 @@ INSERT INTO administrative_units(id,full_name,full_name_en,short_name,short_name
 INSERT INTO administrative_units(id,full_name,full_name_en,short_name,short_name_en,code_name,code_name_en) VALUES(10,'Xã','Commune','Xã','Commune','xa','commune');
 ------------------------------------
 
+INSERT INTO provinces(code,name,name_en,full_name) VALUES
+('01','Hà Nội','Ha Noi','Thành phố Hà Nội'),
+('02','Hà Giang','Ha Giang','Tỉnh Hà Giang'),
 -- DATA for provinces --
 INSERT INTO provinces(code,name,name_en,full_name,full_name_en,code_name,administrative_unit_id,administrative_region_id) VALUES
 ('01','Hà Nội','Ha Noi','Thành phố Hà Nội','Ha Noi City','ha_noi',1,3),
@@ -97,7 +100,7 @@ INSERT INTO provinces(code,name,name_en,full_name,full_name_en,code_name,adminis
 
 -- ----------------------------------
 
--- DATA for districts --
+-- DATA for districts -- (
 INSERT INTO districts(code,name,name_en,full_name,full_name_en,code_name,province_code,administrative_unit_id) VALUES
 ('001','Ba Đình','Ba Dinh','Quận Ba Đình','Ba Dinh District','ba_dinh','01',5),
 ('002','Hoàn Kiếm','Hoan Kiem','Quận Hoàn Kiếm','Hoan Kiem District','hoan_kiem','01',5),

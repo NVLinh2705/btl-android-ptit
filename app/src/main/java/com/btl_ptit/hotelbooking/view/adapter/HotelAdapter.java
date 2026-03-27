@@ -11,18 +11,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.btl_ptit.hotelbooking.data.model.MyHotel;
 import com.btl_ptit.hotelbooking.databinding.HotelItemBinding;
+import com.btl_ptit.hotelbooking.listener.OnHotelClickListener;
 import com.bumptech.glide.Glide;
 
 import org.jetbrains.annotations.NotNull;
 
 public class HotelAdapter extends PagingDataAdapter<MyHotel, HotelAdapter.HotelViewHolder> {
-    public static final int LOADING_ITEM = 0;
-    public static final int HOTEL_ITEM = 1;
     private Context context;
+    private OnHotelClickListener listener;
 
-    public HotelAdapter(@NotNull DiffUtil.ItemCallback<MyHotel> diffCallback, Context context) {
+    public HotelAdapter(@NotNull DiffUtil.ItemCallback<MyHotel> diffCallback, Context context, OnHotelClickListener listener) {
         super(diffCallback);
         this.context = context;
+        this.listener = listener;
     }
 
     @NonNull
@@ -43,13 +44,12 @@ public class HotelAdapter extends PagingDataAdapter<MyHotel, HotelAdapter.HotelV
             holder.hotelItemBinding.textViewRating.setText("1.500.000 trung bình một đêm");
             holder.hotelItemBinding.txtName.setText(currentMyHotel.getName());
 
+            holder.itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onHotelClick(currentMyHotel);
+                }
+            });
         }
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        // set ViewType
-        return position == getItemCount() ? HOTEL_ITEM : LOADING_ITEM;
     }
 
     public class HotelViewHolder extends RecyclerView.ViewHolder {

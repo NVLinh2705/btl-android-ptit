@@ -14,12 +14,14 @@ material3 = "1.4.0"
 navigationFragment = "2.9.7"
 navigationUi = "2.9.7"
 pagingRuntime = "3.4.2"
+playServicesMaps = "20.0.0"
 retrofit = "3.0.0"
 rxandroid = "3.0.2"
 shimmer = "0.5.0"
 
 [libraries]
 adapter-rxjava3 = { module = "com.squareup.retrofit2:adapter-rxjava3", version.ref = "retrofit" }
+play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
 rxandroid = { module = "io.reactivex.rxjava3:rxandroid", version.ref = "rxandroid" }
 compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
