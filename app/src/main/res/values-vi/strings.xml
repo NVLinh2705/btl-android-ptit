@@ -7,8 +7,10 @@
     <string name="profile"><b>Tài khoản</b></string>
     <string name="delete">Xóa</string>
     <string name="detail">Chi tiết</string>
-    <string name="trending_destinations">Điểm đến nổi tiếng</string>
+    <string name="trending_destinations">Điểm đến nổi tiếng 🔥</string>
     <string name="see_all"><u>Xem thêm</u></string>
     <string name="retry_label">Đã có lỗi xảy ra. Vui lòng thử lại!</string>
     <string name="txt_retry">Thử lại</string>
+    <string name="txtRecommended">Gợi ý dành cho bạn ✨</string>
+    <string name="averagePerNight">trung bình / đêm</string>
 </resources>

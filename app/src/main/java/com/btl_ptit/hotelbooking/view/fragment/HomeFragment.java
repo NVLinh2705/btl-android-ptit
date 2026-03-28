@@ -13,19 +13,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.btl_ptit.hotelbooking.R;
-import com.btl_ptit.hotelbooking.data.model.MyHotel;
+import com.btl_ptit.hotelbooking.data.model.MyPopularDestination;
 import com.btl_ptit.hotelbooking.data.remote.MockApiClient;
-import com.btl_ptit.hotelbooking.data.remote.api_services.HotelRestService;
-import com.btl_ptit.hotelbooking.data.repository.MyHotelRepository;
+import com.btl_ptit.hotelbooking.data.remote.api_services.MyDestinationRestService;
+import com.btl_ptit.hotelbooking.data.repository.MyDestinationRepository;
 import com.btl_ptit.hotelbooking.databinding.FragmentHomeBinding;
-import com.btl_ptit.hotelbooking.listener.OnHotelClickListener;
-import com.btl_ptit.hotelbooking.utils.paging.MyHotelComparator;
+import com.btl_ptit.hotelbooking.databinding.PopularDestinationItemBinding;
+import com.btl_ptit.hotelbooking.listener.OnDestinationClickListener;
+import com.btl_ptit.hotelbooking.utils.paging.MyComparator;
 import com.btl_ptit.hotelbooking.view.activity.HotelDetailActivity;
-import com.btl_ptit.hotelbooking.view.adapter.HotelAdapter;
-import com.btl_ptit.hotelbooking.view.adapter.HotelLoadStateAdapter;
-import com.btl_ptit.hotelbooking.view_model.paging.HotelViewModel;
-import com.btl_ptit.hotelbooking.view_model.paging.HotelViewModelFactory;
+import com.btl_ptit.hotelbooking.view.adapter.LoadStateAdapter;
+import com.btl_ptit.hotelbooking.view.adapter.PopularDestinationAdapter;
+import com.btl_ptit.hotelbooking.view_model.paging.PopularDestinationViewModel;
+import com.btl_ptit.hotelbooking.view_model.paging.PopularDestinationViewModelFactory;
 import com.google.android.material.appbar.AppBarLayout;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -37,10 +37,10 @@ public class HomeFragment extends Fragment {
     private Context mContext;
     private String TAG = "HomeFragmentTAG";
 
-    private HotelAdapter mHotelAdapter;
-    private HotelViewModel mHotelViewModel;
-    private HotelRestService mHotelRestService;
-    private MyHotelRepository mMyHotelRepository;
+    private PopularDestinationAdapter mPopularDestinationAdapter;
+    private PopularDestinationViewModel mPopularDestinationViewModel;
+    private MyDestinationRestService mMyDestinationRestService;
+    private MyDestinationRepository mMyDestinationRepository;;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Override
@@ -76,16 +76,16 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        mHotelRestService = MockApiClient.createService(HotelRestService.class);
-        mMyHotelRepository = new MyHotelRepository(mHotelRestService);
-        mHotelViewModel = new ViewModelProvider(requireActivity(), new HotelViewModelFactory(mMyHotelRepository)).get(HotelViewModel.class);
+        mMyDestinationRestService = MockApiClient.createService(MyDestinationRestService.class);
+        mMyDestinationRepository = new MyDestinationRepository(mMyDestinationRestService);
+        mPopularDestinationViewModel = new ViewModelProvider(requireActivity(), new PopularDestinationViewModelFactory(mMyDestinationRepository)).get(PopularDestinationViewModel.class);
 
         initHotelAdapter();
 
         compositeDisposable.add(
-            mHotelViewModel.pagingDataFlow
+            mPopularDestinationViewModel.pagingDataFlow
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(pagingData -> mHotelAdapter.submitData(getViewLifecycleOwner().getLifecycle(), pagingData))
+            .subscribe(pagingData -> mPopularDestinationAdapter.submitData(getViewLifecycleOwner().getLifecycle(), pagingData))
         );
 
 
@@ -94,9 +94,9 @@ public class HomeFragment extends Fragment {
     }
 
     private void initHotelAdapter() {
-        mHotelAdapter = new HotelAdapter(new MyHotelComparator(), requireContext(), new OnHotelClickListener() {
+        mPopularDestinationAdapter = new PopularDestinationAdapter(new MyComparator<MyPopularDestination>(), requireContext(), new OnDestinationClickListener() {
             @Override
-            public void onHotelClick(MyHotel hotel) {
+            public void onDestinationClick(MyPopularDestination destination) {
                 Intent intent = new Intent(mContext, HotelDetailActivity.class);
                 startActivity(intent);
             }
@@ -107,32 +107,57 @@ public class HomeFragment extends Fragment {
                 false
         );
 
-        mFragmentHomeBinding.recyclerViewHotels.setLayoutManager(layoutManager);
-        mFragmentHomeBinding.recyclerViewHotels.setHasFixedSize(true);
+        mFragmentHomeBinding.recyclerViewDestinations.setLayoutManager(layoutManager);
+        mFragmentHomeBinding.recyclerViewDestinations.setHasFixedSize(true);
 
-        mFragmentHomeBinding.recyclerViewHotels.setAdapter(
-                mHotelAdapter.withLoadStateFooter(
-                        new HotelLoadStateAdapter(v -> mHotelAdapter.retry())
+        mFragmentHomeBinding.recyclerViewDestinations.setAdapter(
+                mPopularDestinationAdapter.withLoadStateFooter(
+                        new LoadStateAdapter(v -> mPopularDestinationAdapter.retry())
                 )
         );
 
-        mHotelAdapter.addLoadStateListener(loadState -> {
+        mPopularDestinationAdapter.addLoadStateListener(loadState -> {
             if (loadState.getRefresh() instanceof LoadState.Loading || loadState.getRefresh() instanceof LoadState.Error) {
-                mFragmentHomeBinding.shimmerLayout.startShimmer();
-                mFragmentHomeBinding.shimmerLayout.setVisibility(View.VISIBLE);
-                mFragmentHomeBinding.recyclerViewHotels.setVisibility(View.GONE);
+                if (mFragmentHomeBinding.shimmerContainer.getChildCount() == 0) {
+                    setupShimmerPlaceholder();
+                }
+                mFragmentHomeBinding.shimmerContainer.setVisibility(View.VISIBLE);
+                mFragmentHomeBinding.recyclerViewDestinations.setVisibility(View.GONE);
             } else {
-                mFragmentHomeBinding.shimmerLayout.stopShimmer();
-                mFragmentHomeBinding.shimmerLayout.setVisibility(View.GONE);
-                mFragmentHomeBinding.recyclerViewHotels.setVisibility(View.VISIBLE);
+                mFragmentHomeBinding.shimmerContainer.setVisibility(View.GONE);
+                mFragmentHomeBinding.recyclerViewDestinations.setVisibility(View.VISIBLE);
             }
             return null;
         });
     }
 
+    private void setupShimmerPlaceholder() {
+        int screenWidth = mContext.getResources().getDisplayMetrics().widthPixels;
+
+        float density = mContext.getResources().getDisplayMetrics().density;
+        int itemWidthPx = (int) (200 * density);
+
+        int count = (int) Math.ceil((float) screenWidth / itemWidthPx);
+
+        count =  Math.max(1, count + 1);
+
+        mFragmentHomeBinding.shimmerContainer.removeAllViews();
+        for (int i = 0; i < count; i++) {
+            // Inflate item
+            PopularDestinationItemBinding shimmerBinding = PopularDestinationItemBinding.inflate(getLayoutInflater(), mFragmentHomeBinding.shimmerContainer, false);
+
+            if (shimmerBinding.shimmerLayout != null) {
+                shimmerBinding.shimmerLayout.startShimmer();
+            }
+
+            mFragmentHomeBinding.shimmerContainer.addView(shimmerBinding.getRoot());
+        }
+    }
+
     @Override
     public void onDestroyView() {
         compositeDisposable.clear();
+        mFragmentHomeBinding = null;
         super.onDestroyView();
     }
 }

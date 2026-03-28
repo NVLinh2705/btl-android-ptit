@@ -1,6 +1,6 @@
 package com.btl_ptit.hotelbooking.api_parsing;
 
-import com.btl_ptit.hotelbooking.data.model.MyHotel;
+import com.btl_ptit.hotelbooking.data.model.MyPopularDestination;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -12,13 +12,11 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HotelListDeserializer implements JsonDeserializer<List<MyHotel>> {
+public class PopularDestinationDeserializer implements JsonDeserializer<List<MyPopularDestination>> {
 
     @Override
-    public List<MyHotel> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-            throws JsonParseException {
-
-        List<MyHotel> hotels = new ArrayList<>();
+    public List<MyPopularDestination> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        List<MyPopularDestination> popularDestinations = new ArrayList<>();
         JsonArray array;
 
         if (json.isJsonArray()) {
@@ -27,16 +25,16 @@ public class HotelListDeserializer implements JsonDeserializer<List<MyHotel>> {
             JsonObject obj = json.getAsJsonObject();
             array = obj.getAsJsonArray("data");
         } else {
-            return hotels;
+            return popularDestinations;
         }
 
         if (array != null) {
             for (JsonElement element : array) {
-                MyHotel item = context.deserialize(element, MyHotel.class);
-                hotels.add(item);
+                MyPopularDestination item = context.deserialize(element, MyPopularDestination.class);
+                popularDestinations.add(item);
             }
         }
 
-        return hotels;
+        return popularDestinations;
     }
 }

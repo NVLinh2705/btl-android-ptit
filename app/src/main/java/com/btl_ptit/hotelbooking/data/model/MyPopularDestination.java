@@ -4,17 +4,18 @@ import com.btl_ptit.hotelbooking.interfaces.DiffUtilModel;
 
 import java.util.Objects;
 
-public class MyHotel implements DiffUtilModel {
+public class MyPopularDestination implements DiffUtilModel {
     private String id;
-    private String name, avatar;
+    private String name, avatar, averagePrice;
 
-    public MyHotel() {
+    public MyPopularDestination() {
     }
 
-    public MyHotel(String id, String name, String avatar) {
+    public MyPopularDestination(String id, String name, String avatar, String averagePrice) {
         this.id = id;
         this.name = name;
         this.avatar = avatar;
+        this.averagePrice = averagePrice;
     }
 
     public String getId() {
@@ -41,19 +42,23 @@ public class MyHotel implements DiffUtilModel {
         this.avatar = avatar;
     }
 
+    public String getAveragePrice() {
+        return averagePrice;
+    }
+
+    public void setAveragePrice(String averagePrice) {
+        this.averagePrice = averagePrice;
+    }
+
     @Override
     public boolean equals(Object other) {
         if (this == other) return true;
         if (other == null || getClass() != other.getClass()) return false;
-        MyHotel myHotel = (MyHotel) other;
-        return Objects.equals(id, myHotel.getId()) &&
-                Objects.equals(name, myHotel.getName()) &&
-                Objects.equals(avatar, myHotel.getAvatar());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, avatar);
+        MyPopularDestination myPopularDestination = (MyPopularDestination) other;
+        return Objects.equals(id, myPopularDestination.getId()) &&
+                Objects.equals(name, myPopularDestination.getName()) &&
+                Objects.equals(avatar, myPopularDestination.getAvatar()) &&
+                Objects.equals(averagePrice, myPopularDestination.getAveragePrice());
     }
 
     @Override

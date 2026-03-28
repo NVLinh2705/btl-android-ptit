@@ -138,11 +138,49 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingHorizontal="8dp">
+                        android:paddingHorizontal="8dp"
+                        android:layout_marginBottom="8dp">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/trending_destinations"
+                            android:textColor="@color/md_theme_inverseSurface_highContrast"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="@string/see_all"
+                            android:textSize="12sp"
+                            android:textColor="@color/md_theme_primaryFixedDim_mediumContrast" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/shimmerContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:visibility="visible" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerViewDestinations"
+                        android:layout_width="match_parent"
+                        android:visibility="gone"
+                        android:orientation="horizontal"
+                        android:layout_height="wrap_content" />
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="8dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="8dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/txtRecommended"
                             android:textColor="@color/md_theme_inverseSurface_highContrast"
                             android:textSize="14sp"
                             android:textStyle="bold" />
@@ -160,7 +198,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <com.facebook.shimmer.ShimmerFrameLayout
-                            android:id="@+id/shimmerLayout"
+                            android:id="@+id/shimmerLayout2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
@@ -182,12 +220,13 @@
                         </com.facebook.shimmer.ShimmerFrameLayout>
 
                         <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/recyclerViewHotels"
+                            android:id="@+id/recyclerViewHotels2"
                             android:layout_width="match_parent"
                             android:visibility="gone"
                             android:layout_height="wrap_content"
                             />
                     </FrameLayout>
+
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>

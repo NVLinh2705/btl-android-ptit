@@ -12,7 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.btl_ptit.hotelbooking.data.model.MyHotel;
 import com.btl_ptit.hotelbooking.databinding.HotelItemBinding;
 import com.btl_ptit.hotelbooking.listener.OnHotelClickListener;
+import com.btl_ptit.hotelbooking.utils.paging.MyComparator;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +23,7 @@ public class HotelAdapter extends PagingDataAdapter<MyHotel, HotelAdapter.HotelV
     private Context context;
     private OnHotelClickListener listener;
 
-    public HotelAdapter(@NotNull DiffUtil.ItemCallback<MyHotel> diffCallback, Context context, OnHotelClickListener listener) {
+    public HotelAdapter(@NotNull MyComparator<MyHotel> diffCallback, Context context, OnHotelClickListener listener) {
         super(diffCallback);
         this.context = context;
         this.listener = listener;
@@ -37,11 +40,13 @@ public class HotelAdapter extends PagingDataAdapter<MyHotel, HotelAdapter.HotelV
         MyHotel currentMyHotel = getItem(position);
         // Check for null
         if (currentMyHotel != null) {
+            int radius = (int) (8 * context.getResources().getDisplayMetrics().density);
             Glide.with(holder.hotelItemBinding.imageViewHotel.getContext())
-                    .load(currentMyHotel.getAvatar()).fitCenter()
+                    .load(currentMyHotel.getAvatar())
+                    .transform(new CenterCrop(), new RoundedCorners(radius))
                     .into(holder.hotelItemBinding.imageViewHotel);
 
-            holder.hotelItemBinding.textViewRating.setText("1.500.000 trung bình một đêm");
+            holder.hotelItemBinding.textViewRating.setText("trung bình / một đêm");
             holder.hotelItemBinding.txtName.setText(currentMyHotel.getName());
 
             holder.itemView.setOnClickListener(v -> {
@@ -52,7 +57,7 @@ public class HotelAdapter extends PagingDataAdapter<MyHotel, HotelAdapter.HotelV
         }
     }
 
-    public class HotelViewHolder extends RecyclerView.ViewHolder {
+    static class HotelViewHolder extends RecyclerView.ViewHolder {
         // Define layout view binding
         HotelItemBinding hotelItemBinding;
 

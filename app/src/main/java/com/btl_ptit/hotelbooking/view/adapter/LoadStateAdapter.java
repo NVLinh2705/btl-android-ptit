@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.paging.LoadState;
-import androidx.paging.LoadStateAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.btl_ptit.hotelbooking.R;
@@ -17,10 +16,10 @@ import com.btl_ptit.hotelbooking.databinding.LoadStateItemBinding;
 
 import org.jetbrains.annotations.NotNull;
 
-public class HotelLoadStateAdapter  extends LoadStateAdapter<HotelLoadStateAdapter.LoadStateViewHolder> {
+public class LoadStateAdapter extends androidx.paging.LoadStateAdapter<LoadStateAdapter.LoadStateViewHolder> {
     private View.OnClickListener mRetryCallback;
 
-    public HotelLoadStateAdapter(View.OnClickListener retryCallback) {
+    public LoadStateAdapter(View.OnClickListener retryCallback) {
         // Init Retry Callback
         mRetryCallback = retryCallback;
     }
