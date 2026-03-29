@@ -12,6 +12,9 @@ export interface RoomTypeInput {
   has_free_cancellation?: boolean;
   is_active?: boolean;
   quantity: number;
+  facility_ids?: number[];   // for inserting into room_type_facilities
+  area?: number | null;
+  view?: string | null;
 }
 
 export interface PolicyInput {
@@ -32,7 +35,7 @@ export interface CreateHotelPayload {
   province_code?: string;
   district_code?: string;
   ward_code?: string;
-  street?: string;
+  address?: string;
   latitude?: number;
   longitude?: number;
 

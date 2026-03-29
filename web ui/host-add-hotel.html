@@ -789,7 +789,7 @@ input[type="file"] { display: none; }
           </div>
           <div class="form-group">
             <label class="form-label">Street / House Number</label>
-            <input type="text" id="street" placeholder="e.g. 12 Tran Hung Dao St." />
+            <input type="text" id="street" placeholder="e.g. 12 Tran Hung Dao St." oninput="displayAddress(this.value)"/>
           </div>
         </div>
       </div>
@@ -1440,6 +1440,8 @@ function togglePolicy(id, btn) {
 }
 
 // ─── Location (GET /get-locations) ───────────────────────────────────────
+
+
 function setSelectLoading(id, msg) {
   const el = document.getElementById(id);
   el.innerHTML = '<option>' + msg + '</option>';
@@ -1525,7 +1527,14 @@ async function loadWards(districtCode) {
     setSelectReady('ward');
   }
 }
-
+function displayAddress(street){
+  const provinceSel = document.getElementById('province');
+  const districtSel = document.getElementById('district');
+  const wardSel = document.getElementById('ward');
+  const streetInput = document.getElementById('street');
+  const address = (streetInput.value + ", " || "") + (wardSel.options[wardSel.selectedIndex]?.text + ", " || "") + (districtSel.options[districtSel.selectedIndex]?.text + ", " || "") + (provinceSel.options[provinceSel.selectedIndex]?.text || "");
+  console.log('Full address: ', address);
+}
 // ─── Map (placeholder — wire to Google Maps API) ─────────────────────────
 function openMapPicker() {
   const demoLat = (21.0 + Math.random() * 0.1).toFixed(6);
@@ -1593,6 +1602,10 @@ async function publishHotel() {
   btn.disabled = true;
 
   try {
+    const provinceSel = document.getElementById('province');
+    const districtSel = document.getElementById('district');
+    const wardSel = document.getElementById('ward');
+    const streetInput = document.getElementById('street');
     // ── 1. Create hotel + room types + facilities + policies ──────────────
     const payload = {
       name:          document.getElementById('hotel-name').value,
@@ -1604,7 +1617,10 @@ async function publishHotel() {
       province_code: document.getElementById('province').value || null,
       district_code: document.getElementById('district').value || null,
       ward_code:     document.getElementById('ward').value || null,
-      street:        document.getElementById('street').value || null,
+      address:       (streetInput.value + ", " || "") 
+                  + (wardSel.options[wardSel.selectedIndex]?.text + ", " || "") 
+                  + (districtSel.options[districtSel.selectedIndex]?.text + ", " || "") 
+                  + (provinceSel.options[provinceSel.selectedIndex]?.text || ""),
       facility_ids:  Array.from(state.selectedFacilities),
       room_types: state.roomTypes.map(r => ({
         name:                  r.name,
@@ -1626,7 +1642,7 @@ async function publishHotel() {
         is_active:      document.getElementById('ptoggle-' + pt.id)?.classList.contains('on') ?? true,
       })),
     };
-
+    console.log("address: ", (streetInput.value + ", " || "") + (wardSel.options[wardSel.selectedIndex]?.text + ", " || "") + (districtSel.options[districtSel.selectedIndex]?.text + ", " || "") + (provinceSel.options[provinceSel.selectedIndex]?.text || ""));
     const { hotel_id, room_type_ids } = await apiFetch('/create-hotel', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

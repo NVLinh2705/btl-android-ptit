@@ -48,11 +48,11 @@ Deno.serve(async (req: Request) => {
     .from("users_roles")
     .select("roles(name)")
     .eq("user_id", user.id)
-    .single();
+    .eq("role_id", 2)
+    .maybeSingle();
 
-  // Uncomment to enforce host-only access:
-  // if (!roleRow || (roleRow.roles as any)?.name !== "host")
-  //   return err("Forbidden: host role required", 403);
+  if (!roleRow)
+    return err("Forbidden: host role required" + user.id, 403);
 
   try {
     // ── 1. Insert hotel ──────────────────────────────────────────────────
@@ -67,7 +67,7 @@ Deno.serve(async (req: Request) => {
         province_code: payload.province_code ?? null,
         district_code: payload.district_code ?? null,
         ward_code: payload.ward_code ?? null,
-        street: payload.street ?? null,
+        address: payload.address ?? null,
         latitude: payload.latitude ?? null,
         longitude: payload.longitude ?? null,
       })
