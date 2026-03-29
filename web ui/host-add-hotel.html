@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StayAdmin — Host Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+<style>
+:root {
+  --bg: #F7F5F0;
+  --surface: #FFFFFF;
+  --surface-2: #F0EDE6;
+  --border: #E2DDD5;
+  --border-focus: #2C2C2C;
+  --text: #1A1A1A;
+  --text-muted: #7A7570;
+  --text-placeholder: #B0AAA2;
+  --accent: #1A1A1A;
+  --accent-light: #F0EDE6;
+  --success: #2D6A4F;
+  --success-light: #D8F3DC;
+  --danger: #B33A3A;
+  --danger-light: #FDEAEA;
+  --warning: #8B5E00;
+  --warning-light: #FFF3CD;
+  --tag-bg: #EFEFEB;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.07);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.09);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+  --radius: 10px;
+  --radius-lg: 16px;
+  --sidebar-w: 260px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+}
+
+/* ─── Sidebar ─── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 100;
+}
+
+.sidebar-logo {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-logo h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px;
+  letter-spacing: -0.3px;
+  color: var(--text);
+}
+.sidebar-logo span { color: var(--text-muted); font-weight: 300; font-family: 'DM Sans', sans-serif; font-size: 12px; display: block; margin-top: 2px; }
+
+.sidebar-steps {
+  padding: 24px 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  border: 1px solid transparent;
+  position: relative;
+}
+.step-item:hover { background: var(--surface-2); }
+.step-item.active { background: var(--accent); color: #fff; }
+.step-item.completed { background: var(--success-light); color: var(--success); }
+
+.step-num {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600; flex-shrink: 0;
+  color: var(--text-muted);
+}
+.step-item.active .step-num { background: rgba(255,255,255,0.2); color: #fff; }
+.step-item.completed .step-num { background: var(--success); color: #fff; }
+
+.step-label { font-size: 13.5px; font-weight: 500; }
+.step-item.active .step-label { color: #fff; }
+
+.sidebar-footer {
+  padding: 16px;
+  border-top: 1px solid var(--border);
+}
+.save-draft-btn {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  border-radius: var(--radius);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.15s;
+}
+.save-draft-btn:hover { background: var(--surface-2); color: var(--text); }
+
+/* ─── Main Content ─── */
+.main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky; top: 0; z-index: 50;
+}
+.topbar-title { font-size: 15px; font-weight: 600; }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+
+.avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 600;
+}
+
+.content {
+  padding: 40px;
+  max-width: 860px;
+  width: 100%;
+}
+
+/* ─── Section Header ─── */
+.section-header {
+  margin-bottom: 32px;
+}
+.section-header h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+.section-header p { color: var(--text-muted); font-size: 14px; line-height: 1.6; }
+
+/* ─── Cards ─── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+}
+.card-title {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-title i { color: var(--text-muted); }
+
+/* ─── Form Elements ─── */
+.form-row { display: grid; gap: 16px; margin-bottom: 16px; }
+.form-row.cols-2 { grid-template-columns: 1fr 1fr; }
+.form-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.form-row.cols-1 { grid-template-columns: 1fr; }
+
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-label {
+  font-size: 13px; font-weight: 500;
+  color: var(--text);
+  display: flex; align-items: center; gap: 6px;
+}
+.required { color: var(--danger); font-size: 11px; }
+.form-hint { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+input[type="text"], input[type="number"], input[type="email"], textarea, select {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  width: 100%;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+  appearance: none;
+}
+input::placeholder, textarea::placeholder { color: var(--text-placeholder); }
+input:focus, textarea:focus, select:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(26,26,26,0.07);
+}
+textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%237A7570' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; cursor: pointer; }
+
+/* ─── Map Search ─── */
+.map-search-wrap { position: relative; }
+.map-search-wrap input { padding-left: 40px; }
+.map-search-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+.map-placeholder {
+  border: 1.5px dashed var(--border);
+  border-radius: var(--radius);
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--text-muted);
+  background: var(--surface-2);
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-top: 12px;
+  font-size: 13px;
+}
+.map-placeholder:hover { border-color: var(--border-focus); background: var(--bg); }
+.map-placeholder i { opacity: 0.4; }
+
+.coords-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.coord-field input { background: var(--surface-2); color: var(--text-muted); font-size: 13px; }
+
+/* ─── Facility Selector ─── */
+.facility-search-wrap { position: relative; margin-bottom: 16px; }
+.facility-search-wrap input { padding-left: 40px; }
+
+.facility-categories { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.cat-pill {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.cat-pill:hover { background: var(--border); }
+.cat-pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+.facility-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.facility-grid::-webkit-scrollbar { width: 4px; }
+.facility-grid::-webkit-scrollbar-track { background: transparent; }
+.facility-grid::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.facility-item {
+  padding: 10px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  user-select: none;
+  background: var(--surface);
+}
+.facility-item:hover { border-color: var(--accent); background: var(--accent-light); }
+.facility-item.selected { border-color: var(--accent); background: var(--accent); color: #fff; }
+.facility-item.selected .facility-icon { color: rgba(255,255,255,0.8); }
+.facility-icon { font-size: 15px; opacity: 0.6; }
+
+.selected-facilities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 16px;
+  min-height: 32px;
+}
+.facility-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 10px;
+  background: var(--tag-bg);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.facility-tag button {
+  background: none; border: none; cursor: pointer;
+  display: flex; align-items: center;
+  color: var(--text-muted); padding: 0; font-size: 14px;
+}
+.facility-tag button:hover { color: var(--danger); }
+
+/* ─── Room Types ─── */
+.room-list { display: flex; flex-direction: column; gap: 12px; }
+.room-card {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.room-card-header {
+  padding: 16px 20px;
+  background: var(--surface-2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+}
+.room-card-header:hover { background: var(--border); }
+.room-card-title { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+.room-card-meta { font-size: 12px; color: var(--text-muted); font-weight: 400; }
+.room-card-actions { display: flex; gap: 6px; align-items: center; }
+.icon-btn {
+  background: none; border: none; cursor: pointer;
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted);
+  transition: all 0.15s;
+}
+.icon-btn:hover { background: var(--border); color: var(--text); }
+.icon-btn.danger:hover { background: var(--danger-light); color: var(--danger); }
+
+.room-card-body {
+  padding: 20px;
+  border-top: 1px solid var(--border);
+  display: none;
+}
+.room-card-body.open { display: block; }
+
+.add-room-btn {
+  width: 100%;
+  padding: 12px;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-lg);
+  background: transparent;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.15s;
+  margin-top: 12px;
+}
+.add-room-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+/* ─── Image Upload ─── */
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+.image-slot {
+  aspect-ratio: 4/3;
+  border: 1.5px dashed var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--surface-2);
+  font-size: 12px;
+  color: var(--text-muted);
+  position: relative;
+  overflow: hidden;
+}
+.image-slot:hover { border-color: var(--accent); background: var(--accent-light); color: var(--accent); }
+.image-slot.cover-slot {
+  grid-column: span 2;
+  grid-row: span 2;
+  aspect-ratio: unset;
+}
+.image-slot img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0; left: 0;
+}
+.image-slot .cover-badge {
+  position: absolute;
+  top: 8px; left: 8px;
+  background: rgba(26,26,26,0.85);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+.image-slot .remove-img {
+  position: absolute;
+  top: 6px; right: 6px;
+  background: rgba(26,26,26,0.85);
+  border: none;
+  color: #fff;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.image-slot:hover .remove-img { opacity: 1; }
+input[type="file"] { display: none; }
+
+/* ─── Policies ─── */
+.policy-list { display: flex; flex-direction: column; gap: 12px; }
+.policy-item {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.policy-item-header {
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface-2);
+}
+.policy-item-title { font-size: 14px; font-weight: 500; }
+.policy-toggle {
+  position: relative;
+  width: 40px; height: 22px;
+  background: var(--border);
+  border-radius: 11px;
+  cursor: pointer;
+  transition: background 0.2s;
+  border: none;
+  flex-shrink: 0;
+}
+.policy-toggle.on { background: var(--accent); }
+.policy-toggle::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.policy-toggle.on::after { transform: translateX(18px); }
+.policy-item-body { padding: 16px 18px; border-top: 1px solid var(--border); display: none; }
+.policy-item-body.open { display: block; }
+
+/* ─── Checklist / Boolean ─── */
+.checkbox-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+.checkbox-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-size: 13px;
+  user-select: none;
+}
+.checkbox-item:hover { border-color: var(--accent); background: var(--accent-light); }
+.checkbox-item.checked { border-color: var(--accent); background: var(--accent); color: #fff; }
+.checkbox-item input { display: none; }
+
+/* ─── Buttons ─── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: all 0.15s;
+  text-decoration: none;
+}
+.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.btn-primary:hover { background: #333; }
+.btn-secondary { background: transparent; color: var(--text); border-color: var(--border); }
+.btn-secondary:hover { background: var(--surface-2); }
+.btn-lg { padding: 13px 28px; font-size: 15px; border-radius: var(--radius-lg); }
+
+.footer-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 40px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  position: sticky;
+  bottom: 0;
+  margin-left: -40px;
+  margin-right: -40px;
+}
+
+/* ─── Toast ─── */
+.toast {
+  position: fixed;
+  top: 20px; right: 20px;
+  background: var(--text);
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: var(--radius);
+  font-size: 13.5px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 9999;
+  box-shadow: var(--shadow-lg);
+  transform: translateX(120%);
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.toast.show { transform: translateX(0); }
+.toast.success { background: var(--success); }
+.toast.error { background: var(--danger); }
+
+/* ─── Step Panels ─── */
+.step-panel { display: none; }
+.step-panel.active { display: block; }
+
+/* ─── Divider ─── */
+.divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+/* ─── Badge ─── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.badge-green { background: var(--success-light); color: var(--success); }
+.badge-yellow { background: var(--warning-light); color: var(--warning); }
+
+/* ─── Scrollbar global ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ─── Responsive ─── */
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; }
+  .facility-grid { grid-template-columns: 1fr 1fr; }
+  .image-grid { grid-template-columns: repeat(3, 1fr); }
+  .form-row.cols-3 { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  .content { padding: 20px; }
+  .topbar { padding: 14px 20px; }
+  .form-row.cols-2, .form-row.cols-3 { grid-template-columns: 1fr; }
+  .facility-grid { grid-template-columns: 1fr 1fr; }
+  .image-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-actions { margin-left: -20px; margin-right: -20px; padding: 16px 20px; }
+}
+
+/* ─── Animate panel in ─── */
+.step-panel.active {
+  animation: fadeSlideIn 0.25s ease;
+}
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.loading-spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+</style>
+</head>
+<body>
+
+<!-- ─── Sidebar ─── -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <h1>StayAdmin</h1>
+    <span>Host Portal</span>
+  </div>
+  <nav class="sidebar-steps">
+    <div class="step-item active" data-step="1" onclick="goToStep(1)">
+      <div class="step-num">1</div>
+      <span class="step-label">Basic Info</span>
+    </div>
+    <div class="step-item" data-step="2" onclick="goToStep(2)">
+      <div class="step-num">2</div>
+      <span class="step-label">Location</span>
+    </div>
+    <div class="step-item" data-step="3" onclick="goToStep(3)">
+      <div class="step-num">3</div>
+      <span class="step-label">Facilities</span>
+    </div>
+    <div class="step-item" data-step="4" onclick="goToStep(4)">
+      <div class="step-num">4</div>
+      <span class="step-label">Room Types</span>
+    </div>
+    <div class="step-item" data-step="5" onclick="goToStep(5)">
+      <div class="step-num">5</div>
+      <span class="step-label">Photos</span>
+    </div>
+    <div class="step-item" data-step="6" onclick="goToStep(6)">
+      <div class="step-num">6</div>
+      <span class="step-label">Policies</span>
+    </div>
+    <div class="step-item" data-step="7" onclick="goToStep(7)">
+      <div class="step-num">7</div>
+      <span class="step-label">Review & Publish</span>
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <button class="save-draft-btn" onclick="saveDraft()">
+      <i data-lucide="save" style="width:14px;height:14px"></i> Save Draft
+    </button>
+  </div>
+</aside>
+
+<!-- ─── Main ─── -->
+<div class="main">
+  <header class="topbar">
+    <span class="topbar-title" id="topbar-title">Basic Hotel Information</span>
+    <div class="topbar-right">
+      <span style="font-size:12px;color:var(--text-muted)">Step <span id="step-indicator">1</span> of 7</span>
+      <div class="avatar">H</div>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- ─── STEP 1: Basic Info ─── -->
+    <div class="step-panel active" id="step-1">
+      <div class="section-header">
+        <h2>Tell us about your hotel</h2>
+        <p>Start with the essentials — name, description, and key details.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i data-lucide="building-2" style="width:15px;height:15px"></i> Hotel Details</div>
+        <div class="form-row cols-1">
+          <div class="form-group">
+            <label class="form-label">Hotel Name <span class="required">*</span></label>
+            <input type="text" id="hotel-name" placeholder="e.g. The Grand Hanoi" />
+          </div>
+        </div>
+        <div class="form-row cols-1">
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea id="hotel-desc" placeholder="Describe your hotel — atmosphere, unique features, nearby attractions..."></textarea>
+          </div>
+        </div>
+        <div class="form-row cols-2">
+          <div class="form-group">
+            <label class="form-label">Base Currency <span class="required">*</span></label>
+            <select id="hotel-currency">
+              <option value="VND" selected>VND — Vietnamese Dong</option>
+              <option value="USD">USD — US Dollar</option>
+              <option value="EUR">EUR — Euro</option>
+              <option value="THB">THB — Thai Baht</option>
+              <option value="SGD">SGD — Singapore Dollar</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select id="hotel-status">
+              <option value="true">Active — visible to guests</option>
+              <option value="false">Inactive — hidden from search</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── STEP 2: Location ─── -->
+    <div class="step-panel" id="step-2">
+      <div class="section-header">
+        <h2>Where is your hotel?</h2>
+        <p>Search for your address on the map, or fill in the fields manually.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i data-lucide="map-pin" style="width:15px;height:15px"></i> Address Search</div>
+        <div class="map-search-wrap">
+          <i data-lucide="search" class="map-search-icon" style="width:15px;height:15px"></i>
+          <input type="text" id="map-search" placeholder="Search address, street, landmark..." oninput="handleMapSearch(this.value)" />
+        </div>
+        <div class="map-placeholder" id="map-box" onclick="openMapPicker()">
+          <i data-lucide="map" style="width:32px;height:32px"></i>
+          <span>Click to open map picker</span>
+          <span style="font-size:11px;opacity:0.6">Drag the pin to your exact location</span>
+        </div>
+        <div class="coords-row">
+          <div class="coord-field form-group">
+            <label class="form-label" style="font-size:12px">Latitude</label>
+            <input type="text" id="lat" placeholder="21.0285°"  />
+          </div>
+          <div class="coord-field form-group">
+            <label class="form-label" style="font-size:12px">Longitude</label>
+            <input type="text" id="lng" placeholder="105.8542°"  />
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i data-lucide="navigation" style="width:15px;height:15px"></i> Administrative Address</div>
+        <div class="form-row cols-2">
+          <div class="form-group">
+            <label class="form-label">Province / City <span class="required">*</span></label>
+            <select id="province" onchange="loadDistricts(this.value)">
+              <option value="">Select province…</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">District <span class="required">*</span></label>
+            <select id="district" onchange="loadWards(this.value)">
+              <option value="">Select district…</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row cols-2">
+          <div class="form-group">
+            <label class="form-label">Ward</label>
+            <select id="ward">
+              <option value="">Select ward…</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Street / House Number</label>
+            <input type="text" id="street" placeholder="e.g. 12 Tran Hung Dao St." />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── STEP 3: Facilities ─── -->
+    <div class="step-panel" id="step-3">
+      <div class="section-header">
+        <h2>Hotel facilities & amenities</h2>
+        <p>Select all the facilities your hotel offers. Guests filter by these when searching.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i data-lucide="sparkles" style="width:15px;height:15px"></i> Select Facilities</div>
+
+        <div class="facility-search-wrap">
+          <i data-lucide="search" class="map-search-icon" style="width:15px;height:15px"></i>
+          <input type="text" id="facility-search" placeholder="Search facilities…" oninput="filterFacilities(this.value)" />
+        </div>
+
+        <div class="facility-categories" id="facility-cats"></div>
+        <div class="facility-grid" id="facility-grid"></div>
+
+        <div class="divider"></div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px"><span id="selected-count">0</span> selected</div>
+        <div class="selected-facilities" id="selected-facilities">
+          <span style="font-size:12px;color:var(--text-placeholder)">No facilities selected yet</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── STEP 4: Room Types ─── -->
+    <div class="step-panel" id="step-4">
+      <div class="section-header">
+        <h2>Room types</h2>
+        <p>Add all room configurations your hotel offers. Each type can have different beds, pricing, and amenities.</p>
+      </div>
+
+      <div id="room-list" class="room-list"></div>
+      <button class="add-room-btn" onclick="addRoomType()">
+        <i data-lucide="plus" style="width:16px;height:16px"></i> Add Room Type
+      </button>
+    </div>
+
+    <!-- ─── STEP 5: Photos ─── -->
+    <div class="step-panel" id="step-5">
+      <div class="section-header">
+        <h2>Photos</h2>
+        <p>Upload high-quality images. The first large slot is your cover photo shown in search results.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i data-lucide="image" style="width:15px;height:15px"></i> Hotel Photos</div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:4px">Accepted: Any image format · Max 5MB per image</p>
+        <div class="image-grid" id="hotel-images">
+          <div class="image-slot cover-slot" onclick="triggerUpload('hotel-img-0')">
+            <i data-lucide="camera" style="width:28px;height:28px;opacity:0.3"></i>
+            <span>Cover Photo</span>
+            <span style="font-size:11px;opacity:0.5">Recommended 1400×900</span>
+          </div>
+          <div class="image-slot" onclick="triggerUpload('hotel-img-1')"><i data-lucide="plus" style="width:20px;height:20px;opacity:0.3"></i></div>
+          <div class="image-slot" onclick="triggerUpload('hotel-img-2')"><i data-lucide="plus" style="width:20px;height:20px;opacity:0.3"></i></div>
+          <div class="image-slot" onclick="triggerUpload('hotel-img-3')"><i data-lucide="plus" style="width:20px;height:20px;opacity:0.3"></i></div>
+          <div class="image-slot" onclick="triggerUpload('hotel-img-4')"><i data-lucide="plus" style="width:20px;height:20px;opacity:0.3"></i></div>
+          <div class="image-slot" onclick="triggerUpload('hotel-img-5')"><i data-lucide="plus" style="width:20px;height:20px;opacity:0.3"></i></div>
+        </div>
+        <input type="file" id="hotel-img-0" accept="image/*" onchange="handleImageUpload(this,'hotel-img-0',true)">
+        <input type="file" id="hotel-img-1" accept="image/*" onchange="handleImageUpload(this,'hotel-img-1',false)">
+        <input type="file" id="hotel-img-2" accept="image/*" onchange="handleImageUpload(this,'hotel-img-2',false)">
+        <input type="file" id="hotel-img-3" accept="image/*" onchange="handleImageUpload(this,'hotel-img-3',false)">
+        <input type="file" id="hotel-img-4" accept="image/*" onchange="handleImageUpload(this,'hotel-img-4',false)">
+        <input type="file" id="hotel-img-5" accept="image/*" onchange="handleImageUpload(this,'hotel-img-5',false)">
+      </div>
+    </div>
+
+    <!-- ─── STEP 6: Policies ─── -->
+    <div class="step-panel" id="step-6">
+      <div class="section-header">
+        <h2>Hotel policies</h2>
+        <p>Define rules for check-in, cancellations, pets, and more. Toggle each policy on or off.</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><i data-lucide="scroll-text" style="width:15px;height:15px"></i> Policies</div>
+        <div class="policy-list" id="policy-list"></div>
+      </div>
+    </div>
+
+    <!-- ─── STEP 7: Review ─── -->
+    <div class="step-panel" id="step-7">
+      <div class="section-header">
+        <h2>Review & Publish</h2>
+        <p>Check all details before your hotel goes live. You can always edit later.</p>
+      </div>
+      <div id="review-content"></div>
+      <div class="card" style="background:var(--success-light);border-color:var(--success)">
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="width:44px;height:44px;background:var(--success);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i data-lucide="check" style="width:22px;height:22px;color:#fff"></i>
+          </div>
+          <div>
+            <div style="font-weight:600;font-size:15px;color:var(--success)">Ready to publish</div>
+            <div style="font-size:13px;color:var(--success);opacity:0.8;margin-top:2px">Your hotel listing will be visible to guests after submission.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer nav -->
+    <div class="footer-actions">
+      <button class="btn btn-secondary" id="btn-prev" onclick="prevStep()" style="visibility:hidden">
+        <i data-lucide="arrow-left" style="width:15px;height:15px"></i> Back
+      </button>
+      <button class="btn btn-primary btn-lg" id="btn-next" onclick="nextStep()">
+        Continue <i data-lucide="arrow-right" style="width:15px;height:15px"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+
+<script>
+// ─── State ───
+const state = {
+  currentStep: 1,
+  lat: null, lng: null,
+  selectedFacilities: new Set(),
+  roomTypes: [],
+  hotelImages: [],
+  policies: {}
+};
+
+let activeCat = 'all';
+
+// ─── API Config ───────────────────────────────────────────────────────────
+const BASE_URL = 'https://tjsycqpwxutseencwlzr.supabase.co/functions/v1';
+const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqc3ljcXB3eHV0c2VlbmN3bHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5OTMyNjYsImV4cCI6MjA4OTU2OTI2Nn0.8wEuX9k4m1LaIHd6TONec7L9VByuF1aTzAxkmp6sgzs';  // replace with your Supabase anon key
+
+// ─── API Config ───────────────────────────────────────────────────────────
+const LOGIN_PAGE = 'login.html';
+const SESSION_KEY = 'sb_session';
+ 
+// ── Auth: read JWT from session, redirect to login if missing/expired ──────
+function getSession() {
+  try {
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    const session = JSON.parse(raw);
+    // Treat token as expired 60 s before actual expiry
+    if (session?.expires_at && Date.now() / 1000 > session.expires_at - 60) return null;
+    return session;
+  } catch (_) { return null; }
+}
+ 
+function requireAuth() {
+  const session = getSession();
+  if (!session) { window.location.href = LOGIN_PAGE; return null; }
+  return session;
+}
+ 
+function getAuthToken() {
+  const session = getSession();
+  // Authenticated calls use the user's JWT; public calls fall back to anon key
+  return session?.access_token || ANON_KEY;
+}
+ 
+function logout() {
+  sessionStorage.removeItem(SESSION_KEY);
+  window.location.href = LOGIN_PAGE;
+}
+
+// ── apiFetch: public calls use anon key, authenticated calls use JWT ────────
+async function apiFetch(path, options = {}, useJwt = false) {
+  const token = useJwt ? getAuthToken() : ANON_KEY;
+  const res = await fetch(`${BASE_URL}${path}`, {
+    ...options,
+    headers: {
+      'apikey': ANON_KEY,
+      'Authorization': `Bearer ${token}`,
+      ...(options.headers || {}),
+    },
+  });
+  if (res.status === 401) {
+    // Token expired mid-session — kick back to login
+    sessionStorage.removeItem(SESSION_KEY);
+    window.location.href = LOGIN_PAGE;
+    throw new Error('Session expired');
+  }
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error || `HTTP ${res.status}`);
+  }
+  return res.json();
+}
+
+// async function apiFetchAuth(path, options = {}) {
+//   const res = await fetch(`${BASE_URL}${path}`, {
+//     ...options,
+//     headers: {
+//       'apikey': ANON_KEY,
+//       'Authorization': `Bearer ${JWT_TOKEN}`,
+//       ...(options.headers || {}),
+//     },
+//   });
+//   if (!res.ok) {
+//     const body = await res.json().catch(() => ({}));
+//     throw new Error(body.error || `HTTP ${res.status}`);
+//   }
+//   return res.json();
+// }
+
+// ─── Facilities (populated from API) ─────────────────────────────────────
+let facilityTypes = [];
+let facilities    = [];
+
+// ─── Policy types (static — defined in DB seed, IDs are stable) ──────────
+const policyTypes = [
+  {id:1, code:'CHECKIN_CHECKOUT',      name:'Check-in và Check-out'},
+  {id:2, code:'CANCELLATION', name:'Huỷ phòng'},
+  {id:3, code:'PETS',         name:'Thú cưng'},
+  {id:4, code:'CHILDREN',     name:'Trẻ em'},
+  {id:5, code:'SMOKING',      name:'Hút thuốc'},
+  {id:6, code:'PAYMENT',      name:'Thanh toán và Đặt cọc'},
+  {id:7, code:'EXTRA_BED',    name:'Giường thêm'}
+];
+
+// ─── Step logic ───────────────────────────────────────────────────────────
+const stepTitles = {
+  1: 'Basic Hotel Information', 2: 'Location & Address',
+  3: 'Facilities & Amenities', 4: 'Room Types',
+  5: 'Photos', 6: 'Policies', 7: 'Review & Publish'
+};
+
+function goToStep(n) {
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.step-item').forEach(s => s.classList.remove('active'));
+  document.getElementById('step-' + n).classList.add('active');
+  document.querySelector('[data-step="' + n + '"]').classList.add('active');
+  state.currentStep = n;
+  document.getElementById('topbar-title').textContent = stepTitles[n];
+  document.getElementById('step-indicator').textContent = n;
+  document.getElementById('btn-prev').style.visibility = n === 1 ? 'hidden' : 'visible';
+  document.getElementById('btn-next').innerHTML = n === 7
+    ? '<span>Publish Hotel</span> <i data-lucide="send" style="width:15px;height:15px"></i>'
+    : 'Continue <i data-lucide="arrow-right" style="width:15px;height:15px"></i>';
+  lucide.createIcons();
+  if (n === 7) buildReview();
+}
+
+function nextStep() {
+  if (state.currentStep < 7) {
+    markCompleted(state.currentStep);
+    goToStep(state.currentStep + 1);
+    window.scrollTo(0, 0);
+  } else {
+    publishHotel();
+  }
+}
+function prevStep() {
+  if (state.currentStep > 1) goToStep(state.currentStep - 1);
+}
+function markCompleted(n) {
+  const el = document.querySelector('[data-step="' + n + '"]');
+  el.classList.remove('active');
+  el.classList.add('completed');
+  el.querySelector('.step-num').innerHTML = '<i data-lucide="check" style="width:13px;height:13px"></i>';
+  lucide.createIcons();
+}
+
+// ─── Facilities (GET /get-facilities) ─────────────────────────────────────
+async function initFacilities() {
+  const grid = document.getElementById('facility-grid');
+  const cats = document.getElementById('facility-cats');
+
+  grid.innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:16px;grid-column:span 3;display:flex;align-items:center;gap:8px"><div class="loading-spinner" style="border-color:rgba(0,0,0,0.15);border-top-color:var(--text-muted)"></div> Loading facilities…</div>';
+  cats.innerHTML = '';
+
+  try {
+    // Returns grouped: [{ id, name, name_vi, facilities: [{ id, name, name_vi, facility_type_id }] }]
+    const grouped = await apiFetch('/get-facilities');
+    facilityTypes = grouped.map(g => ({ id: g.id, name: g.name }));
+    facilities    = grouped.flatMap(g =>
+      (g.facilities || []).map(f => ({ id: f.id, t: f.facility_type_id, name: f.name }))
+    );
+  } catch (e) {
+    console.error('Failed to load facilities:', e);
+    grid.innerHTML = '<div style="color:var(--danger);font-size:13px;padding:16px;grid-column:span 3">Failed to load facilities. ' + e.message + '</div>';
+    return;
+  }
+
+  cats.innerHTML = '<div class="cat-pill active" data-cat="all" onclick="setCat(this,\'all\')">All</div>' +
+    facilityTypes.map(ft =>
+      '<div class="cat-pill" data-cat="' + ft.id + '" onclick="setCat(this,' + ft.id + ')">' + ft.name + '</div>'
+    ).join('');
+
+  renderFacilityGrid('all', '');
+}
+
+function setCat(el, cat) {
+  document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  activeCat = cat;
+  renderFacilityGrid(cat, document.getElementById('facility-search').value);
+}
+
+function filterFacilities(q) {
+  renderFacilityGrid(activeCat, q);
+}
+
+function renderFacilityGrid(cat, query) {
+  const grid = document.getElementById('facility-grid');
+  let list = cat === 'all' ? facilities : facilities.filter(f => f.t == cat);
+  if (query) list = list.filter(f => f.name.toLowerCase().includes(query.toLowerCase()));
+  grid.innerHTML = list.map(f => {
+    const sel = state.selectedFacilities.has(f.id);
+    return '<div class="facility-item ' + (sel ? 'selected' : '') + '" onclick="toggleFacility(' + f.id + ', this)"><span class="facility-icon">✦</span> ' + f.name + '</div>';
+  }).join('') || '<div style="color:var(--text-muted);font-size:13px;padding:16px;grid-column:span 3">No facilities found</div>';
+}
+
+function toggleFacility(id, el) {
+  if (state.selectedFacilities.has(id)) {
+    state.selectedFacilities.delete(id);
+    el.classList.remove('selected');
+  } else {
+    state.selectedFacilities.add(id);
+    el.classList.add('selected');
+  }
+  updateSelectedFacilities();
+}
+
+function updateSelectedFacilities() {
+  const wrap = document.getElementById('selected-facilities');
+  const count = state.selectedFacilities.size;
+  document.getElementById('selected-count').textContent = count;
+  if (count === 0) {
+    wrap.innerHTML = '<span style="font-size:12px;color:var(--text-placeholder)">No facilities selected yet</span>';
+    return;
+  }
+  wrap.innerHTML = Array.from(state.selectedFacilities).map(id => {
+    const f = facilities.find(x => x.id === id);
+    return '<div class="facility-tag">' + (f ? f.name : id) + ' <button onclick="removeFacility(' + id + ')">x</button></div>';
+  }).join('');
+}
+
+function removeFacility(id) {
+  state.selectedFacilities.delete(id);
+  renderFacilityGrid(activeCat, document.getElementById('facility-search').value);
+  updateSelectedFacilities();
+}
+
+// ─── Room Types ───────────────────────────────────────────────────────────
+const VIEW_OPTIONS = ['None','Sea view','City view','Garden view','Pool view','Mountain view','River view','Lake view','Courtyard view','Forest view'];
+let roomCounter = 0;
+
+function addRoomType() {
+  const id = ++roomCounter;
+  state.roomTypes.push({
+    id, name: 'Room Type ' + id,
+    maxGuests: 2, beds: 1, bedType: 'Double',
+    price: 500000, qty: 1,
+    freeCancellation: false,
+    area: null, view: '',
+    facilityIds: new Set(),
+    activeFacCat: 'all',
+  });
+  renderRooms();
+}
+
+function renderRooms() {
+  const list = document.getElementById('room-list');
+  list.innerHTML = state.roomTypes.map((r) => {
+    const selectedCount = r.facilityIds.size;
+    return '<div class="room-card" id="room-' + r.id + '">' +
+      '<div class="room-card-header" onclick="toggleRoom(' + r.id + ')">' +
+        '<div class="room-card-title">' +
+          '<i data-lucide="bed-double" style="width:16px;height:16px;color:var(--text-muted)"></i>' +
+          '<span id="rname-' + r.id + '">' + r.name + '</span>' +
+          '<span class="room-card-meta">· ' + r.beds + ' ' + r.bedType + ' · ' + r.maxGuests + ' guests · ' + formatPrice(r.price) + '/night' + (r.area ? ' · ' + r.area + ' m²' : '') + (r.view ? ' · ' + r.view : '') + '</span>' +
+        '</div>' +
+        '<div class="room-card-actions" onclick="event.stopPropagation()">' +
+          '<button class="icon-btn danger" onclick="removeRoom(' + r.id + ')"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button>' +
+          '<button class="icon-btn" onclick="toggleRoom(' + r.id + ')"><i data-lucide="chevron-down" style="width:14px;height:14px"></i></button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="room-card-body open" id="rbody-' + r.id + '">' +
+        '<div class="form-row cols-2">' +
+          '<div class="form-group"><label class="form-label">Room Type Name <span class="required">*</span></label>' +
+            '<input type="text" value="' + r.name + '" oninput="updateRoom(' + r.id + ',\'name\',this.value)" /></div>' +
+          '<div class="form-group"><label class="form-label">Quantity Available <span class="required">*</span></label>' +
+            '<input type="number" value="' + r.qty + '" min="1" oninput="updateRoom(' + r.id + ',\'qty\',this.value)" /></div>' +
+        '</div>' +
+        '<div class="form-row cols-3">' +
+          '<div class="form-group"><label class="form-label">Max Guests</label>' +
+            '<input type="number" value="' + r.maxGuests + '" min="1" max="20" oninput="updateRoom(' + r.id + ',\'maxGuests\',this.value)" /></div>' +
+          '<div class="form-group"><label class="form-label">Bed Count</label>' +
+            '<input type="number" value="' + r.beds + '" min="1" oninput="updateRoom(' + r.id + ',\'beds\',this.value)" /></div>' +
+          '<div class="form-group"><label class="form-label">Bed Type</label>' +
+            '<select onchange="updateRoom(' + r.id + ',\'bedType\',this.value)">' +
+              ['Single','Double','Queen','King','Twin','Bunk','Sofa Bed'].map(bt => '<option ' + (r.bedType===bt?'selected':'') + '>' + bt + '</option>').join('') +
+            '</select></div>' +
+        '</div>' +
+        '<div class="form-row cols-3">' +
+          '<div class="form-group"><label class="form-label"><i data-lucide="ruler" style="width:13px;height:13px"></i> Area (m²)</label>' +
+            '<input type="number" value="' + (r.area || '') + '" min="1" placeholder="e.g. 32" oninput="updateRoom(' + r.id + ',\'area\',this.value)" /></div>' +
+          '<div class="form-group"><label class="form-label"><i data-lucide="eye" style="width:13px;height:13px"></i> View</label>' +
+            '<select onchange="updateRoom(' + r.id + ',\'view\',this.value)">' +
+              VIEW_OPTIONS.map(v => '<option value="' + (v==='None'?'':v) + '" ' + ((r.view||'')===(v==='None'?'':v)?'selected':'') + '>' + v + '</option>').join('') +
+            '</select></div>' +
+          '<div class="form-group"><label class="form-label">Base Price / Night <span class="required">*</span></label>' +
+            '<input type="number" value="' + r.price + '" min="0" oninput="updateRoom(' + r.id + ',\'price\',this.value)" /></div>' +
+        '</div>' +
+        '<div class="form-row cols-2">' +
+          '<div class="form-group"><label class="form-label">Options</label>' +
+            '<div class="checkbox-group">' +
+              '<label class="checkbox-item ' + (r.freeCancellation?'checked':'') + '" onclick="toggleCheckbox(this,' + r.id + ',\'freeCancellation\')">' +
+                '<input type="checkbox" ' + (r.freeCancellation?'checked':'') + '> Free cancellation</label>' +
+            '</div></div>' +
+          '<div class="form-group"><label class="form-label">Description</label>' +
+            '<textarea placeholder="Views, special features…" rows="2" oninput="updateRoom(' + r.id + ',\'desc\',this.value)">' + (r.desc||'') + '</textarea></div>' +
+        '</div>' +
+        // Room Facilities
+        '<div class="divider" style="margin:16px 0 14px"></div>' +
+        '<div class="card-title" style="margin-bottom:14px"><i data-lucide="sparkles" style="width:14px;height:14px"></i> Room Facilities <span style="font-weight:400;color:var(--text-muted);font-size:12px;text-transform:none;letter-spacing:0">&nbsp;— ' + selectedCount + ' selected</span></div>' +
+        '<div class="facility-search-wrap" style="margin-bottom:10px">' +
+          '<i data-lucide="search" class="map-search-icon" style="width:14px;height:14px"></i>' +
+          '<input type="text" placeholder="Search room facilities…" style="padding-left:36px" oninput="renderRoomFacilityGrid(' + r.id + ', this.value)" />' +
+        '</div>' +
+        '<div class="facility-categories" id="rfac-cats-' + r.id + '">' + buildRoomFacCats(r.id) + '</div>' +
+        '<div class="facility-grid" id="rfac-grid-' + r.id + '" style="max-height:220px">' + buildRoomFacGrid(r.id, r.activeFacCat, '') + '</div>' +
+        '<div class="selected-facilities" id="rfac-selected-' + r.id + '" style="margin-top:12px">' + buildRoomFacTags(r.id) + '</div>' +
+        // Room Photos
+        '<div class="divider" style="margin:16px 0 12px"></div>' +
+        '<div class="card-title"><i data-lucide="image" style="width:14px;height:14px"></i> Room Photos</div>' +
+        '<div class="image-grid" style="grid-template-columns:repeat(4,1fr)">' +
+          [0,1,2,3].map(n =>
+            '<div class="image-slot" style="aspect-ratio:4/3" id="rm' + r.id + '-slot' + n + '" onclick="triggerUpload(\'rm' + r.id + '-img' + n + '\')">' +
+              '<i data-lucide="plus" style="width:16px;height:16px;opacity:0.3"></i>' +
+            '</div>' +
+            '<input type="file" id="rm' + r.id + '-img' + n + '" accept="image/*" onchange="handleRoomImage(this,\'rm' + r.id + '-img' + n + '\',' + r.id + ',' + n + ')">'
+          ).join('') +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+  lucide.createIcons();
+}
+
+// ── Per-room facility helpers ─────────────────────────────────────────────
+function buildRoomFacCats(rid) {
+  const r = state.roomTypes.find(x => x.id === rid);
+  if (!r) return '';
+  return '<div class="cat-pill ' + (r.activeFacCat==='all'?'active':'') + '" onclick="setRoomFacCat(' + rid + ',\'all\',this)">All</div>' +
+    facilityTypes.map(ft =>
+      '<div class="cat-pill ' + (r.activeFacCat==ft.id?'active':'') + '" onclick="setRoomFacCat(' + rid + ',' + ft.id + ',this)">' + ft.name + '</div>'
+    ).join('');
+}
+
+function setRoomFacCat(rid, cat, el) {
+  const r = state.roomTypes.find(x => x.id === rid);
+  if (!r) return;
+  r.activeFacCat = cat;
+  document.getElementById('rfac-cats-' + rid).querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  const searchInput = document.querySelector('#rfac-grid-' + rid)?.closest('.room-card-body')?.querySelector('input[placeholder="Search room facilities…"]');
+  document.getElementById('rfac-grid-' + rid).innerHTML = buildRoomFacGrid(rid, cat, searchInput?.value || '');
+}
+
+function buildRoomFacGrid(rid, cat, query) {
+  const r = state.roomTypes.find(x => x.id === rid);
+  if (!r) return '';
+  let list = cat === 'all' ? facilities : facilities.filter(f => f.t == cat);
+  if (query) list = list.filter(f => f.name.toLowerCase().includes(query.toLowerCase()));
+  if (!list.length) return '<div style="color:var(--text-muted);font-size:13px;padding:12px;grid-column:span 3">No facilities found</div>';
+  return list.map(f => {
+    const sel = r.facilityIds.has(f.id);
+    return '<div class="facility-item ' + (sel?'selected':'') + '" onclick="toggleRoomFacility(' + rid + ',' + f.id + ',this)"><span class="facility-icon">✦</span> ' + f.name + '</div>';
+  }).join('');
+}
+
+function renderRoomFacilityGrid(rid, query) {
+  const r = state.roomTypes.find(x => x.id === rid);
+  if (!r) return;
+  document.getElementById('rfac-grid-' + rid).innerHTML = buildRoomFacGrid(rid, r.activeFacCat, query);
+}
+
+function toggleRoomFacility(rid, fid, el) {
+  const r = state.roomTypes.find(x => x.id === rid);
+  if (!r) return;
+  if (r.facilityIds.has(fid)) { r.facilityIds.delete(fid); el.classList.remove('selected'); }
+  else { r.facilityIds.add(fid); el.classList.add('selected'); }
+  document.getElementById('rfac-selected-' + rid).innerHTML = buildRoomFacTags(rid);
+  const countSpan = document.querySelector('#room-' + rid + ' .card-title span');
+  if (countSpan) countSpan.innerHTML = '&nbsp;— ' + r.facilityIds.size + ' selected';
+}
+
+function buildRoomFacTags(rid) {
+  const r = state.roomTypes.find(x => x.id === rid);
+  if (!r || r.facilityIds.size === 0) return '<span style="font-size:12px;color:var(--text-placeholder)">No facilities selected</span>';
+  return Array.from(r.facilityIds).map(fid => {
+    const f = facilities.find(x => x.id === fid);
+    return '<div class="facility-tag">' + (f ? f.name : fid) + ' <button onclick="removeRoomFacility(' + rid + ',' + fid + ')">x</button></div>';
+  }).join('');
+}
+
+function removeRoomFacility(rid, fid) {
+  const r = state.roomTypes.find(x => x.id === rid);
+  if (!r) return;
+  r.facilityIds.delete(fid);
+  document.getElementById('rfac-selected-' + rid).innerHTML = buildRoomFacTags(rid);
+  document.getElementById('rfac-grid-' + rid).innerHTML = buildRoomFacGrid(rid, r.activeFacCat, '');
+}
+
+function toggleRoom(id) {
+  document.getElementById('rbody-' + id).classList.toggle('open');
+}
+function removeRoom(id) {
+  state.roomTypes = state.roomTypes.filter(r => r.id !== id);
+  renderRooms();
+  showToast('Room type removed');
+}
+function updateRoom(id, key, val) {
+  const r = state.roomTypes.find(r => r.id === id);
+  if (!r) return;
+  const numericKeys = ['price', 'maxGuests', 'beds', 'qty', 'area'];
+  r[key] = numericKeys.includes(key) ? (val === '' ? null : Number(val)) : val;
+  const nameEl = document.getElementById('rname-' + id);
+  if (nameEl) nameEl.textContent = r.name;
+}
+function toggleCheckbox(el, rid, key) {
+  el.classList.toggle('checked');
+  const r = state.roomTypes.find(r => r.id === rid);
+  if (r) r[key] = !r[key];
+}
+function formatPrice(p) {
+  return Number(p).toLocaleString('vi-VN') + ' VND';
+}
+
+// ─── Image Upload (POST /upload-image) ────────────────────────────────────
+function triggerUpload(id) { document.getElementById(id).click(); }
+
+async function handleImageUpload(input, slotId, isCover) {
+  if (!input.files[0]) return;
+  const file = input.files[0];
+  const slotIndex = parseInt(slotId.replace('hotel-img-', ''));
+  const slots = document.getElementById('hotel-images').querySelectorAll('.image-slot');
+  const slot = slots[slotIndex];
+
+  // Preview immediately
+  const previewUrl = URL.createObjectURL(file);
+  slot.innerHTML =
+    '<img src="' + previewUrl + '" alt="">' +
+    (isCover ? '<span class="cover-badge">Cover</span>' : '') +
+    '<button class="remove-img" onclick="removeImage(\'' + slotId + '\',event)">x</button>';
+
+  // Store file for upload later (keyed by slot)
+  state.hotelImages[slotIndex] = { file, isCover, slotId };
+}
+
+async function handleRoomImage(input, inputId, roomId, idx) {
+  if (!input.files[0]) return;
+  const url = URL.createObjectURL(input.files[0]);
+  const roomCard = document.getElementById('room-' + roomId);
+  const slots = roomCard.querySelectorAll('.image-slot');
+  slots[idx].innerHTML = '<img src="' + url + '" alt=""><button class="remove-img" onclick="this.parentElement.innerHTML=\'<i data-lucide=plus style=width:16px;height:16px;opacity:0.3></i>\';lucide.createIcons();event.stopPropagation()">x</button>';
+
+  // Store room image file
+  const r = state.roomTypes.find(x => x.id === roomId);
+  if (r) {
+    if (!r.imageFiles) r.imageFiles = [];
+    r.imageFiles[idx] = input.files[0];
+  }
+  lucide.createIcons();
+}
+
+function removeImage(id, e) {
+  e.stopPropagation();
+  const idx = parseInt(id.replace('hotel-img-', ''));
+  const slots = document.getElementById('hotel-images').querySelectorAll('.image-slot');
+  const isCover = idx === 0;
+  slots[idx].innerHTML = isCover
+    ? '<i data-lucide="camera" style="width:28px;height:28px;opacity:0.3"></i><span>Cover Photo</span><span style="font-size:11px;opacity:0.5">Recommended 1400x900</span>'
+    : '<i data-lucide="plus" style="width:20px;height:20px;opacity:0.3"></i>';
+  document.getElementById(id).value = '';
+  state.hotelImages[idx] = null;
+  lucide.createIcons();
+}
+
+async function uploadImage(file, hotelId, roomTypeId, isCover) {
+  const form = new FormData();
+  form.append('file', file);
+  form.append('hotel_id', String(hotelId));
+  form.append('is_cover', isCover ? 'true' : 'false');
+  if (roomTypeId != null) form.append('room_type_id', String(roomTypeId));
+
+  const res = await fetch(BASE_URL + '/upload-image', {
+    method: 'POST',
+    headers: {
+      'apikey': ANON_KEY,
+      'Authorization': 'Bearer ' + getAuthToken(),
+    },
+    body: form,
+  });
+  if (res.status === 401) {
+    sessionStorage.removeItem(SESSION_KEY);
+    window.location.href = LOGIN_PAGE;
+    throw new Error('Session expired');
+  }
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error || 'Upload failed: HTTP ' + res.status);
+  }
+  return res.json(); // { image_id, url, is_cover }
+}
+
+// ─── Policies ─────────────────────────────────────────────────────────────
+function initPolicies() {
+  const list = document.getElementById('policy-list');
+  const defaults = {
+    CHECKIN:      'Check-in from 14:00. Check-out by 12:00.',
+    CANCELLATION: 'Free cancellation up to 24 hours before arrival.',
+    PETS:         'Pets are not allowed.',
+    CHILDREN:     'Children of all ages are welcome.',
+    SMOKING:      'Non-smoking throughout the property.',
+    PAYMENT:      'Payment accepted in cash or card at the property.',
+    EXTRA_BED:    'Extra beds available upon request.'
+  };
+  list.innerHTML = policyTypes.map(pt =>
+    '<div class="policy-item">' +
+      '<div class="policy-item-header">' +
+        '<span class="policy-item-title">' + pt.name + '</span>' +
+        '<button class="policy-toggle on" id="ptoggle-' + pt.id + '" onclick="togglePolicy(' + pt.id + ', this)"></button>' +
+      '</div>' +
+      '<div class="policy-item-body open" id="pbody-' + pt.id + '">' +
+        '<div class="form-row cols-1" style="margin-bottom:0"><div class="form-group">' +
+          '<input type="text" placeholder="Policy title (optional)" style="margin-bottom:8px" id="ptitle-' + pt.id + '" />' +
+          '<textarea rows="2" placeholder="Policy details…" id="pcontent-' + pt.id + '">' + (defaults[pt.code] || '') + '</textarea>' +
+        '</div></div>' +
+      '</div>' +
+    '</div>'
+  ).join('');
+}
+
+function togglePolicy(id, btn) {
+  btn.classList.toggle('on');
+  document.getElementById('pbody-' + id).classList.toggle('open');
+}
+
+// ─── Location (GET /get-locations) ───────────────────────────────────────
+function setSelectLoading(id, msg) {
+  const el = document.getElementById(id);
+  el.innerHTML = '<option>' + msg + '</option>';
+  el.disabled = true;
+}
+function setSelectReady(id) {
+  document.getElementById(id).disabled = false;
+}
+
+async function initProvinces() {
+  setSelectLoading('province', 'Loading provinces…');
+  try {
+    const data = await apiFetch('/get-locations?type=provinces');
+    const sel = document.getElementById('province');
+    sel.innerHTML = '<option value="">Select province…</option>';
+    data.forEach(p => {
+      const o = document.createElement('option');
+      o.value = p.code;
+      o.textContent = p.name;
+      sel.appendChild(o);
+    });
+    setSelectReady('province');
+  } catch (e) {
+    console.error('Failed to load provinces:', e);
+    document.getElementById('province').innerHTML = '<option value="">Failed to load</option>';
+    setSelectReady('province');
+  }
+}
+
+async function loadDistricts(provinceCode) {
+  const distSel = document.getElementById('district');
+  const wardSel = document.getElementById('ward');
+  wardSel.innerHTML = '<option value="">Select ward…</option>';
+  wardSel.disabled = true;
+
+  if (!provinceCode) {
+    distSel.innerHTML = '<option value="">Select district…</option>';
+    distSel.disabled = true;
+    return;
+  }
+
+  setSelectLoading('district', 'Loading districts…');
+  try {
+    const data = await apiFetch('/get-locations?type=districts&province_code=' + provinceCode);
+    distSel.innerHTML = '<option value="">Select district…</option>';
+    data.forEach(d => {
+      const o = document.createElement('option');
+      o.value = d.code;
+      o.textContent = d.name;
+      distSel.appendChild(o);
+    });
+    setSelectReady('district');
+  } catch (e) {
+    console.error('Failed to load districts:', e);
+    distSel.innerHTML = '<option value="">Failed to load</option>';
+    setSelectReady('district');
+  }
+}
+
+async function loadWards(districtCode) {
+  if (!districtCode) {
+    const wardSel = document.getElementById('ward');
+    wardSel.innerHTML = '<option value="">Select ward…</option>';
+    wardSel.disabled = true;
+    return;
+  }
+
+  setSelectLoading('ward', 'Loading wards…');
+  try {
+    const data = await apiFetch('/get-locations?type=wards&district_code=' + districtCode);
+    const wardSel = document.getElementById('ward');
+    wardSel.innerHTML = '<option value="">Select ward…</option>';
+    data.forEach(w => {
+      const o = document.createElement('option');
+      o.value = w.code;
+      o.textContent = w.name;
+      wardSel.appendChild(o);
+    });
+    setSelectReady('ward');
+  } catch (e) {
+    console.error('Failed to load wards:', e);
+    document.getElementById('ward').innerHTML = '<option value="">Failed to load</option>';
+    setSelectReady('ward');
+  }
+}
+
+// ─── Map (placeholder — wire to Google Maps API) ─────────────────────────
+function openMapPicker() {
+  const demoLat = (21.0 + Math.random() * 0.1).toFixed(6);
+  const demoLng = (105.8 + Math.random() * 0.1).toFixed(6);
+  state.lat = parseFloat(demoLat);
+  state.lng = parseFloat(demoLng);
+  document.getElementById('lat').value = demoLat;
+  document.getElementById('lng').value = demoLng;
+  const box = document.getElementById('map-box');
+  box.style.background = 'var(--accent-light)';
+  box.innerHTML =
+    '<div style="text-align:center">' +
+      '<div style="font-size:32px">📍</div>' +
+      '<div style="font-weight:600;font-size:14px;margin-top:8px">Location pinned</div>' +
+      '<div style="font-size:12px;color:var(--text-muted);margin-top:4px">' + demoLat + ', ' + demoLng + '</div>' +
+      '<div style="font-size:11px;color:var(--text-muted);margin-top:8px;opacity:0.7">Wire to Google Maps API for production</div>' +
+    '</div>';
+  showToast('Location pinned', 'success');
+}
+function handleMapSearch(q) { /* Wire to Google Places Autocomplete */ }
+
+// ─── Review ───────────────────────────────────────────────────────────────
+function buildReview() {
+  const name  = document.getElementById('hotel-name').value || '—';
+  const desc  = document.getElementById('hotel-desc').value || '—';
+  const rooms = state.roomTypes.length;
+  const facs  = state.selectedFacilities.size;
+  const totalRoomFacs = state.roomTypes.reduce((s, r) => s + r.facilityIds.size, 0);
+  const imgs  = state.hotelImages.filter(Boolean).length;
+
+  document.getElementById('review-content').innerHTML =
+    '<div class="card">' +
+      '<div class="card-title"><i data-lucide="building-2" style="width:15px;height:15px"></i> Basic Info</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">' +
+        '<div><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">Name</div><div style="font-size:14px;font-weight:500">' + name + '</div></div>' +
+        '<div><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">Currency</div><div style="font-size:14px;font-weight:500">' + document.getElementById('hotel-currency').value + '</div></div>' +
+      '</div>' +
+      '<div style="margin-top:14px"><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">Description</div>' +
+        '<div style="font-size:13px;color:var(--text-muted);line-height:1.6">' + desc + '</div></div>' +
+    '</div>' +
+    '<div class="card">' +
+      '<div class="card-title"><i data-lucide="map-pin" style="width:15px;height:15px"></i> Location</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">' +
+        '<div><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">Coordinates</div>' +
+          '<div style="font-size:14px;font-weight:500">' + (state.lat ? state.lat + ', ' + state.lng : 'Not set') + '</div></div>' +
+        '<div><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">Street</div>' +
+          '<div style="font-size:14px;font-weight:500">' + (document.getElementById('street').value || '—') + '</div></div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="card">' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px">' +
+        '<div><div class="card-title" style="margin-bottom:6px"><i data-lucide="sparkles" style="width:14px;height:14px"></i> Hotel Fac.</div><div style="font-size:24px;font-weight:700">' + facs + '</div><div style="font-size:12px;color:var(--text-muted)">selected</div></div>' +
+        '<div><div class="card-title" style="margin-bottom:6px"><i data-lucide="bed-double" style="width:14px;height:14px"></i> Room Types</div><div style="font-size:24px;font-weight:700">' + rooms + '</div><div style="font-size:12px;color:var(--text-muted)">added</div></div>' +
+        '<div><div class="card-title" style="margin-bottom:6px"><i data-lucide="sparkles" style="width:14px;height:14px"></i> Room Fac.</div><div style="font-size:24px;font-weight:700">' + totalRoomFacs + '</div><div style="font-size:12px;color:var(--text-muted)">across rooms</div></div>' +
+        '<div><div class="card-title" style="margin-bottom:6px"><i data-lucide="image" style="width:14px;height:14px"></i> Photos</div><div style="font-size:24px;font-weight:700">' + imgs + '</div><div style="font-size:12px;color:var(--text-muted)">hotel photos</div></div>' +
+      '</div>' +
+    '</div>';
+  lucide.createIcons();
+}
+
+// ─── Publish (POST /create-hotel then POST /upload-image) ─────────────────
+async function publishHotel() {
+  const btn = document.getElementById('btn-next');
+  btn.innerHTML = '<div class="loading-spinner"></div> Publishing…';
+  btn.disabled = true;
+
+  try {
+    // ── 1. Create hotel + room types + facilities + policies ──────────────
+    const payload = {
+      name:          document.getElementById('hotel-name').value,
+      description:   document.getElementById('hotel-desc').value || null,
+      base_currency: document.getElementById('hotel-currency').value,
+      is_active:     document.getElementById('hotel-status').value === 'true',
+      latitude:      state.lat,
+      longitude:     state.lng,
+      province_code: document.getElementById('province').value || null,
+      district_code: document.getElementById('district').value || null,
+      ward_code:     document.getElementById('ward').value || null,
+      street:        document.getElementById('street').value || null,
+      facility_ids:  Array.from(state.selectedFacilities),
+      room_types: state.roomTypes.map(r => ({
+        name:                  r.name,
+        description:           r.desc || null,
+        max_guests:            r.maxGuests,
+        bed_count:             r.beds,
+        bed_type:              r.bedType,
+        base_price_per_night:  r.price,
+        has_free_cancellation: r.freeCancellation,
+        quantity:              r.qty,
+        area:                  r.area || null,
+        view:                  r.view || null,
+        facility_ids:          Array.from(r.facilityIds),
+      })),
+      policies: policyTypes.map(pt => ({
+        policy_type_id: pt.id,
+        title:          document.getElementById('ptitle-' + pt.id)?.value || null,
+        content:        document.getElementById('pcontent-' + pt.id)?.value || null,
+        is_active:      document.getElementById('ptoggle-' + pt.id)?.classList.contains('on') ?? true,
+      })),
+    };
+
+    const { hotel_id, room_type_ids } = await apiFetch('/create-hotel', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }, true);
+
+    // ── 2. Upload hotel images ────────────────────────────────────────────
+    const hotelImgJobs = state.hotelImages
+      .filter(Boolean)
+      .map(({ file, isCover }) => uploadImage(file, hotel_id, null, isCover));
+
+    // ── 3. Upload room images ─────────────────────────────────────────────
+    const roomImgJobs = state.roomTypes.flatMap((r, idx) => {
+      const roomTypeId = room_type_ids[idx];
+      if (!roomTypeId || !r.imageFiles?.length) return [];
+      return r.imageFiles
+        .filter(Boolean)
+        .map(file => uploadImage(file, hotel_id, roomTypeId, false));
+    });
+
+    const uploadResults = await Promise.allSettled([...hotelImgJobs, ...roomImgJobs]);
+    const failed = uploadResults.filter(r => r.status === 'rejected');
+    if (failed.length) {
+      console.warn(failed.length + ' image(s) failed to upload:', failed.map(f => f.reason));
+      showToast(failed.length + ' image(s) failed — hotel was saved', 'error');
+    }
+
+    // ── Done ──────────────────────────────────────────────────────────────
+    btn.innerHTML = '<i data-lucide="check" style="width:15px;height:15px"></i> Published!';
+    btn.style.background = 'var(--success)';
+    showToast('Hotel #' + hotel_id + ' published! 🎉', 'success');
+    lucide.createIcons();
+
+  } catch (e) {
+    console.error('Publish failed:', e);
+    showToast('Failed: ' + e.message, 'error');
+    btn.innerHTML = 'Publish Hotel <i data-lucide="send" style="width:15px;height:15px"></i>';
+    btn.disabled = false;
+    lucide.createIcons();
+  }
+}
+
+// ─── Toast ────────────────────────────────────────────────────────────────
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + (type || '');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ─── Save draft (local storage) ───────────────────────────────────────────
+function saveDraft() {
+  showToast('Draft saved locally');
+}
+
+// ─── Init ─────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+
+
+    // Guard: redirect to login if session missing or expired
+  const session = requireAuth();
+  if (!session) return;
+ 
+  // Populate topbar with logged-in user info
+  const user = session.user;
+  const name = user?.user_metadata?.full_name || user?.email || 'Host';
+  const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+  const avatarEl = document.querySelector('.avatar');
+  if (avatarEl) avatarEl.textContent = initials;
+  const emailEl = document.getElementById('topbar-user-email');
+  if (emailEl) emailEl.textContent = user?.email || '';
+
+  lucide.createIcons();
+  initFacilities();   // async — loads from GET /get-facilities
+  initProvinces();    // async — loads from GET /get-locations?type=provinces
+  initPolicies();
+});
+</script>
+</body>
+</html>
