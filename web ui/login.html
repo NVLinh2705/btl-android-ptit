@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StayAdmin — Sign In</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg:             #F7F5F0;
+  --surface:        #FFFFFF;
+  --surface-2:      #F0EDE6;
+  --border:         #E2DDD5;
+  --border-focus:   #2C2C2C;
+  --text:           #1A1A1A;
+  --text-muted:     #7A7570;
+  --text-placeholder: #B0AAA2;
+  --accent:         #1A1A1A;
+  --danger:         #B33A3A;
+  --danger-light:   #FDEAEA;
+  --success:        #2D6A4F;
+  --success-light:  #D8F3DC;
+  --radius:         10px;
+  --radius-lg:      16px;
+  --shadow-sm:      0 1px 3px rgba(0,0,0,0.07);
+  --shadow-lg:      0 20px 60px rgba(0,0,0,0.12);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+/* ─── Left panel ─── */
+.panel-left {
+  background: var(--accent);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 52px 56px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle grid texture */
+.panel-left::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Decorative circle */
+.panel-left::after {
+  content: '';
+  position: absolute;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.06);
+  bottom: -180px; right: -120px;
+}
+
+.panel-brand {
+  position: relative; z-index: 1;
+}
+.panel-brand h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28px;
+  color: #fff;
+  letter-spacing: -0.3px;
+}
+.panel-brand span {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  font-weight: 300;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-top: 4px;
+}
+
+.panel-copy {
+  position: relative; z-index: 1;
+}
+.panel-copy h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 38px;
+  line-height: 1.18;
+  color: #fff;
+  letter-spacing: -0.5px;
+  margin-bottom: 20px;
+}
+.panel-copy h2 em {
+  font-style: italic;
+  color: rgba(255,255,255,0.55);
+}
+.panel-copy p {
+  font-size: 14px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.7;
+  max-width: 320px;
+}
+
+.panel-features {
+  position: relative; z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.feature-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 100px;
+  padding: 8px 16px 8px 10px;
+  width: fit-content;
+}
+.feature-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.5);
+  flex-shrink: 0;
+}
+.feature-pill span {
+  font-size: 12.5px;
+  color: rgba(255,255,255,0.6);
+  font-weight: 400;
+  letter-spacing: 0.1px;
+}
+
+/* ─── Right panel ─── */
+.panel-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: var(--bg);
+}
+
+.login-box {
+  width: 100%;
+  max-width: 400px;
+  animation: fadeUp 0.4s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.login-box-header {
+  margin-bottom: 36px;
+}
+.login-box-header h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: -0.3px;
+  margin-bottom: 8px;
+}
+.login-box-header p {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ─── Form ─── */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.form-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.input-wrap {
+  position: relative;
+}
+.input-wrap svg {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-placeholder);
+  pointer-events: none;
+  transition: color 0.15s;
+  width: 15px; height: 15px;
+}
+.input-wrap input {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  padding: 11px 14px 11px 40px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  width: 100%;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  appearance: none;
+}
+.input-wrap input::placeholder { color: var(--text-placeholder); }
+.input-wrap input:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(26,26,26,0.07);
+}
+.input-wrap input:focus + svg,
+.input-wrap:focus-within svg { color: var(--text-muted); }
+
+/* Password toggle */
+.pw-toggle {
+  position: absolute;
+  right: 12px; top: 50%;
+  transform: translateY(-50%);
+  background: none; border: none;
+  cursor: pointer;
+  color: var(--text-placeholder);
+  padding: 4px;
+  display: flex; align-items: center;
+  transition: color 0.15s;
+}
+.pw-toggle:hover { color: var(--text-muted); }
+
+/* ─── Error message ─── */
+.error-box {
+  display: none;
+  background: var(--danger-light);
+  border: 1px solid rgba(179,58,58,0.2);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: var(--danger);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  animation: fadeIn 0.2s ease;
+}
+.error-box.hidden { display: none !important; }
+.error-box svg { flex-shrink: 0; margin-top: 1px; width: 15px; height: 15px; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Submit button ─── */
+.btn-submit {
+  width: 100%;
+  padding: 12px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.15s, transform 0.1s;
+  margin-top: 8px;
+  letter-spacing: 0.1px;
+}
+.btn-submit:hover:not(:disabled) { background: #333; }
+.btn-submit:active:not(:disabled) { transform: scale(0.99); }
+.btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── Footer note ─── */
+.login-footer {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* ─── Success overlay ─── */
+.success-overlay {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 16px;
+  animation: fadeUp 0.35s ease both;
+}
+.success-overlay.visible { display: flex; }
+.success-icon {
+  width: 56px; height: 56px;
+  background: var(--success-light);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+.success-icon svg { color: var(--success); width: 26px; height: 26px; }
+.success-overlay h4 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px;
+  font-weight: 400;
+}
+.success-overlay p { font-size: 13.5px; color: var(--text-muted); }
+.redirect-bar {
+  width: 200px; height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+.redirect-bar-fill {
+  height: 100%;
+  background: var(--success);
+  border-radius: 2px;
+  width: 0%;
+  transition: width 1.8s linear;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  body { grid-template-columns: 1fr; }
+  .panel-left { display: none; }
+  .panel-right { padding: 32px 24px; align-items: flex-start; padding-top: 60px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─── Left decorative panel ─── -->
+<div class="panel-left">
+  <div class="panel-brand">
+    <h1>StayAdmin</h1>
+    <span>HOST PORTAL</span>
+  </div>
+
+  <div class="panel-copy">
+    <h2>Manage your<br>properties <em>with ease.</em></h2>
+    <p>List your hotel, set up room types, upload photos and publish your property — all from one place.</p>
+  </div>
+
+  <div class="panel-features">
+    <div class="feature-pill"><div class="feature-dot"></div><span>Multi-step hotel onboarding</span></div>
+    <div class="feature-pill"><div class="feature-dot"></div><span>Room type &amp; facility management</span></div>
+    <div class="feature-pill"><div class="feature-dot"></div><span>Photo uploads via Supabase Storage</span></div>
+    <div class="feature-pill"><div class="feature-dot"></div><span>Province / district / ward address lookup</span></div>
+  </div>
+</div>
+
+<!-- ─── Right login panel ─── -->
+<div class="panel-right">
+  <div class="login-box">
+
+    <!-- Login form -->
+    <div id="login-form-wrap">
+      <div class="login-box-header">
+        <h3>Welcome back</h3>
+        <p>Sign in to your host account to continue.</p>
+      </div>
+
+      <!-- Error box -->
+      <div class="error-box hidden" id="error-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <span id="error-msg">Invalid email or password.</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="email">Email address</label>
+        <div class="input-wrap">
+          <input
+            type="email" id="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            onkeydown="if(event.key==='Enter') focusPassword()"
+          />
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <div class="input-wrap">
+          <input
+            type="password" id="password"
+            placeholder="••••••••"
+            autocomplete="current-password"
+            onkeydown="if(event.key==='Enter') handleLogin()"
+          />
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <button class="pw-toggle" type="button" onclick="togglePassword()" title="Show/hide password" id="pw-toggle-btn">
+            <svg id="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <button class="btn-submit" id="login-btn" onclick="handleLogin()">
+        Sign in
+      </button>
+
+      <div class="login-footer">
+        Contact your administrator if you don't have an account.<br>
+        Hosted on <strong>Supabase</strong> · JWT auth
+      </div>
+    </div>
+
+    <!-- Success state -->
+    <div class="success-overlay" id="success-overlay">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <h4>Signed in!</h4>
+      <p>Redirecting to the host portal…</p>
+      <div class="redirect-bar"><div class="redirect-bar-fill" id="redirect-bar-fill"></div></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ─── Config ───────────────────────────────────────────────────────────────
+const SUPABASE_URL  = 'https://tjsycqpwxutseencwlzr.supabase.co/';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqc3ljcXB3eHV0c2VlbmN3bHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5OTMyNjYsImV4cCI6MjA4OTU2OTI2Nn0.8wEuX9k4m1LaIHd6TONec7L9VByuF1aTzAxkmp6sgzs';
+
+// ─── Redirect target ──────────────────────────────────────────────────────
+// Change this to the actual path of your portal page
+const PORTAL_PAGE = 'host-add-hotel.html';
+
+// ─── Session keys ─────────────────────────────────────────────────────────
+const SESSION_KEY = 'sb_session';   // stores the full Supabase session object
+
+// ─── On load: skip login if already have a valid session ──────────────────
+(function checkExistingSession() {
+  try {
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    if (!raw) return;
+    const session = JSON.parse(raw);
+    const expiresAt = session?.expires_at; // unix seconds
+    if (expiresAt && Date.now() / 1000 < expiresAt - 60) {
+      // Token still valid — go straight to portal
+      window.location.href = PORTAL_PAGE;
+    }
+  } catch (_) { /* ignore parse errors */ }
+})();
+
+// ─── Helpers ──────────────────────────────────────────────────────────────
+function showError(msg) {
+  const box = document.getElementById('error-box');
+  document.getElementById('error-msg').textContent = msg;
+  box.classList.remove('hidden');
+}
+function hideError() {
+  document.getElementById('error-box').classList.add('hidden');
+}
+
+function focusPassword() {
+  document.getElementById('password').focus();
+}
+
+function togglePassword() {
+  const input = document.getElementById('password');
+  const isHidden = input.type === 'password';
+  input.type = isHidden ? 'text' : 'password';
+  document.getElementById('eye-icon').innerHTML = isHidden
+    ? // eye-off
+      '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>' +
+      '<path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>' +
+      '<line x1="1" y1="1" x2="23" y2="23"/>'
+    : // eye
+      '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+}
+
+function setLoading(on) {
+  const btn = document.getElementById('login-btn');
+  btn.disabled = on;
+  btn.innerHTML = on
+    ? '<div class="spinner"></div> Signing in…'
+    : 'Sign in';
+}
+
+function showSuccess() {
+  document.getElementById('login-form-wrap').style.display = 'none';
+  const overlay = document.getElementById('success-overlay');
+  overlay.classList.add('visible');
+  // Animate progress bar then redirect
+  requestAnimationFrame(() => {
+    document.getElementById('redirect-bar-fill').style.width = '100%';
+  });
+  setTimeout(() => { window.location.href = PORTAL_PAGE; }, 1900);
+}
+
+// ─── Login ────────────────────────────────────────────────────────────────
+async function handleLogin() {
+  hideError();
+  const email    = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+
+  if (!email)    { showError('Please enter your email address.'); return; }
+  if (!password) { showError('Please enter your password.'); return; }
+  if (!email.includes('@')) { showError('Please enter a valid email address.'); return; }
+
+  setLoading(true);
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON,
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      // Supabase auth error messages
+      const msg = data?.error_description || data?.message || data?.error || 'Sign in failed.';
+      // Normalise common messages to be friendlier
+      if (msg.toLowerCase().includes('invalid login')) {
+        showError('Incorrect email or password. Please try again.');
+      } else if (msg.toLowerCase().includes('email not confirmed')) {
+        showError('Please confirm your email address before signing in.');
+      } else if (msg.toLowerCase().includes('too many')) {
+        showError('Too many attempts. Please wait a moment and try again.');
+      } else {
+        showError(msg);
+      }
+      setLoading(false);
+      return;
+    }
+
+    // ── Success: persist session ─────────────────────────────────────────
+    // data = { access_token, refresh_token, expires_in, expires_at, token_type, user }
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(data));
+
+    showSuccess();
+
+  } catch (e) {
+    console.error('Login error:', e);
+    showError('Network error. Check your connection and try again.');
+    setLoading(false);
+  }
+}
+</script>
+</body>
+</html>
