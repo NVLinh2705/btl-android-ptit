@@ -2,7 +2,13 @@ package com.btl_ptit.hotelbooking.data.dto;
 
 import com.google.gson.annotations.SerializedName;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class LoginResponse {
     @SerializedName("access_token")
     private String accessToken;
@@ -16,22 +22,9 @@ public class LoginResponse {
     @SerializedName("user")
     private SupabaseUser user;
 
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
-    public long getExpiresIn() {
-        return expiresIn;
-    }
-
-    public SupabaseUser getUser() {
-        return user;
-    }
-
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class SupabaseUser {
         @SerializedName("id")
         private String id;
@@ -42,19 +35,11 @@ public class LoginResponse {
         @SerializedName("user_metadata")
         private UserMetadata userMetadata;
 
-        public String getId() {
-            return id;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public UserMetadata getUserMetadata() {
-            return userMetadata;
-        }
     }
 
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class UserMetadata {
         // Common Supabase metadata keys (can differ based on provider)
         @SerializedName("full_name")

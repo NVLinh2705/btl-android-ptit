@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    RoomTypeDetailActivity layout.
+    Structure:
+      CoordinatorLayout
+        AppBarLayout (collapsing, image behind toolbar)
+          CollapsingToolbarLayout
+            ViewPager2 (photo gallery)
+            MaterialToolbar
+        NestedScrollView
+          - Room name + rating badge
+          - Policy rows
+          - Select button + last-room warning
+          - Room size section
+          - Facilities section ("Great for your stay")
+-->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface">
+
+    <!-- ── Collapsing image header ─────────────────────────────────────── -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:fitsSystemWindows="true">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsingToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:contentScrim="?attr/colorSurface"
+            app:titleEnabled="false">
+
+            <!-- Photo ViewPager2 -->
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPagerImages"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.7" />
+
+            <!-- Rating badge overlay (top-left) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|start"
+                android:layout_margin="12dp"
+                app:cardBackgroundColor="#CC000000"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="0dp"
+                app:layout_collapseMode="parallax"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvRatingBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="5dp"
+                    android:text="8.8 Super comfy"
+                    android:textColor="#FFFFFF"
+                    android:textAppearance="?attr/textAppearanceLabelMedium"
+                    android:textStyle="bold" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Dot indicators for ViewPager2 -->
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabDots"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="12dp"
+                app:layout_collapseMode="parallax"
+                app:tabBackground="@drawable/tab_indicator_dot"
+                app:tabGravity="center"
+                app:tabIndicatorHeight="0dp"
+                app:tabPaddingStart="4dp"
+                app:tabPaddingEnd="4dp" />
+
+            <!-- Toolbar on top of image -->
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:navigationIcon="@drawable/ic_arrow_back"
+                app:menu="@menu/menu_room_detail"
+                app:navigationIconTint="@android:color/white"
+                android:background="@android:color/transparent" />
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- ── Scrollable content ─────────────────────────────────────────── -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- ── Room name ─────────────────────────────────────────── -->
+            <TextView
+                android:id="@+id/tvRoomName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="20dp"
+                android:text="Standard Double Room"
+                android:textAppearance="?attr/textAppearanceTitleLarge"
+                android:textStyle="bold"
+                android:textColor="?attr/colorOnSurface" />
+
+            <!-- Subtitle: date range passed from list screen -->
+            <TextView
+                android:id="@+id/tvDateRange"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="2dp"
+                android:text="29 Mar - 30 Mar"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:visibility="gone" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="14dp" />
+
+            <!-- ── Policy rows ───────────────────────────────────────── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="4dp">
+
+                <!-- Price for N adults -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_person"
+                        android:contentDescription="@null"
+                        app:tint="?attr/colorOnSurfaceVariant" />
+
+                    <TextView
+                        android:id="@+id/tvGuests"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="Price for 2 adults"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?attr/colorOnSurface" />
+                </LinearLayout>
+
+                <!-- Cancellation policy -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_cancellation"
+                        android:contentDescription="@null"
+                        app:tint="?attr/colorOnSurfaceVariant" />
+
+                    <TextView
+                        android:id="@+id/tvCancellation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="Total cost to cancel"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textStyle="bold"
+                        android:textColor="?attr/colorOnSurface" />
+                </LinearLayout>
+
+                <!-- No prepayment -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_payment"
+                        android:contentDescription="@null"
+                        app:tint="?attr/colorOnSurfaceVariant" />
+
+                    <TextView
+                        android:id="@+id/tvPrepayment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?attr/colorOnSurface" />
+                </LinearLayout>
+
+                <!-- No credit card -->
+                <LinearLayout
+                    android:id="@+id/layoutNoCard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_credit_card_off"
+                        android:contentDescription="@null"
+                        app:tint="?attr/colorTertiary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="@string/no_credit_card_needed"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textStyle="bold"
+                        android:textColor="?attr/colorTertiary" />
+                </LinearLayout>
+
+                <!-- View booking conditions link -->
+                <TextView
+                    android:id="@+id/tvBookingConditions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/view_booking_conditions"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorPrimary"
+                    android:paddingVertical="4dp" />
+
+            </LinearLayout>
+
+            <!-- ── Pricing ───────────────────────────────────────────── -->
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="1dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/price_for_1_night"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="4dp">
+
+                    <TextView
+                        android:id="@+id/tvOriginalPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/tvPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:textAppearance="?attr/textAppearanceTitleLarge"
+                        android:textStyle="bold"
+                        android:textColor="?attr/colorOnSurface" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/includes_taxes"
+                    android:textAppearance="?attr/textAppearanceLabelSmall"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:layout_marginTop="2dp" />
+
+                <!-- Select button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSelect"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="14dp"
+                    android:text="@string/select"
+                    app:cornerRadius="8dp" />
+
+                <!-- Last room warning -->
+                <LinearLayout
+                    android:id="@+id/layoutLastRoom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:background="@drawable/bg_dot_red" />
+
+                    <TextView
+                        android:id="@+id/tvLastRoom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:textAppearance="?attr/textAppearanceLabelLarge"
+                        android:textStyle="bold"
+                        android:textColor="@color/red_700" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- ── Room size ─────────────────────────────────────────── -->
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="1dp" />
+
+            <LinearLayout
+                android:id="@+id/layoutRoomSize"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="16dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvRoomSize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Room size: 20 m²"
+                    android:textAppearance="?attr/textAppearanceTitleSmall"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorOnSurface" />
+
+            </LinearLayout>
+
+            <!-- ── Facilities section ────────────────────────────────── -->
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="1dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="32dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/great_for_your_stay"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorOnSurface"
+                    android:layout_marginBottom="14dp" />
+
+                <!-- 2-column grid of facilities -->
+                <com.google.android.flexbox.FlexboxLayout
+                    android:id="@+id/flexFacilities"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:flexWrap="wrap"
+                    app:flexDirection="row"
+                    app:justifyContent="flex_start"
+                    app:alignItems="center" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

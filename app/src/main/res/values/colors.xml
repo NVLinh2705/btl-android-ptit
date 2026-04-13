@@ -154,4 +154,10 @@
     <color name="colorOnOutlineContainer_highContrast">#FFFFFF</color>
     <color name="backgroundColor">#FAFAFA</color>
     <color name="color_likedHeartIcon">#BC2457</color>
+    <!-- Used for "We have N left" and the red dot warning -->
+    <color name="red_700">#C62828</color>
+
+    <!-- Used for free-cancellation text -->
+    <color name="green_700">#2E7D32</color>
+    <color name="bright_blue">#1E88E5</color>
 </resources>

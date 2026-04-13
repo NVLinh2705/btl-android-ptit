@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Used as app:tabBackground on the TabLayout dot row in the detail screen.
+    Selected tab = white filled circle, unselected = white semi-transparent circle.
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_selected="true">
+        <shape android:shape="oval">
+            <solid android:color="#FFFFFFFF" />
+            <size android:width="8dp" android:height="8dp" />
+        </shape>
+    </item>
+
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#80FFFFFF" />
+            <size android:width="6dp" android:height="6dp" />
+        </shape>
+    </item>
+
+</selector>

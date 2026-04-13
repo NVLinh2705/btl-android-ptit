@@ -11,9 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.btl_ptit.hotelbooking.R;
 import com.btl_ptit.hotelbooking.databinding.FragmentHomeBinding;
-import com.btl_ptit.hotelbooking.view.activity.HotelDetailActivity;
+import com.btl_ptit.hotelbooking.view.activity.HotelInfoActivity;
 import com.google.android.material.appbar.AppBarLayout;
 
 
@@ -58,7 +57,7 @@ public class HomeFragment extends Fragment {
         });
 
         mFragmentHomeBinding.btn.setOnClickListener(v -> {
-            Intent intent = new Intent(mContext, HotelDetailActivity.class);
+            Intent intent = new Intent(mContext, HotelInfoActivity.class);
             startActivity(intent);
         });
         return view;

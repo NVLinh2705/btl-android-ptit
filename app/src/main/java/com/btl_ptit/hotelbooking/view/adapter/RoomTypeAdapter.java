@@ -1,0 +1,203 @@
+package com.btl_ptit.hotelbooking.view.adapter;
+
+import android.content.Context;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
+import android.graphics.Typeface;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.android.flexbox.FlexboxLayout;
+import com.btl_ptit.hotelbooking.R;
+import com.btl_ptit.hotelbooking.data.model.Facility;
+import com.btl_ptit.hotelbooking.data.model.RoomType;
+
+import java.text.NumberFormat;
+import java.util.List;
+import java.util.Locale;
+
+public class RoomTypeAdapter extends RecyclerView.Adapter<RoomTypeAdapter.RoomTypeViewHolder> {
+
+    public interface OnRoomSelectedListener {
+        void onRoomSelected(RoomType roomType);
+    }
+
+    private final List<RoomType> roomTypes;
+    private final Context context;
+    private final OnRoomSelectedListener listener;
+    private final NumberFormat currencyFormat;
+
+    public RoomTypeAdapter(Context context, List<RoomType> roomTypes, OnRoomSelectedListener listener) {
+        this.context = context;
+        this.roomTypes = roomTypes;
+        this.listener = listener;
+        this.currencyFormat = NumberFormat.getNumberInstance(new Locale("vi", "VN"));
+    }
+
+    @NonNull
+    @Override
+    public RoomTypeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_room_type, parent, false);
+        return new RoomTypeViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RoomTypeViewHolder holder, int position) {
+        holder.bind(roomTypes.get(position));
+    }
+
+    @Override
+    public int getItemCount() { return roomTypes.size(); }
+
+    // ── ViewHolder ────────────────────────────────────────────────────────
+
+    class RoomTypeViewHolder extends RecyclerView.ViewHolder {
+        TextView tvRoomName, tvBedInfo, tvArea, tvGuests,
+                 tvCancellation, tvPrepayment, tvPrice,
+                 tvOriginalPrice, tvLastRoom;
+        ImageView ivThumbnail;
+        FlexboxLayout flexFacilities;
+        View layoutArea, layoutLastRoom;
+        com.google.android.material.button.MaterialButton btnSelect;
+
+        RoomTypeViewHolder(@NonNull View itemView) {
+            super(itemView);
+            tvRoomName      = itemView.findViewById(R.id.tvRoomName);
+            tvBedInfo       = itemView.findViewById(R.id.tvBedInfo);
+            tvArea          = itemView.findViewById(R.id.tvArea);
+            layoutArea      = itemView.findViewById(R.id.layoutArea);
+            tvGuests        = itemView.findViewById(R.id.tvGuests);
+            tvCancellation  = itemView.findViewById(R.id.tvCancellation);
+            tvPrepayment    = itemView.findViewById(R.id.tvPrepayment);
+            tvPrice         = itemView.findViewById(R.id.tvPrice);
+            tvOriginalPrice = itemView.findViewById(R.id.tvOriginalPrice);
+            tvLastRoom      = itemView.findViewById(R.id.tvLastRoom);
+            layoutLastRoom  = itemView.findViewById(R.id.layoutLastRoom);
+            ivThumbnail     = itemView.findViewById(R.id.ivThumbnail);
+            flexFacilities  = itemView.findViewById(R.id.flexFacilities);
+            btnSelect       = itemView.findViewById(R.id.btnSelect);
+        }
+
+        void bind(RoomType room) {
+            // ── Name ─────────────────────────────────────────────────
+            tvRoomName.setText(room.getName());
+
+            // ── Bed info ─────────────────────────────────────────────
+            tvBedInfo.setText(room.getBedSummary());
+
+            // ── Area ─────────────────────────────────────────────────
+            if (room.getArea() != null) {
+                tvArea.setText(room.getAreaLabel());
+                layoutArea.setVisibility(View.VISIBLE);
+            } else {
+                layoutArea.setVisibility(View.GONE);
+            }
+
+            // ── Thumbnail ─────────────────────────────────────────────
+            List<String> images = room.getImageUrls();
+            if (images != null && !images.isEmpty()) {
+                Glide.with(context)
+                        .load(images.get(0))
+                        .apply(new RequestOptions()
+                                .transform(new RoundedCorners(12))
+                                .placeholder(R.drawable.placeholder_room)
+                                .error(R.drawable.placeholder_room))
+                        .into(ivThumbnail);
+            } else {
+                ivThumbnail.setImageResource(R.drawable.placeholder_room);
+            }
+
+            // ── Facilities ────────────────────────────────────────────
+            populateFacilities(flexFacilities, room.getFacilities(), 6 /* max shown in list */);
+
+            // ── Guests ───────────────────────────────────────────────
+            tvGuests.setText(context.getString(R.string.price_for_n_adults, room.getMaxGuests()));
+
+            // ── Cancellation label ────────────────────────────────────
+            if (room.isHasFreeCancellation()) {
+                tvCancellation.setText(R.string.free_cancellation);
+                tvCancellation.setTextColor(context.getColor(R.color.green_700));
+            } else {
+                tvCancellation.setText(R.string.total_cost_to_cancel);
+                tvCancellation.setTextColor(context.getColor(android.R.color.black));
+            }
+
+            // ── Prepayment ────────────────────────────────────────────
+            String noPrep = context.getString(R.string.no_prepayment_needed);
+            String rest   = context.getString(R.string.pay_at_property);
+            SpannableString ss = new SpannableString(noPrep + rest);
+            ss.setSpan(new StyleSpan(Typeface.BOLD), 0, noPrep.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            tvPrepayment.setText(ss);
+
+            // ── Price ─────────────────────────────────────────────────
+            String formattedPrice = "VND " + currencyFormat.format((long) room.getBasePricePerNight());
+            tvPrice.setText(formattedPrice);
+            tvOriginalPrice.setVisibility(View.GONE); // set visible + text if discounted
+
+            // ── Last room warning ─────────────────────────────────────
+            if (room.isLastRoom()) {
+                layoutLastRoom.setVisibility(View.VISIBLE);
+                tvLastRoom.setText(R.string.we_have_1_left);
+            } else if (room.getQuantity() > 0 && room.getQuantity() <= 3) {
+                layoutLastRoom.setVisibility(View.VISIBLE);
+                tvLastRoom.setText(context.getString(R.string.we_have_n_left, room.getQuantity()));
+            } else {
+                layoutLastRoom.setVisibility(View.GONE);
+            }
+
+            // ── Select click ──────────────────────────────────────────
+            btnSelect.setOnClickListener(v -> {
+                if (listener != null) listener.onRoomSelected(room);
+            });
+            itemView.setOnClickListener(v -> {
+                if (listener != null) listener.onRoomSelected(room);
+            });
+        }
+    }
+
+    // ── Helpers ───────────────────────────────────────────────────────────
+
+    /**
+     * Inflates facility icon+label rows into a FlexboxLayout.
+     * @param maxItems max number to show; pass Integer.MAX_VALUE to show all.
+     */
+    public void populateFacilities(FlexboxLayout flex, List<Facility> facilities, int maxItems) {
+        flex.removeAllViews();
+        if (facilities == null || facilities.isEmpty()) return;
+
+        LayoutInflater inflater = LayoutInflater.from(context);
+        int count = Math.min(facilities.size(), maxItems);
+
+        for (int i = 0; i < count; i++) {
+            Facility fac = facilities.get(i);
+            View chip = inflater.inflate(R.layout.item_facility_chip, flex, false);
+
+            ImageView icon = chip.findViewById(R.id.imgIcon);
+            TextView  name = chip.findViewById(R.id.txtName);
+
+            // Resolve drawable by name
+            int resId = context.getResources().getIdentifier(
+                    fac.getIconResName(), "drawable", context.getPackageName());
+            if (resId != 0) icon.setImageResource(resId);
+            else            icon.setImageResource(R.drawable.ic_facility_default);
+
+            name.setText(fac.getName());
+            flex.addView(chip);
+        }
+    }
+
+    // ── Format price ──────────────────────────────────────────────────────
+    private String formatPrice(double price) {
+        return "VND " + currencyFormat.format((long) price);
+    }
+}

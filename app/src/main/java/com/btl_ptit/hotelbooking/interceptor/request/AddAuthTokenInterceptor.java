@@ -35,15 +35,23 @@ public class AddAuthTokenInterceptor implements Interceptor {
         // 1. Lấy Header Authorization mà truyền từ LoginActivity (@Header), nếu ko có thì gọi từ sharedPreferences
         String authHeader = original.header("Authorization");
         if (authHeader != null && !authHeader.trim().isEmpty()) {
-            requestWithToken.header("Authorization", authHeader);
+            requestWithToken.header("Authorization", normalizeBearerToken(authHeader));
         } else {
             String accessToken = this.sharedPreferences.getString(Constants.KEY_ACCESS_TOKEN, null);
             if (accessToken != null && !accessToken.trim().isEmpty()) {
-                requestWithToken.header("Authorization", accessToken);
+                requestWithToken.header("Authorization", normalizeBearerToken(accessToken));
             }
         }
 
         return chain.proceed(requestWithToken.build());
+    }
+
+    private String normalizeBearerToken(String tokenOrHeader) {
+        String value = tokenOrHeader.trim();
+        if (value.regionMatches(true, 0, "Bearer ", 0, 7)) {
+            return "Bearer " + value.substring(7).trim();
+        }
+        return "Bearer " + value;
     }
 
 }

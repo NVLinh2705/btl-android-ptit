@@ -81,4 +81,9 @@
         <item name="fontFamily">@font/plus_jakarta</item>
         <item name="android:fontFamily">@font/plus_jakarta</item>
     </style>
+    <!-- Rounded thumbnail corners (used on ShapeableImageView in item_room_type) -->
+    <style name="ShapeAppearance.RoomThumbnail" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
 </resources>
