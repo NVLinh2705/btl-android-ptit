@@ -80,4 +80,5 @@ dependencies {
     implementation libs.rxandroid
 
     implementation libs.shimmer
+    implementation "com.google.android.gms:play-services-maps:18.2.0"
 }

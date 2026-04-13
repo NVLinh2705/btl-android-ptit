@@ -59,9 +59,10 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "Forgot Password clicked", Toast.LENGTH_SHORT).show()
         );
 
-        binding.tvRegisterPrompt.setOnClickListener(v ->
-            Toast.makeText(this, "Register clicked", Toast.LENGTH_SHORT).show()
-        );
+        binding.tvRegisterPrompt.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+            startActivity(intent);
+        });
 
         binding.btnGoogleLogin.setOnClickListener(v ->
             Toast.makeText(this, "Google Login clicked", Toast.LENGTH_SHORT).show()
@@ -98,7 +99,13 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (!response.isSuccessful() || response.body() == null) {
-                    Toast.makeText(LoginActivity.this, "Login Failed: Check credentials", Toast.LENGTH_SHORT).show();
+                    try {
+                        String errorBody = response.errorBody().string();
+                        Toast.makeText(LoginActivity.this, "Error: " + errorBody, Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+//                    Toast.makeText(LoginActivity.this, "Login Failed: Check credentials", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
