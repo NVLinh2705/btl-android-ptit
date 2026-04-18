@@ -13,29 +13,43 @@
     <string name="see_all"><u>See All</u></string>
 
     <!-- Activity titles -->
-    <string name="choose_your_stay">Choose your stay</string>
+    <string name="choose_your_stay">Chọn phòng</string>
     <string name="room_information">Room information</string>
 
     <!-- Room card -->
-    <string name="room_image_desc">Room photo</string>
-    <string name="price_for_1_night">Price for 1 night</string>
-    <string name="price_for_n_adults">Price for %d adults</string>
-    <string name="includes_taxes">Includes taxes and charges</string>
-    <string name="select">Select</string>
-    <string name="no_rooms_available">No rooms available</string>
+    <string name="room_image_desc">Ảnh phòng</string>
+    <string name="price_for_1_night">Giá cho 1 đêm</string>
+    <string name="price_for_n_adults">Cho %d khách</string>
+    <string name="price_for_n_adults_nights">Giá cho %1$d khách · %2$d đêm: %3$s</string>
+    <string name="price_for_n_nights">Giá cho %1$d đêm: %2$s</string>
+    <string name="includes_taxes">Đã bao gồm thuế và phí</string>
+    <string name="select">Chọn</string>
+    <string name="book_now">Đặt ngay</string>
+    <string name="no_rooms_available">Không còn phòng phù hợp</string>
+    <string name="choose_room_quantity">Chọn số lượng phòng</string>
+    <string name="room_quantity_available">Còn tối đa %1$d phòng</string>
+    <string name="confirm_select">Xác nhận chọn</string>
+    <string name="selected_room_button">Đã chọn: %1$d phòng</string>
+    <string name="decrease_quantity">Giảm số lượng</string>
+    <string name="increase_quantity">Tăng số lượng</string>
+    <string name="no_room_reviews">Chưa có đánh giá nào cho phòng này</string>
 
     <!-- Policy labels -->
-    <string name="total_cost_to_cancel">Total cost to cancel</string>
-    <string name="free_cancellation">Free cancellation</string>
+    <string name="total_cost_to_cancel">Chi phí hủy phòng áp dụng theo chính sách</string>
+    <string name="free_cancellation">Miễn phí hủy phòng</string>
     <!-- Note: use SpannableString in code to make "No prepayment needed" bold -->
-    <string name="no_prepayment_needed">No prepayment needed</string>
-    <string name="pay_at_property"> – pay at the property</string>
-    <string name="no_credit_card_needed">No credit card needed</string>
-    <string name="view_booking_conditions">View booking conditions</string>
+    <string name="no_prepayment_needed">Không cần thanh toán trước</string>
+    <string name="pay_at_property"> - thanh toán tại nơi lưu trú</string>
+    <string name="no_credit_card_needed">Không cần thẻ tín dụng</string>
+    <string name="view_booking_conditions">Xem điều kiện đặt phòng</string>
 
     <!-- Last room warning -->
-    <string name="we_have_1_left">We have 1 left</string>
-    <string name="we_have_n_left">We have %d left</string>
+    <string name="we_have_1_left">Chỉ còn 1 phòng</string>
+    <string name="we_have_n_left">Còn lại %d phòng</string>
+    <string name="selected_room_bed_summary">%1$d phòng • %2$d giường</string>
+
+    <string name="error_load_room_types">Không tải được danh sách phòng</string>
+    <string name="error_network">Lỗi kết nối mạng</string>
 
     <!-- Detail screen -->
     <string name="great_for_your_stay">Great for your stay</string>

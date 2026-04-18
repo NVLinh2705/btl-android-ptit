@@ -1,9 +1,10 @@
 package com.btl_ptit.hotelbooking.view.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import com.btl_ptit.hotelbooking.R;
 import com.btl_ptit.hotelbooking.data.dto.HotelImage;
 import com.btl_ptit.hotelbooking.data.dto.HotelResponse;
 import com.btl_ptit.hotelbooking.data.dto.LikeHotelRequest;
+import com.btl_ptit.hotelbooking.data.session.RoomSelectionStore;
 import com.btl_ptit.hotelbooking.data.remote.SupabaseClient;
 import com.btl_ptit.hotelbooking.data.remote.api_services.SupabaseRestService;
 import com.btl_ptit.hotelbooking.databinding.ActivityHotelInfoBinding;
@@ -36,6 +38,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 
 import java.util.List;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
 import retrofit2.Call;
@@ -56,6 +60,8 @@ public class HotelInfoActivity extends AppCompatActivity implements OnMapReadyCa
     private SupabaseRestService restService;
 
     private LinearLayout emptyState;
+    private final DateTimeFormatter apiDateFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
+    private final DateTimeFormatter displayDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +73,7 @@ public class HotelInfoActivity extends AppCompatActivity implements OnMapReadyCa
 
         setupToolbar();
         setupMap();
+        setupBottomCta();
         fetchHotelDataAsync(3);
     }
 
@@ -251,9 +258,7 @@ public class HotelInfoActivity extends AppCompatActivity implements OnMapReadyCa
         return super.onCreateOptionsMenu(menu);
     }
     private void setupImageSlider() {
-        ViewPager2 pagerImages =    b.pagerImages;
-        ImageButton btnPrev = b.btnPrev;
-        ImageButton btnNext = b.btnNext;
+        ViewPager2 pagerImages = b.pagerImages;
 
         HotelImagePagerAdapter adapter = new HotelImagePagerAdapter();
         pagerImages.setAdapter(adapter);
@@ -268,17 +273,47 @@ public class HotelInfoActivity extends AppCompatActivity implements OnMapReadyCa
 
         adapter.submitList(imageUrls);
 
-        btnPrev.setOnClickListener(v -> {
-            int current = pagerImages.getCurrentItem();
-            if (current > 0) pagerImages.setCurrentItem(current - 1, true);
-        });
+        int dotCount = Math.min(6, imageUrls == null ? 0 : imageUrls.size());
+        setupImageDots(b.layoutImageDots, dotCount);
+        updateImageDots(0, imageUrls == null ? 0 : imageUrls.size(), dotCount);
 
-        btnNext.setOnClickListener(v -> {
-            int current = pagerImages.getCurrentItem();
-            RecyclerView.Adapter<?> a = pagerImages.getAdapter();
-            int count = a != null ? a.getItemCount() : 0;
-            if (current < count - 1) pagerImages.setCurrentItem(current + 1, true);
+        pagerImages.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                updateImageDots(position, imageUrls == null ? 0 : imageUrls.size(), dotCount);
+            }
         });
+    }
+
+    private void setupImageDots(LinearLayout container, int dotCount) {
+        container.removeAllViews();
+        for (int i = 0; i < dotCount; i++) {
+            android.view.View dot = new android.view.View(this);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(dpToPx(6), dpToPx(6));
+            lp.setMargins(dpToPx(3), 0, dpToPx(3), 0);
+            dot.setLayoutParams(lp);
+            dot.setBackgroundResource(R.drawable.tab_indicator_dot);
+            container.addView(dot);
+        }
+        container.setVisibility(dotCount > 1 ? android.view.View.VISIBLE : android.view.View.GONE);
+    }
+
+    private void updateImageDots(int position, int imageCount, int dotCount) {
+        if (dotCount <= 0) return;
+        int activeIndex = imageCount <= dotCount
+                ? position
+                : Math.min(dotCount - 1, position * dotCount / imageCount);
+        for (int i = 0; i < b.layoutImageDots.getChildCount(); i++) {
+            b.layoutImageDots.getChildAt(i).setSelected(i == activeIndex);
+        }
+    }
+
+    private int dpToPx(int dp) {
+        return (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                dp,
+                getResources().getDisplayMetrics()
+        );
     }
 
     private void setupFacilities() {
@@ -327,6 +362,46 @@ public class HotelInfoActivity extends AppCompatActivity implements OnMapReadyCa
 
         adapter.submitList(hotelResponse != null ? hotelResponse.getPolicies() : null);
     }
+
+    private void setupBottomCta() {
+        b.btnSelectRoom.setOnClickListener(v -> {
+            if (hotelResponse == null) return;
+
+            LocalDate today = LocalDate.now();
+            String checkinDate = getIntent().getStringExtra(ListRoomTypeActivity.EXTRA_CHECKIN_DATE);
+            String checkoutDate = getIntent().getStringExtra(ListRoomTypeActivity.EXTRA_CHECKOUT_DATE);
+
+            if (checkinDate == null || checkinDate.trim().isEmpty()) {
+                checkinDate = today.format(apiDateFormatter);
+            }
+            if (checkoutDate == null || checkoutDate.trim().isEmpty()) {
+                checkoutDate = today.plusDays(1).format(apiDateFormatter);
+            }
+
+            Intent intent = new Intent(this, ListRoomTypeActivity.class);
+            intent.putExtra(ListRoomTypeActivity.EXTRA_HOTEL_ID, hotelResponse.getId());
+            intent.putExtra(ListRoomTypeActivity.EXTRA_CHECKIN_DATE, checkinDate);
+            intent.putExtra(ListRoomTypeActivity.EXTRA_CHECKOUT_DATE, checkoutDate);
+            intent.putExtra(ListRoomTypeActivity.EXTRA_CHECKIN, formatDisplayDate(checkinDate));
+            intent.putExtra(ListRoomTypeActivity.EXTRA_CHECKOUT, formatDisplayDate(checkoutDate));
+            intent.putExtra(ListRoomTypeActivity.EXTRA_ROOM_QUANTITY,
+                    getIntent().getIntExtra(ListRoomTypeActivity.EXTRA_ROOM_QUANTITY, 1));
+            intent.putExtra(ListRoomTypeActivity.EXTRA_ADULTS,
+                    getIntent().getIntExtra(ListRoomTypeActivity.EXTRA_ADULTS, 2));
+            intent.putExtra(ListRoomTypeActivity.EXTRA_CHILDREN,
+                    getIntent().getIntExtra(ListRoomTypeActivity.EXTRA_CHILDREN, 0));
+            startActivity(intent);
+        });
+    }
+
+    private String formatDisplayDate(String apiDate) {
+        try {
+            return LocalDate.parse(apiDate, apiDateFormatter).format(displayDateFormatter);
+        } catch (Exception ignore) {
+            return apiDate;
+        }
+    }
+
     @Override
     public void onMapReady(GoogleMap map) {
         this.googleMap = map;
@@ -348,6 +423,14 @@ public class HotelInfoActivity extends AppCompatActivity implements OnMapReadyCa
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (isFinishing()) {
+            RoomSelectionStore.clear();
+        }
     }
 }
 

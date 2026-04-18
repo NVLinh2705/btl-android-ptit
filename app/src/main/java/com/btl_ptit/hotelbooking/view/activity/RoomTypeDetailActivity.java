@@ -1,227 +1,412 @@
 package com.btl_ptit.hotelbooking.view.activity;
 
 import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
-import com.btl_ptit.hotelbooking.R;
-
-import android.content.Intent;
-import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.style.StyleSpan;
-import android.graphics.Typeface;
-import android.graphics.Paint;
+import android.text.style.RelativeSizeSpan;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
-import com.google.android.flexbox.FlexboxLayout;
 import com.btl_ptit.hotelbooking.R;
-import com.btl_ptit.hotelbooking.view.adapter.RoomImagePagerAdapter;
-import com.btl_ptit.hotelbooking.view.adapter.RoomTypeAdapter;
+import com.btl_ptit.hotelbooking.data.dto.HotelReview;
+import com.btl_ptit.hotelbooking.data.dto.Policy;
+import com.btl_ptit.hotelbooking.data.dto.RoomTypeDetailResponse;
 import com.btl_ptit.hotelbooking.data.model.RoomType;
+import com.btl_ptit.hotelbooking.data.remote.SupabaseClient;
+import com.btl_ptit.hotelbooking.data.remote.api_services.SupabaseRestService;
+import com.btl_ptit.hotelbooking.data.session.RoomSelectionStore;
+import com.btl_ptit.hotelbooking.view.adapter.FacilitiesGroupedAdapter;
+import com.btl_ptit.hotelbooking.view.adapter.HotelReviewsAdapter;
+import com.btl_ptit.hotelbooking.view.adapter.RoomImagePagerAdapter;
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Shows full details for a single room type.
- *
- * Expected Intent extras:
- *   EXTRA_ROOM_TYPE_ID (int)    — room type to display
- *   EXTRA_CHECKIN      (String) — "29 Mar"
- *   EXTRA_CHECKOUT     (String) — "30 Mar"
- */
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class RoomTypeDetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_ROOM_TYPE_ID = "room_type_id";
 
-    private ViewPager2          viewPager;
-    private TabLayout           tabDots;
-    private MaterialCardView    cardRating;
-    private android.widget.TextView tvRatingBadge;
-    private android.widget.TextView tvRoomName;
-    private android.widget.TextView tvDateRange;
-    private android.widget.TextView tvGuests;
-    private android.widget.TextView tvCancellation;
-    private android.widget.TextView tvPrepayment;
-    private View                layoutNoCard;
-    private android.widget.TextView tvBookingConditions;
-    private android.widget.TextView tvOriginalPrice;
-    private android.widget.TextView tvPrice;
-    private MaterialButton      btnSelect;
-    private View                layoutLastRoom;
-    private android.widget.TextView tvLastRoom;
-    private View                layoutRoomSize;
-    private android.widget.TextView tvRoomSize;
-    private FlexboxLayout       flexFacilities;
+    private ViewPager2 viewPager;
+    private LinearLayout layoutImageDots;
+    private TextView tvRoomName;
+    private TextView tvGuests;
+    private TextView tvCancellation;
+    private TextView tvPrepayment;
+    private TextView tvPrice;
+    private TextView tvRoomSize;
+    private TextView tvDescription;
+    private TextView tvBedSummary;
+    private View layoutArea;
 
-    private final NumberFormat currencyFormat =
-            NumberFormat.getNumberInstance(new Locale("vi", "VN"));
+    private LinearLayout layoutSelectionCta;
+    private TextView tvSelectionSummary;
+    private TextView tvSelectionPrice;
+
+    private SupabaseRestService restService;
+    private RoomType currentRoomType;
+
+    private final NumberFormat currencyFormat = NumberFormat.getNumberInstance(new Locale("vi", "VN"));
+
+    private String checkinDisplay;
+    private String checkoutDisplay;
+    private String checkinApi;
+    private String checkoutApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_type_detail);
 
+        restService = SupabaseClient.createService(SupabaseRestService.class);
         bindViews();
+        initDateExtras();
         setupToolbar();
-
-        // Date range subtitle
-        String checkin  = getIntent().getStringExtra(ListRoomTypeActivity.EXTRA_CHECKIN);
-        String checkout = getIntent().getStringExtra(ListRoomTypeActivity.EXTRA_CHECKOUT);
-        if (checkin != null && checkout != null) {
-            tvDateRange.setText(checkin + " - " + checkout);
-            tvDateRange.setVisibility(View.VISIBLE);
-        }
+        setupStaticSections();
 
         int roomTypeId = getIntent().getIntExtra(EXTRA_ROOM_TYPE_ID, -1);
         fetchRoomType(roomTypeId);
     }
 
-    // ── View binding ──────────────────────────────────────────────────────
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateSelectionCta();
+    }
 
     private void bindViews() {
-        viewPager            = findViewById(R.id.viewPagerImages);
-        tabDots              = findViewById(R.id.tabDots);
-        cardRating           = findViewById(R.id.cardRating);
-        tvRatingBadge        = findViewById(R.id.tvRatingBadge);
-        tvRoomName           = findViewById(R.id.tvRoomName);
-        tvDateRange          = findViewById(R.id.tvDateRange);
-        tvGuests             = findViewById(R.id.tvGuests);
-        tvCancellation       = findViewById(R.id.tvCancellation);
-        tvPrepayment         = findViewById(R.id.tvPrepayment);
-        layoutNoCard         = findViewById(R.id.layoutNoCard);
-        tvBookingConditions  = findViewById(R.id.tvBookingConditions);
-        tvOriginalPrice      = findViewById(R.id.tvOriginalPrice);
-        tvOriginalPrice.setPaintFlags(tvOriginalPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        tvPrice              = findViewById(R.id.tvPrice);
-        btnSelect            = findViewById(R.id.btnSelect);
-        layoutLastRoom       = findViewById(R.id.layoutLastRoom);
-        tvLastRoom           = findViewById(R.id.tvLastRoom);
-        layoutRoomSize       = findViewById(R.id.layoutRoomSize);
-        tvRoomSize           = findViewById(R.id.tvRoomSize);
-        flexFacilities       = findViewById(R.id.flexFacilities);
+        viewPager = findViewById(R.id.viewPagerImages);
+        layoutImageDots = findViewById(R.id.layoutImageDots);
+        tvRoomName = findViewById(R.id.tvRoomName);
+        tvGuests = findViewById(R.id.tvGuests);
+        tvCancellation = findViewById(R.id.tvCancellation);
+        tvPrepayment = findViewById(R.id.tvPrepayment);
+        tvPrice = findViewById(R.id.tvPrice);
+        tvRoomSize = findViewById(R.id.tvRoomSize);
+        tvDescription = findViewById(R.id.tvDescription);
+        tvBedSummary = findViewById(R.id.tvBedSummary);
+        layoutArea = findViewById(R.id.layoutArea);
+
+        layoutSelectionCta = findViewById(R.id.layoutSelectionCta);
+        tvSelectionSummary = findViewById(R.id.tvSelectionSummary);
+        tvSelectionPrice = findViewById(R.id.tvSelectionPrice);
+    }
+
+    private void initDateExtras() {
+        checkinDisplay = getIntent().getStringExtra(ListRoomTypeActivity.EXTRA_CHECKIN);
+        checkoutDisplay = getIntent().getStringExtra(ListRoomTypeActivity.EXTRA_CHECKOUT);
+        checkinApi = getIntent().getStringExtra(ListRoomTypeActivity.EXTRA_CHECKIN_DATE);
+        checkoutApi = getIntent().getStringExtra(ListRoomTypeActivity.EXTRA_CHECKOUT_DATE);
     }
 
     private void setupToolbar() {
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) getSupportActionBar().setTitle("");
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("");
+        }
         toolbar.setNavigationOnClickListener(v -> finish());
 
-        // Make toolbar icons white over photo, switch to dark when collapsed
-        AppBarLayout appBar = findViewById(R.id.appBarLayout);
-        appBar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
-            int totalScrollRange = appBarLayout.getTotalScrollRange();
-            float fraction = Math.abs(verticalOffset) / (float) totalScrollRange;
-            // When fully collapsed (fraction ≈ 1), switch icon tints to dark
-            int iconColor = fraction > 0.7f
-                    ? getColor(android.R.color.black)
-                    : getColor(android.R.color.white);
-            toolbar.setNavigationIconTint(iconColor);
+        getWindow().setStatusBarColor(getColor(R.color.toolbar_blue));
+    }
+
+    private void setupStaticSections() {
+        findViewById(R.id.btnBookNow).setOnClickListener(v ->
+                Toast.makeText(this, "Tiếp tục đặt phòng", Toast.LENGTH_SHORT).show()
+        );
+
+        findViewById(R.id.btnSelect).setOnClickListener(v -> {
+            if (currentRoomType == null) return;
+            showQuantityPicker(currentRoomType);
         });
     }
 
-    // ── Data loading ──────────────────────────────────────────────────────
-
-    private void fetchRoomType(int id) {
-        // TODO: Replace with your actual ViewModel / repository call.
-        // Example:
-        // viewModel.getRoomType(id).observe(this, result -> {
-        //     if (result.isSuccess()) bindRoomType(result.getData());
-        // });
-    }
-
-    /** Bind a RoomType object to all views. Call this once data arrives. */
-    public void bindRoomType(RoomType room) {
-        // ── Photo gallery ─────────────────────────────────────────────
-        List<String> images = room.getImageUrls();
-        if (images != null && !images.isEmpty()) {
-            RoomImagePagerAdapter pagerAdapter =
-                    new RoomImagePagerAdapter(this, images);
-            viewPager.setAdapter(pagerAdapter);
-            new TabLayoutMediator(tabDots, viewPager, (tab, pos) -> {}).attach();
-            tabDots.setVisibility(images.size() > 1 ? View.VISIBLE : View.GONE);
+    private void fetchRoomType(int roomTypeId) {
+        if (roomTypeId <= 0) {
+            Toast.makeText(this, R.string.error_load_room_types, Toast.LENGTH_SHORT).show();
+            return;
         }
 
-        // ── Rating badge (optional) ───────────────────────────────────
-        // Show if you have a rating from the API:
-        // cardRating.setVisibility(View.VISIBLE);
-        // tvRatingBadge.setText("8.8 Super comfy");
+        restService.getRoomTypeDetail(roomTypeId).enqueue(new Callback<RoomTypeDetailResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<RoomTypeDetailResponse> call,
+                                   @NonNull Response<RoomTypeDetailResponse> response) {
+                if (!response.isSuccessful() || response.body() == null) {
+                    Toast.makeText(RoomTypeDetailActivity.this, R.string.error_load_room_types, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                bindRoomType(response.body());
+            }
 
-        // ── Name ─────────────────────────────────────────────────────
+            @Override
+            public void onFailure(@NonNull Call<RoomTypeDetailResponse> call, @NonNull Throwable t) {
+                Toast.makeText(RoomTypeDetailActivity.this, R.string.error_network, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void bindRoomType(RoomTypeDetailResponse data) {
+        RoomType room = mapRoomType(data);
+        currentRoomType = room;
+        RoomSelectionStore.attachHotel(room.getHotelId());
+
         tvRoomName.setText(room.getName());
+        setupToolbarTitle(room.getName(), buildDateRangeLabel());
 
-        // ── Guests ───────────────────────────────────────────────────
+        int nights = calculateNights(checkinApi, checkoutApi);
         tvGuests.setText(getString(R.string.price_for_n_adults, room.getMaxGuests()));
 
-        // ── Cancellation ─────────────────────────────────────────────
-        if (room.isHasFreeCancellation()) {
-            tvCancellation.setText(R.string.free_cancellation);
-            tvCancellation.setTextColor(getColor(R.color.green_700));
-        } else {
-            tvCancellation.setText(R.string.total_cost_to_cancel);
-        }
+        String cancellationPolicy = findPolicyContent(data.getPolicies(), "CANCELLATION");
+        String paymentPolicy = findPolicyContent(data.getPolicies(), "PAYMENT");
+        tvCancellation.setText(cancellationPolicy != null ? cancellationPolicy : getString(R.string.total_cost_to_cancel));
+        tvPrepayment.setText(paymentPolicy != null ? paymentPolicy : getString(R.string.no_prepayment_needed));
 
-        // ── No prepayment (bold + normal mixed text) ──────────────────
-        String bold = getString(R.string.no_prepayment_needed);
-        String rest = getString(R.string.pay_at_property);
-        SpannableString ss = new SpannableString(bold + rest);
-        ss.setSpan(new StyleSpan(Typeface.BOLD), 0, bold.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        tvPrepayment.setText(ss);
+        double totalPrice = room.getBasePricePerNight() * Math.max(1, nights);
+        room.setTotalPrice(totalPrice);
+        room.setNights(Math.max(1, nights));
+        tvPrice.setText(getString(R.string.price_for_n_nights, room.getNights(), "VND " + currencyFormat.format((long) totalPrice)));
 
-        // ── Price ─────────────────────────────────────────────────────
-        String price = "VND " + currencyFormat.format((long) room.getBasePricePerNight());
-        tvPrice.setText(price);
-        tvOriginalPrice.setVisibility(View.GONE); // set if discounted
-
-        // ── Last room ─────────────────────────────────────────────────
-        if (room.getQuantity() > 0 && room.getQuantity() <= 3) {
-            layoutLastRoom.setVisibility(View.VISIBLE);
-            tvLastRoom.setText(room.getQuantity() == 1
-                    ? getString(R.string.we_have_1_left)
-                    : getString(R.string.we_have_n_left, room.getQuantity()));
-        }
-
-        // ── Room size ─────────────────────────────────────────────────
         if (room.getArea() != null) {
-            layoutRoomSize.setVisibility(View.VISIBLE);
-            tvRoomSize.setText("Room size: " + room.getArea().intValue() + " m\u00B2");
+            layoutArea.setVisibility(View.VISIBLE);
+            tvRoomSize.setText(getString(R.string.room_size_label, room.getArea().intValue()));
+        } else {
+            layoutArea.setVisibility(View.GONE);
         }
 
-        // ── Facilities ────────────────────────────────────────────────
-        RoomTypeAdapter adapterHelper = new RoomTypeAdapter(this, new ArrayList<>(), null);
-        adapterHelper.populateFacilities(flexFacilities, room.getFacilities(), Integer.MAX_VALUE);
+        tvDescription.setText(data.getDescription() != null ? data.getDescription() : "");
+        tvBedSummary.setText(room.getBedSummary());
 
-        // ── Select button ─────────────────────────────────────────────
-        btnSelect.setOnClickListener(v -> {
-            // TODO: navigate to booking confirmation screen
-//            Intent intent = new Intent(this, BookingActivity.class);
-//            intent.putExtra("room_type_id", room.getId());
-//            startActivity(intent);
+        setupImageSlider(extractImageUrls(data.getImages()));
+        setupFacilities(data);
+        setupReviews(data.getReviews());
+
+        updateSelectionCta();
+    }
+
+    private void setupToolbarTitle(String roomName, String dateLabel) {
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(roomName);
+
+        if (dateLabel == null || dateLabel.trim().isEmpty()) {
+            toolbar.setSubtitle(null);
+            return;
+        }
+
+        SpannableString ss = new SpannableString(dateLabel);
+        ss.setSpan(new RelativeSizeSpan(0.85f), 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        toolbar.setSubtitle(ss);
+    }
+
+    private String buildDateRangeLabel() {
+        if (checkinDisplay != null && checkoutDisplay != null) {
+            return checkinDisplay + " - " + checkoutDisplay;
+        }
+        if (checkinApi != null && checkoutApi != null) {
+            return checkinApi + " - " + checkoutApi;
+        }
+        return "";
+    }
+
+    private int calculateNights(String checkin, String checkout) {
+        if (checkin == null || checkout == null) return 1;
+        try {
+            LocalDate in = LocalDate.parse(checkin);
+            LocalDate out = LocalDate.parse(checkout);
+            long nights = ChronoUnit.DAYS.between(in, out);
+            return (int) Math.max(1, nights);
+        } catch (Exception ignored) {
+            return 1;
+        }
+    }
+
+    private void setupImageSlider(List<String> imageUrls) {
+        RoomImagePagerAdapter pagerAdapter = new RoomImagePagerAdapter(this, imageUrls);
+        viewPager.setAdapter(pagerAdapter);
+
+        int dotCount = Math.min(6, imageUrls.size());
+        setupImageDots(dotCount);
+        updateImageDots(0, imageUrls.size(), dotCount);
+
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                updateImageDots(position, imageUrls.size(), dotCount);
+            }
+        });
+    }
+
+    private void setupImageDots(int dotCount) {
+        layoutImageDots.removeAllViews();
+        for (int i = 0; i < dotCount; i++) {
+            View dot = new View(this);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(dpToPx(6), dpToPx(6));
+            lp.setMargins(dpToPx(3), 0, dpToPx(3), 0);
+            dot.setLayoutParams(lp);
+            dot.setBackgroundResource(R.drawable.tab_indicator_dot);
+            layoutImageDots.addView(dot);
+        }
+        layoutImageDots.setVisibility(dotCount > 1 ? View.VISIBLE : View.GONE);
+    }
+
+    private void updateImageDots(int position, int imageCount, int dotCount) {
+        if (dotCount <= 0) return;
+        int activeIndex = imageCount <= dotCount
+                ? position
+                : Math.min(dotCount - 1, position * dotCount / imageCount);
+        for (int i = 0; i < layoutImageDots.getChildCount(); i++) {
+            layoutImageDots.getChildAt(i).setSelected(i == activeIndex);
+        }
+    }
+
+    private void setupFacilities(RoomTypeDetailResponse data) {
+        androidx.recyclerview.widget.RecyclerView rvFacilities = findViewById(R.id.rvFacilitiesGrouped);
+        rvFacilities.setLayoutManager(new LinearLayoutManager(this));
+
+        FacilitiesGroupedAdapter adapter = new FacilitiesGroupedAdapter();
+        rvFacilities.setAdapter(adapter);
+        adapter.submitList(data.getFacilitiesFlat());
+    }
+
+    private void setupReviews(List<HotelReview> reviews) {
+        androidx.recyclerview.widget.RecyclerView rvReviews = findViewById(R.id.rvReviews);
+        TextView tvNoReviews = findViewById(R.id.tvNoReviews);
+        rvReviews.setLayoutManager(new LinearLayoutManager(this));
+
+        HotelReviewsAdapter adapter = new HotelReviewsAdapter(roomTypeInfo -> {
+            // no-op on room-type card click in this screen
+        });
+        rvReviews.setAdapter(adapter);
+        if (reviews == null || reviews.isEmpty()) {
+            adapter.submitList(new ArrayList<>());
+            rvReviews.setVisibility(View.GONE);
+            tvNoReviews.setVisibility(View.VISIBLE);
+        } else {
+            adapter.submitList(reviews);
+            rvReviews.setVisibility(View.VISIBLE);
+            tvNoReviews.setVisibility(View.GONE);
+        }
+    }
+
+    private List<String> extractImageUrls(List<RoomTypeDetailResponse.ImageItem> images) {
+        List<String> urls = new ArrayList<>();
+        if (images != null) {
+            for (RoomTypeDetailResponse.ImageItem image : images) {
+                if (image != null && image.getUrl() != null && !image.getUrl().trim().isEmpty()) {
+                    urls.add(image.getUrl());
+                }
+            }
+        }
+        if (urls.isEmpty()) {
+            urls.add("");
+        }
+        return urls;
+    }
+
+    private String findPolicyContent(List<Policy> policies, String typeCode) {
+        if (policies == null) return null;
+        for (Policy p : policies) {
+            if (p == null || p.getTypeCode() == null) continue;
+            if (typeCode.equalsIgnoreCase(p.getTypeCode())) {
+                return p.getContent();
+            }
+        }
+        return null;
+    }
+
+    private int dpToPx(int dp) {
+        return (int) (dp * getResources().getDisplayMetrics().density);
+    }
+
+    private RoomType mapRoomType(RoomTypeDetailResponse item) {
+        RoomType roomType = new RoomType();
+        roomType.setId(item.getId());
+        roomType.setHotelId(item.getHotelId());
+        roomType.setName(item.getName());
+        roomType.setDescription(item.getDescription());
+        roomType.setMaxGuests(item.getMaxGuests());
+        roomType.setBedCount(item.getBedCount());
+        roomType.setBedType(item.getBedType());
+        roomType.setBasePricePerNight(item.getBasePricePerNight());
+        roomType.setHasFreeCancellation(item.isHasFreeCancellation());
+        roomType.setQuantity(item.getQuantity());
+        roomType.setArea(item.getArea() != null ? item.getArea().doubleValue() : null);
+        return roomType;
+    }
+
+    private void updateSelectionCta() {
+        if (!RoomSelectionStore.hasSelection()) {
+            layoutSelectionCta.setVisibility(View.GONE);
+            return;
+        }
+
+        layoutSelectionCta.setVisibility(View.VISIBLE);
+        int rooms = RoomSelectionStore.getSelectedRoomCount();
+        int beds = RoomSelectionStore.getSelectedBedCount();
+        double totalPrice = RoomSelectionStore.getTotalPrice();
+
+        tvSelectionSummary.setText(getString(R.string.selected_room_bed_summary, rooms, beds));
+        tvSelectionPrice.setText("VND " + currencyFormat.format((long) totalPrice));
+    }
+
+    private void showQuantityPicker(RoomType roomType) {
+        if (roomType == null) return;
+        int maxAvailable = Math.max(1, roomType.getQuantity());
+        int current = RoomSelectionStore.getRoomCount(roomType.getId());
+        final int[] quantity = {Math.max(1, Math.min(current > 0 ? current : 1, maxAvailable))};
+
+        BottomSheetDialog dialog = new BottomSheetDialog(this);
+        View content = getLayoutInflater().inflate(R.layout.dialog_room_quantity_picker, null, false);
+        dialog.setContentView(content);
+
+        TextView tvTitle = content.findViewById(R.id.tvPickerTitle);
+        TextView tvAvailable = content.findViewById(R.id.tvPickerAvailable);
+        TextView tvQuantity = content.findViewById(R.id.tvQuantity);
+        View btnMinus = content.findViewById(R.id.btnMinus);
+        View btnPlus = content.findViewById(R.id.btnPlus);
+        View btnConfirm = content.findViewById(R.id.btnConfirm);
+
+        tvTitle.setText(getString(R.string.choose_room_quantity));
+        tvAvailable.setText(getString(R.string.room_quantity_available, maxAvailable));
+        tvQuantity.setText(String.valueOf(quantity[0]));
+
+        btnMinus.setOnClickListener(v -> {
+            if (quantity[0] > 1) {
+                quantity[0] -= 1;
+                tvQuantity.setText(String.valueOf(quantity[0]));
+            }
         });
 
-        // ── Booking conditions link ───────────────────────────────────
-        tvBookingConditions.setOnClickListener(v -> {
-            // TODO: show bottom sheet or dialog with full conditions
+        btnPlus.setOnClickListener(v -> {
+            if (quantity[0] < maxAvailable) {
+                quantity[0] += 1;
+                tvQuantity.setText(String.valueOf(quantity[0]));
+            }
         });
+
+        btnConfirm.setOnClickListener(v -> {
+            RoomSelectionStore.setRoomCount(roomType, quantity[0]);
+            updateSelectionCta();
+            Toast.makeText(this, "Đã cập nhật lựa chọn", Toast.LENGTH_SHORT).show();
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 }

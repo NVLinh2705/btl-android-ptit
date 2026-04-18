@@ -1,10 +1,12 @@
 package com.btl_ptit.hotelbooking.view.adapter;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
 import android.graphics.Typeface;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -21,6 +24,7 @@ import com.google.android.flexbox.FlexboxLayout;
 import com.btl_ptit.hotelbooking.R;
 import com.btl_ptit.hotelbooking.data.model.Facility;
 import com.btl_ptit.hotelbooking.data.model.RoomType;
+import com.btl_ptit.hotelbooking.data.session.RoomSelectionStore;
 
 import java.text.NumberFormat;
 import java.util.List;
@@ -28,16 +32,18 @@ import java.util.Locale;
 
 public class RoomTypeAdapter extends RecyclerView.Adapter<RoomTypeAdapter.RoomTypeViewHolder> {
 
-    public interface OnRoomSelectedListener {
-        void onRoomSelected(RoomType roomType);
+    public interface OnRoomActionListener {
+        void onRoomClicked(RoomType roomType);
+        void onSelectRoom(RoomType roomType);
+        void onRemoveRoom(RoomType roomType);
     }
 
     private final List<RoomType> roomTypes;
     private final Context context;
-    private final OnRoomSelectedListener listener;
+    private final OnRoomActionListener listener;
     private final NumberFormat currencyFormat;
 
-    public RoomTypeAdapter(Context context, List<RoomType> roomTypes, OnRoomSelectedListener listener) {
+    public RoomTypeAdapter(Context context, List<RoomType> roomTypes, OnRoomActionListener listener) {
         this.context = context;
         this.roomTypes = roomTypes;
         this.listener = listener;
@@ -66,6 +72,7 @@ public class RoomTypeAdapter extends RecyclerView.Adapter<RoomTypeAdapter.RoomTy
                  tvCancellation, tvPrepayment, tvPrice,
                  tvOriginalPrice, tvLastRoom;
         ImageView ivThumbnail;
+        ImageView btnRemoveSelection;
         FlexboxLayout flexFacilities;
         View layoutArea, layoutLastRoom;
         com.google.android.material.button.MaterialButton btnSelect;
@@ -84,6 +91,7 @@ public class RoomTypeAdapter extends RecyclerView.Adapter<RoomTypeAdapter.RoomTy
             tvLastRoom      = itemView.findViewById(R.id.tvLastRoom);
             layoutLastRoom  = itemView.findViewById(R.id.layoutLastRoom);
             ivThumbnail     = itemView.findViewById(R.id.ivThumbnail);
+            btnRemoveSelection = itemView.findViewById(R.id.btnRemoveSelection);
             flexFacilities  = itemView.findViewById(R.id.flexFacilities);
             btnSelect       = itemView.findViewById(R.id.btnSelect);
         }
@@ -124,20 +132,28 @@ public class RoomTypeAdapter extends RecyclerView.Adapter<RoomTypeAdapter.RoomTy
             tvGuests.setText(context.getString(R.string.price_for_n_adults, room.getMaxGuests()));
 
             // ── Cancellation label ────────────────────────────────────
-            if (room.isHasFreeCancellation()) {
+            if (!TextUtils.isEmpty(room.getCancellationPolicy())) {
+                tvCancellation.setText(room.getCancellationPolicy());
+                tvCancellation.setTextColor(context.getColor(R.color.green_700));
+            } else if (room.isHasFreeCancellation()) {
                 tvCancellation.setText(R.string.free_cancellation);
                 tvCancellation.setTextColor(context.getColor(R.color.green_700));
             } else {
                 tvCancellation.setText(R.string.total_cost_to_cancel);
-                tvCancellation.setTextColor(context.getColor(android.R.color.black));
+                tvCancellation.setTextColor(context.getColor(R.color.green_700));
             }
 
             // ── Prepayment ────────────────────────────────────────────
-            String noPrep = context.getString(R.string.no_prepayment_needed);
-            String rest   = context.getString(R.string.pay_at_property);
-            SpannableString ss = new SpannableString(noPrep + rest);
-            ss.setSpan(new StyleSpan(Typeface.BOLD), 0, noPrep.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            tvPrepayment.setText(ss);
+            if (!TextUtils.isEmpty(room.getPaymentPolicy())) {
+                tvPrepayment.setText(room.getPaymentPolicy());
+            } else {
+                String noPrep = context.getString(R.string.no_prepayment_needed);
+                String rest   = context.getString(R.string.pay_at_property);
+                SpannableString ss = new SpannableString(noPrep + rest);
+                ss.setSpan(new StyleSpan(Typeface.BOLD), 0, noPrep.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                tvPrepayment.setText(ss);
+            }
+            tvPrepayment.setTextColor(context.getColor(R.color.green_700));
 
             // ── Price ─────────────────────────────────────────────────
             String formattedPrice = "VND " + currencyFormat.format((long) room.getBasePricePerNight());
@@ -157,11 +173,42 @@ public class RoomTypeAdapter extends RecyclerView.Adapter<RoomTypeAdapter.RoomTy
 
             // ── Select click ──────────────────────────────────────────
             btnSelect.setOnClickListener(v -> {
-                if (listener != null) listener.onRoomSelected(room);
+                if (listener != null) listener.onSelectRoom(room);
+            });
+            btnRemoveSelection.setOnClickListener(v -> {
+                if (listener != null) listener.onRemoveRoom(room);
             });
             itemView.setOnClickListener(v -> {
-                if (listener != null) listener.onRoomSelected(room);
+                if (listener != null) listener.onRoomClicked(room);
             });
+
+            bindSelectionState(room);
+        }
+
+        private void bindSelectionState(RoomType room) {
+            int selectedCount = RoomSelectionStore.getRoomCount(room.getId());
+            boolean isSelected = selectedCount > 0;
+
+            if (isSelected) {
+                btnSelect.setText(context.getString(R.string.selected_room_button, selectedCount));
+                btnSelect.setIconResource(R.drawable.ic_arrow_down);
+                btnSelect.setIconGravity(com.google.android.material.button.MaterialButton.ICON_GRAVITY_END);
+                btnSelect.setIconPadding(8);
+                btnSelect.setIconTint(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.toolbar_blue)));
+                btnSelect.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context, android.R.color.white)));
+                btnSelect.setTextColor(ContextCompat.getColor(context, R.color.toolbar_blue));
+                btnSelect.setStrokeWidth(2);
+                btnSelect.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.toolbar_blue)));
+                btnRemoveSelection.setVisibility(View.VISIBLE);
+            } else {
+                btnSelect.setText(R.string.select);
+                btnSelect.setIcon(null);
+                btnSelect.setIconGravity(com.google.android.material.button.MaterialButton.ICON_GRAVITY_TEXT_START);
+                btnSelect.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.toolbar_blue)));
+                btnSelect.setTextColor(ContextCompat.getColor(context, android.R.color.white));
+                btnSelect.setStrokeWidth(0);
+                btnRemoveSelection.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -191,13 +238,9 @@ public class RoomTypeAdapter extends RecyclerView.Adapter<RoomTypeAdapter.RoomTy
             if (resId != 0) icon.setImageResource(resId);
             else            icon.setImageResource(R.drawable.ic_facility_default);
 
-            name.setText(fac.getName());
+            name.setText(!TextUtils.isEmpty(fac.getNameVi()) ? fac.getNameVi() : fac.getName());
             flex.addView(chip);
         }
     }
 
-    // ── Format price ──────────────────────────────────────────────────────
-    private String formatPrice(double price) {
-        return "VND " + currencyFormat.format((long) price);
-    }
 }

@@ -119,7 +119,62 @@ Deno.serve(async (req: Request) => {
     type_name_vi: row.facilities?.facility_types?.name_vi,
   }));
 
-  // ── 5. Assemble ───────────────────────────────────────────────────────────
+  // ── 5. Policies from parent hotel (room-level policies are not in schema) ──
+  const { data: policyRows } = await db
+    .from("policies")
+    .select(`
+      id, title, content, is_active,
+      policy_types ( id, code, name )
+    `)
+    .eq("hotel_id", roomType.hotel_id)
+    .eq("is_active", true)
+    .order("id", { ascending: true });
+
+  const policies = (policyRows ?? []).map((p: any) => ({
+    id: p.id,
+    title: p.title,
+    content: p.content,
+    is_active: p.is_active,
+    type_id: p.policy_types?.id,
+    type_code: p.policy_types?.code,
+    type_name: p.policy_types?.name,
+  }));
+
+  // ── 6. Reviews for this room type (via bookings -> booked_rooms) ───────────
+  const { data: reviewRows } = await db
+    .from("reviews")
+    .select(`
+      id, rating, comment, created_at,
+      users ( id, full_name, avatar_url ),
+      bookings!inner (
+        booked_rooms!inner (
+          room_type_id
+        )
+      )
+    `)
+    .eq("hotel_id", roomType.hotel_id)
+    .eq("bookings.booked_rooms.room_type_id", roomTypeId)
+    .order("created_at", { ascending: false })
+    .limit(10);
+
+  const reviews = (reviewRows ?? []).map((r: any) => ({
+    id: r.id,
+    rating: r.rating,
+    comment: r.comment,
+    created_at: r.created_at,
+    reviewer: {
+      id: r.users?.id,
+      full_name: r.users?.full_name,
+      avatar_url: r.users?.avatar_url,
+    },
+    room_type: {
+      id: roomTypeId,
+      name: roomType.name,
+      image_url: (images ?? [])[0]?.url ?? null,
+    },
+  }));
+
+  // ── 7. Assemble ───────────────────────────────────────────────────────────
   return ok({
     ...roomType,
     hotel: hotel ?? null,
@@ -128,5 +183,7 @@ Deno.serve(async (req: Request) => {
     facilities_grouped: facilitiesGrouped,
     facilities_flat:    facilitiesFlat,
     total_facilities:   facilityRows?.length ?? 0,
+    policies,
+    reviews,
   });
 });

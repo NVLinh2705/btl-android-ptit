@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface">
+    android:background="?attr/colorSurface"
+    android:fitsSystemWindows="true">
 
     <!-- AppBar with date subtitle, matches screenshot blue header -->
     <com.google.android.material.appbar.AppBarLayout
@@ -17,22 +18,15 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:background="#0B4AA2"
             app:title="@string/choose_your_stay"
+            app:titleTextColor="@android:color/white"
+            app:subtitleTextColor="@android:color/white"
             app:titleTextAppearance="?attr/textAppearanceTitleMedium"
             app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="@android:color/white"
             app:menu="@menu/menu_room_list" />
 
-        <!-- Date subtitle row -->
-        <TextView
-            android:id="@+id/tvDateRange"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="8dp"
-            android:textAppearance="?attr/textAppearanceBodySmall"
-            android:textColor="?attr/colorOnSurface"
-            android:alpha="0.7"
-            android:text="29 Mar - 30 Mar" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -43,8 +37,7 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         app:layout_anchor="@id/appBarLayout"
-        app:layout_anchorGravity="bottom"
-        android:indeterminate="true" />
+        app:layout_anchorGravity="bottom" />
 
     <!-- Room list -->
     <androidx.recyclerview.widget.RecyclerView
@@ -53,7 +46,7 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:paddingTop="8dp"
-        android:paddingBottom="24dp"
+        android:paddingBottom="130dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <!-- Empty state -->
@@ -80,6 +73,58 @@
             android:text="@string/no_rooms_available"
             android:textAppearance="?attr/textAppearanceTitleMedium"
             android:textColor="?attr/colorOnSurfaceVariant" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutSelectionCta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@android:color/white"
+        android:elevation="8dp"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvSelectionSummary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#111111"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvSelectionPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="#111111"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/includes_taxes"
+                android:textColor="#6D6D6D"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnBookNow"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:text="@string/book_now"
+            android:textAllCaps="false"
+            app:cornerRadius="10dp" />
 
     </LinearLayout>
 
