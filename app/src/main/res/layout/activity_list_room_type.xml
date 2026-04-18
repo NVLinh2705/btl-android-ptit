@@ -12,6 +12,7 @@
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
         app:liftOnScroll="true">
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -25,6 +26,7 @@
             app:titleTextAppearance="?attr/textAppearanceTitleMedium"
             app:navigationIcon="@drawable/ic_arrow_back"
             app:navigationIconTint="@android:color/white"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:menu="@menu/menu_room_list" />
 
 
@@ -38,6 +40,27 @@
         android:visibility="gone"
         app:layout_anchor="@id/appBarLayout"
         app:layout_anchorGravity="bottom" />
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerLoading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:shimmer_auto_start="false"
+        app:shimmer_duration="1100">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="8dp">
+
+            <include layout="@layout/item_room_type_skeleton" />
+            <include layout="@layout/item_room_type_skeleton" />
+            <include layout="@layout/item_room_type_skeleton" />
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
     <!-- Room list -->
     <androidx.recyclerview.widget.RecyclerView

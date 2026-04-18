@@ -56,4 +56,17 @@
     <string name="room_size_label">Room size: %d m²</string>
 
     <string name="not_found_message">Không tìm thấy kết quả</string>
+
+    <string name="fill_booking_info_title">Điền thông tin đặt phòng</string>
+    <string name="booking_full_name_label">Họ Tên *</string>
+    <string name="booking_email_label">Địa chỉ email *</string>
+    <string name="booking_phone_label">Điện thoại *</string>
+    <string name="selected_rooms_title">Phòng đã chọn</string>
+    <string name="fill_missing_info">Điền thông tin còn thiếu</string>
+    <string name="next_step">Bước tiếp theo</string>
+    <string name="error_enter_full_name">Vui lòng nhập họ tên hợp lệ</string>
+    <string name="error_enter_email">Vui lòng nhập email hợp lệ</string>
+    <string name="error_enter_phone">Vui lòng nhập số điện thoại hợp lệ</string>
+    <string name="confirm_booking_title">Xác nhận đặt phòng</string>
+    <string name="confirm_booking_placeholder">Màn hình xác nhận đặt phòng đang được phát triển</string>
 </resources>

@@ -2,7 +2,10 @@ package com.btl_ptit.hotelbooking.data.session;
 
 import com.btl_ptit.hotelbooking.data.model.RoomType;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -100,6 +103,21 @@ public final class RoomSelectionStore {
         return getSelectedRoomCount() > 0;
     }
 
+    public static synchronized List<SelectionItem> getSelectionItems() {
+        if (selectedRooms.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<SelectionItem> items = new ArrayList<>();
+        for (SelectedRoom selected : selectedRooms.values()) {
+            double unitPrice = selected.roomType.getTotalPrice() > 0
+                    ? selected.roomType.getTotalPrice()
+                    : selected.roomType.getBasePricePerNight();
+            items.add(new SelectionItem(selected.roomType, selected.count, unitPrice));
+        }
+        return items;
+    }
+
     public static synchronized void clear() {
         selectedRooms.clear();
         currentHotelId = null;
@@ -112,6 +130,34 @@ public final class RoomSelectionStore {
         SelectedRoom(RoomType roomType, int count) {
             this.roomType = roomType;
             this.count = count;
+        }
+    }
+
+    public static final class SelectionItem {
+        private final RoomType roomType;
+        private final int count;
+        private final double unitPrice;
+
+        private SelectionItem(RoomType roomType, int count, double unitPrice) {
+            this.roomType = roomType;
+            this.count = count;
+            this.unitPrice = unitPrice;
+        }
+
+        public RoomType getRoomType() {
+            return roomType;
+        }
+
+        public int getCount() {
+            return count;
+        }
+
+        public double getUnitPrice() {
+            return unitPrice;
+        }
+
+        public double getLineTotal() {
+            return unitPrice * count;
         }
     }
 }

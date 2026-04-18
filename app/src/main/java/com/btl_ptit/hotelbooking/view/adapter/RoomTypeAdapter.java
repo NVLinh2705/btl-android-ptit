@@ -25,10 +25,9 @@ import com.btl_ptit.hotelbooking.R;
 import com.btl_ptit.hotelbooking.data.model.Facility;
 import com.btl_ptit.hotelbooking.data.model.RoomType;
 import com.btl_ptit.hotelbooking.data.session.RoomSelectionStore;
+import com.btl_ptit.hotelbooking.utils.CurrencyUtils;
 
-import java.text.NumberFormat;
 import java.util.List;
-import java.util.Locale;
 
 public class RoomTypeAdapter extends RecyclerView.Adapter<RoomTypeAdapter.RoomTypeViewHolder> {
 
@@ -41,13 +40,11 @@ public class RoomTypeAdapter extends RecyclerView.Adapter<RoomTypeAdapter.RoomTy
     private final List<RoomType> roomTypes;
     private final Context context;
     private final OnRoomActionListener listener;
-    private final NumberFormat currencyFormat;
 
     public RoomTypeAdapter(Context context, List<RoomType> roomTypes, OnRoomActionListener listener) {
         this.context = context;
         this.roomTypes = roomTypes;
         this.listener = listener;
-        this.currencyFormat = NumberFormat.getNumberInstance(new Locale("vi", "VN"));
     }
 
     @NonNull
@@ -156,7 +153,7 @@ public class RoomTypeAdapter extends RecyclerView.Adapter<RoomTypeAdapter.RoomTy
             tvPrepayment.setTextColor(context.getColor(R.color.green_700));
 
             // ── Price ─────────────────────────────────────────────────
-            String formattedPrice = "VND " + currencyFormat.format((long) room.getBasePricePerNight());
+            String formattedPrice = CurrencyUtils.formatVnd(room.getBasePricePerNight());
             tvPrice.setText(formattedPrice);
             tvOriginalPrice.setVisibility(View.GONE); // set visible + text if discounted
 

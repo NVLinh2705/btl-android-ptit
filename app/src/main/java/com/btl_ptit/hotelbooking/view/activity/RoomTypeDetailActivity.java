@@ -5,12 +5,15 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
 import android.view.View;
+import android.content.res.ColorStateList;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -22,18 +25,18 @@ import com.btl_ptit.hotelbooking.data.model.RoomType;
 import com.btl_ptit.hotelbooking.data.remote.SupabaseClient;
 import com.btl_ptit.hotelbooking.data.remote.api_services.SupabaseRestService;
 import com.btl_ptit.hotelbooking.data.session.RoomSelectionStore;
+import com.btl_ptit.hotelbooking.utils.CurrencyUtils;
 import com.btl_ptit.hotelbooking.view.adapter.FacilitiesGroupedAdapter;
 import com.btl_ptit.hotelbooking.view.adapter.HotelReviewsAdapter;
 import com.btl_ptit.hotelbooking.view.adapter.RoomImagePagerAdapter;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,6 +48,7 @@ public class RoomTypeDetailActivity extends AppCompatActivity {
 
     private ViewPager2 viewPager;
     private LinearLayout layoutImageDots;
+    private androidx.core.widget.NestedScrollView scrollContent;
     private TextView tvRoomName;
     private TextView tvGuests;
     private TextView tvCancellation;
@@ -58,11 +62,11 @@ public class RoomTypeDetailActivity extends AppCompatActivity {
     private LinearLayout layoutSelectionCta;
     private TextView tvSelectionSummary;
     private TextView tvSelectionPrice;
+    private MaterialButton btnSelect;
+    private ImageButton btnRemoveSelection;
 
     private SupabaseRestService restService;
     private RoomType currentRoomType;
-
-    private final NumberFormat currencyFormat = NumberFormat.getNumberInstance(new Locale("vi", "VN"));
 
     private String checkinDisplay;
     private String checkoutDisplay;
@@ -88,9 +92,11 @@ public class RoomTypeDetailActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         updateSelectionCta();
+        updateSelectButtonState();
     }
 
     private void bindViews() {
+        scrollContent = findViewById(R.id.scrollContent);
         viewPager = findViewById(R.id.viewPagerImages);
         layoutImageDots = findViewById(R.id.layoutImageDots);
         tvRoomName = findViewById(R.id.tvRoomName);
@@ -106,6 +112,8 @@ public class RoomTypeDetailActivity extends AppCompatActivity {
         layoutSelectionCta = findViewById(R.id.layoutSelectionCta);
         tvSelectionSummary = findViewById(R.id.tvSelectionSummary);
         tvSelectionPrice = findViewById(R.id.tvSelectionPrice);
+        btnSelect = findViewById(R.id.btnSelect);
+        btnRemoveSelection = findViewById(R.id.btnRemoveSelection);
     }
 
     private void initDateExtras() {
@@ -128,18 +136,31 @@ public class RoomTypeDetailActivity extends AppCompatActivity {
     }
 
     private void setupStaticSections() {
-        findViewById(R.id.btnBookNow).setOnClickListener(v ->
-                Toast.makeText(this, "Tiếp tục đặt phòng", Toast.LENGTH_SHORT).show()
-        );
+        findViewById(R.id.btnBookNow).setOnClickListener(v -> {
+            if (!RoomSelectionStore.hasSelection()) {
+                Toast.makeText(this, "Vui lòng chọn phòng trước khi tiếp tục", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            startActivity(new android.content.Intent(this, FillBookingInfoActivity.class));
+        });
 
-        findViewById(R.id.btnSelect).setOnClickListener(v -> {
+        btnSelect.setOnClickListener(v -> {
             if (currentRoomType == null) return;
             showQuantityPicker(currentRoomType);
+        });
+
+        btnRemoveSelection.setOnClickListener(v -> {
+            if (currentRoomType == null) return;
+            RoomSelectionStore.removeRoom(currentRoomType.getId());
+            updateSelectionCta();
+            updateSelectButtonState();
         });
     }
 
     private void fetchRoomType(int roomTypeId) {
+        showLoading(true);
         if (roomTypeId <= 0) {
+            showLoading(false);
             Toast.makeText(this, R.string.error_load_room_types, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -149,6 +170,7 @@ public class RoomTypeDetailActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<RoomTypeDetailResponse> call,
                                    @NonNull Response<RoomTypeDetailResponse> response) {
                 if (!response.isSuccessful() || response.body() == null) {
+                    showLoading(false);
                     Toast.makeText(RoomTypeDetailActivity.this, R.string.error_load_room_types, Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -157,6 +179,7 @@ public class RoomTypeDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<RoomTypeDetailResponse> call, @NonNull Throwable t) {
+                showLoading(false);
                 Toast.makeText(RoomTypeDetailActivity.this, R.string.error_network, Toast.LENGTH_SHORT).show();
             }
         });
@@ -181,7 +204,7 @@ public class RoomTypeDetailActivity extends AppCompatActivity {
         double totalPrice = room.getBasePricePerNight() * Math.max(1, nights);
         room.setTotalPrice(totalPrice);
         room.setNights(Math.max(1, nights));
-        tvPrice.setText(getString(R.string.price_for_n_nights, room.getNights(), "VND " + currencyFormat.format((long) totalPrice)));
+        tvPrice.setText(getString(R.string.price_for_n_nights, room.getNights(), CurrencyUtils.formatVnd(totalPrice)));
 
         if (room.getArea() != null) {
             layoutArea.setVisibility(View.VISIBLE);
@@ -198,6 +221,8 @@ public class RoomTypeDetailActivity extends AppCompatActivity {
         setupReviews(data.getReviews());
 
         updateSelectionCta();
+        updateSelectButtonState();
+        showLoading(false);
     }
 
     private void setupToolbarTitle(String roomName, String dateLabel) {
@@ -362,7 +387,61 @@ public class RoomTypeDetailActivity extends AppCompatActivity {
         double totalPrice = RoomSelectionStore.getTotalPrice();
 
         tvSelectionSummary.setText(getString(R.string.selected_room_bed_summary, rooms, beds));
-        tvSelectionPrice.setText("VND " + currencyFormat.format((long) totalPrice));
+        tvSelectionPrice.setText(CurrencyUtils.formatVnd(totalPrice));
+    }
+
+    private void updateSelectButtonState() {
+        if (currentRoomType == null || btnSelect == null || btnRemoveSelection == null) {
+            return;
+        }
+
+        int selectedCount = RoomSelectionStore.getRoomCount(currentRoomType.getId());
+        boolean isSelected = selectedCount > 0;
+
+        if (isSelected) {
+            btnSelect.setText(getString(R.string.selected_room_button, selectedCount));
+            btnSelect.setIconResource(R.drawable.ic_arrow_down);
+            btnSelect.setIconGravity(MaterialButton.ICON_GRAVITY_END);
+            btnSelect.setIconPadding(8);
+            btnSelect.setIconTint(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.toolbar_blue)));
+            btnSelect.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, android.R.color.white)));
+            btnSelect.setTextColor(ContextCompat.getColor(this, R.color.toolbar_blue));
+            btnSelect.setStrokeWidth(2);
+            btnSelect.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.toolbar_blue)));
+            btnRemoveSelection.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        btnSelect.setText(R.string.select);
+        btnSelect.setIcon(null);
+        btnSelect.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.toolbar_blue)));
+        btnSelect.setTextColor(ContextCompat.getColor(this, android.R.color.white));
+        btnSelect.setStrokeWidth(0);
+        btnRemoveSelection.setVisibility(View.GONE);
+    }
+
+    private void showLoading(boolean show) {
+        View shimmerLoading = findViewById(R.id.shimmerLoading);
+        if (!(shimmerLoading instanceof com.facebook.shimmer.ShimmerFrameLayout)) {
+            return;
+        }
+        com.facebook.shimmer.ShimmerFrameLayout shimmer = (com.facebook.shimmer.ShimmerFrameLayout) shimmerLoading;
+
+        if (show) {
+            shimmer.setVisibility(View.VISIBLE);
+            shimmer.startShimmer();
+            if (scrollContent != null) {
+                scrollContent.setVisibility(View.GONE);
+            }
+            layoutSelectionCta.setVisibility(View.GONE);
+            return;
+        }
+
+        shimmer.stopShimmer();
+        shimmer.setVisibility(View.GONE);
+        if (scrollContent != null) {
+            scrollContent.setVisibility(View.VISIBLE);
+        }
     }
 
     private void showQuantityPicker(RoomType roomType) {
@@ -403,6 +482,7 @@ public class RoomTypeDetailActivity extends AppCompatActivity {
         btnConfirm.setOnClickListener(v -> {
             RoomSelectionStore.setRoomCount(roomType, quantity[0]);
             updateSelectionCta();
+            updateSelectButtonState();
             Toast.makeText(this, "Đã cập nhật lựa chọn", Toast.LENGTH_SHORT).show();
             dialog.dismiss();
         });

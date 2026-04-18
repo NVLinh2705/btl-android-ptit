@@ -21,6 +21,7 @@ import com.btl_ptit.hotelbooking.data.session.RoomSelectionStore;
 import com.btl_ptit.hotelbooking.data.remote.SupabaseClient;
 import com.btl_ptit.hotelbooking.data.remote.api_services.SupabaseRestService;
 import com.btl_ptit.hotelbooking.databinding.ActivityListRoomTypeBinding;
+import com.btl_ptit.hotelbooking.utils.CurrencyUtils;
 import com.btl_ptit.hotelbooking.view.adapter.RoomTypeAdapter;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -29,8 +30,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.text.NumberFormat;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -65,7 +64,6 @@ public class ListRoomTypeActivity extends AppCompatActivity
     private ActivityListRoomTypeBinding b;
     private RoomTypeAdapter adapter;
     private SupabaseRestService restService;
-    private final NumberFormat currencyFormat = NumberFormat.getNumberInstance(new Locale("vi", "VN"));
 
     private String checkinApi;
     private String checkoutApi;
@@ -84,7 +82,13 @@ public class ListRoomTypeActivity extends AppCompatActivity
 
         setSupportActionBar(b.toolbar);
         b.toolbar.setNavigationOnClickListener(v -> finish());
-        b.btnBookNow.setOnClickListener(v -> Toast.makeText(this, "Tiếp tục đặt phòng", Toast.LENGTH_SHORT).show());
+        b.btnBookNow.setOnClickListener(v -> {
+            if (!RoomSelectionStore.hasSelection()) {
+                Toast.makeText(this, "Vui lòng chọn phòng trước khi tiếp tục", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            startActivity(new Intent(this, FillBookingInfoActivity.class));
+        });
 
         getWindow().setStatusBarColor(getColor(R.color.toolbar_blue));
 
@@ -187,7 +191,17 @@ public class ListRoomTypeActivity extends AppCompatActivity
     }
 
     private void showLoading(boolean show) {
-        b.progressIndicator.setVisibility(show ? View.VISIBLE : View.GONE);
+        b.progressIndicator.setVisibility(View.GONE);
+        if (show) {
+            b.shimmerLoading.setVisibility(View.VISIBLE);
+            b.shimmerLoading.startShimmer();
+            b.rvRoomTypes.setVisibility(View.GONE);
+            b.layoutEmpty.setVisibility(View.GONE);
+            return;
+        }
+
+        b.shimmerLoading.stopShimmer();
+        b.shimmerLoading.setVisibility(View.GONE);
     }
 
     private void initSearchParams() {
@@ -248,7 +262,7 @@ public class ListRoomTypeActivity extends AppCompatActivity
         double totalPrice = RoomSelectionStore.getTotalPrice();
 
         b.tvSelectionSummary.setText(getString(R.string.selected_room_bed_summary, rooms, beds));
-        b.tvSelectionPrice.setText("VND " + currencyFormat.format((long) totalPrice));
+        b.tvSelectionPrice.setText(CurrencyUtils.formatVnd(totalPrice));
     }
 
     private void showQuantityPicker(RoomType roomType) {

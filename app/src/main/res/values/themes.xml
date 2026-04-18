@@ -60,7 +60,7 @@
     <style name="Theme.HotelBookingPTIT" parent="AppTheme" />
 
     <!-- Used on HotelDetailActivity to match the blue toolbar background -->
-    <style name="Theme.HotelBookingPTIT.HotelDetail" parent="Theme.HotelBookingPTIT">
+    <style name="Theme.HotelBookingPTIT.DarkStatusBar" parent="Theme.HotelBookingPTIT">
         <item name="android:statusBarColor">#0B4AA2</item>
         <!-- Dark blue background -> use light (white) status bar icons -->
         <item name="android:windowLightStatusBar">false</item>

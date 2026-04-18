@@ -79,4 +79,5 @@ dependencies {
 
     // Annotation processor to generate code during build
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    implementation libs.shimmer
 }

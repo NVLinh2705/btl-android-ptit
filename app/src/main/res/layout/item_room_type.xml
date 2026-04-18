@@ -248,7 +248,7 @@
                 android:id="@+id/tvOriginalPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="VND 600,000"
+                android:text="600.000 VND"
                 android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:textColor="?attr/colorOnSurfaceVariant"
                 android:visibility="gone" />
@@ -259,7 +259,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
-                android:text="VND 500,000"
+                android:text="500.000 VND"
                 android:textAppearance="?attr/textAppearanceTitleLarge"
                 android:textStyle="bold"
                 android:textColor="?attr/colorOnSurface" />

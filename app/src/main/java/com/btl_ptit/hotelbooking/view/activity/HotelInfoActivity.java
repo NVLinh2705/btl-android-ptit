@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -74,6 +75,7 @@ public class HotelInfoActivity extends AppCompatActivity implements OnMapReadyCa
         setupToolbar();
         setupMap();
         setupBottomCta();
+        showLoadingState(true);
         fetchHotelDataAsync(3);
     }
 
@@ -104,16 +106,18 @@ public class HotelInfoActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     private void showEmptyState() {
-        b.emptyState.setVisibility(android.view.View.VISIBLE);
-        b.scrollView.setVisibility(android.view.View.GONE);
-        b.bottomBar.setVisibility(android.view.View.GONE);
+        showLoadingState(false);
+        b.emptyState.setVisibility(View.VISIBLE);
+        b.scrollView.setVisibility(View.GONE);
+        b.bottomBar.setVisibility(View.GONE);
         b.toolbar.setTitle("");
     }
 
     private void bindHotelData() {
-        b.emptyState.setVisibility(android.view.View.GONE);
-        b.scrollView.setVisibility(android.view.View.VISIBLE);
-        b.bottomBar.setVisibility(android.view.View.VISIBLE);
+        showLoadingState(false);
+        b.emptyState.setVisibility(View.GONE);
+        b.scrollView.setVisibility(View.VISIBLE);
+        b.bottomBar.setVisibility(View.VISIBLE);
 
         setupImageSlider();
         setupFacilities();
@@ -314,6 +318,20 @@ public class HotelInfoActivity extends AppCompatActivity implements OnMapReadyCa
                 dp,
                 getResources().getDisplayMetrics()
         );
+    }
+
+    private void showLoadingState(boolean show) {
+        if (show) {
+            b.shimmerLoading.setVisibility(View.VISIBLE);
+            b.shimmerLoading.startShimmer();
+            b.scrollView.setVisibility(View.GONE);
+            b.emptyState.setVisibility(View.GONE);
+            b.bottomBar.setVisibility(View.GONE);
+            return;
+        }
+
+        b.shimmerLoading.stopShimmer();
+        b.shimmerLoading.setVisibility(View.GONE);
     }
 
     private void setupFacilities() {

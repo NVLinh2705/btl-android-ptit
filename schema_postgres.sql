@@ -113,7 +113,7 @@ CREATE TABLE hotels (
     province_code varchar(20) references provinces(code) on delete set null,
     district_code varchar(20) references districts(code) on delete set null,
     ward_code varchar(20) references wards(code) on delete set null,
-    street          TEXT,
+    address          TEXT,
     base_currency   CHAR(3)     NOT NULL DEFAULT 'VND',
     is_active       BOOLEAN     NOT NULL DEFAULT TRUE,
     longitude       DOUBLE PRECISION,

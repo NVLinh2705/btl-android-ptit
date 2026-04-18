@@ -15,11 +15,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HotelBookingPTIT">
         <activity
+            android:name=".view.activity.ConfirmBookingActivity"
+            android:exported="false"
+            android:theme="@style/Theme.HotelBookingPTIT.DarkStatusBar"/>
+        <activity
+            android:name=".view.activity.FillBookingInfoActivity"
+            android:exported="false"
+            android:theme="@style/Theme.HotelBookingPTIT.DarkStatusBar" />
+        <activity
             android:name=".view.activity.RoomTypeDetailActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.HotelBookingPTIT.DarkStatusBar"/>
         <activity
             android:name=".view.activity.ListRoomTypeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.HotelBookingPTIT.DarkStatusBar"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -28,11 +38,11 @@
         <activity
             android:name=".view.activity.HotelInfoActivity"
             android:exported="false"
-            android:theme="@style/Theme.HotelBookingPTIT.HotelDetail" />
+            android:theme="@style/Theme.HotelBookingPTIT.DarkStatusBar" />
         <activity
             android:name=".view.activity.HotelDetailActivity"
             android:exported="false"
-            android:theme="@style/Theme.HotelBookingPTIT.HotelDetail" />
+            android:theme="@style/Theme.HotelBookingPTIT.DarkStatusBar" />
         <activity
             android:name=".view.activity.LoginActivity"
             android:exported="true">

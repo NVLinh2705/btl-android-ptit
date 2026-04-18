@@ -30,7 +30,9 @@
         android:id="@+id/emptyState"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone">
+
+        android:visibility="gone"
+        android:orientation="vertical">
         <ImageView
             android:src="@drawable/not_found"
             android:layout_height="120dp"
@@ -42,6 +44,59 @@
             android:text="@string/not_found_message"/>
 
     </LinearLayout>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerLoading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:shimmer_auto_start="false"
+        app:shimmer_duration="1100">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="210dp"
+                android:background="@drawable/bg_skeleton_rounded" />
+
+            <View
+                android:layout_width="220dp"
+                android:layout_height="22dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_skeleton_rounded" />
+
+            <View
+                android:layout_width="160dp"
+                android:layout_height="16dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_skeleton_rounded" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_skeleton_rounded" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_skeleton_rounded" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_skeleton_rounded" />
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
