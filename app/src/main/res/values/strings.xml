@@ -14,4 +14,6 @@
     <string name="txt_retry">Retry</string>
     <string name="txtRecommended">Recommended for you ✨</string>
     <string name="averagePerNight">average / night</string>
+    <string name="perNight">/ night</string>
+    <string name="labelHotelNearYou">Hotel near you  🏨</string>
 </resources>

@@ -13,4 +13,6 @@
     <string name="txt_retry">Thử lại</string>
     <string name="txtRecommended">Gợi ý dành cho bạn ✨</string>
     <string name="averagePerNight">trung bình / đêm</string>
+    <string name="perNight">/ đêm</string>
+    <string name="labelHotelNearYou">Khách sạn gần bạn  🏨</string>
 </resources>

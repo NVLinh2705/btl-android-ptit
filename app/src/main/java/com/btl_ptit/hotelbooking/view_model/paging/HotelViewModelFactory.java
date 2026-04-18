@@ -9,16 +9,18 @@ import com.btl_ptit.hotelbooking.data.repository.MyHotelRepository;
 public class HotelViewModelFactory implements ViewModelProvider.Factory {
 
     private final MyHotelRepository repository;
+    private final Boolean isRecommended;
 
-    public HotelViewModelFactory(MyHotelRepository repository) {
+    public HotelViewModelFactory(MyHotelRepository repository, Boolean isRecommended) {
         this.repository = repository;
+        this.isRecommended = isRecommended;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(HotelViewModel.class)) {
-            return (T) new HotelViewModel(repository);
+            return (T) new HotelViewModel(repository, isRecommended);
         }
         throw new IllegalArgumentException("Unknown ViewModel class");
     }
