@@ -1,25 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#F5F6FA"
     tools:context=".view.fragment.MyBookingFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraint_my_booking"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <Button
-            android:id="@+id/btnMyBooking"
-            android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#0B4AA2"
+            app:titleTextColor="@android:color/white"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            tools:title="Danh sách đặt phòng" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="90dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="My Booking fragment"
-            app:layout_constraintTop_toTopOf="@id/constraint_my_booking"
-            app:layout_constraintLeft_toLeftOf="@id/constraint_my_booking"
-            app:layout_constraintRight_toRightOf="@id/constraint_my_booking"
-            app:layout_constraintBottom_toBottomOf="@id/constraint_my_booking"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Common Facilities"
+                        android:textColor="#111111"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
 
 
-</FrameLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvFacilities"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:overScrollMode="never"
+                    tools:listitem="@layout/booking_item"
+                    android:orientation="horizontal"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
