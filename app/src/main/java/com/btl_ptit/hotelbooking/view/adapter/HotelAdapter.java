@@ -1,5 +1,7 @@
 package com.btl_ptit.hotelbooking.view.adapter;
 
+import static android.view.View.VISIBLE;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -9,6 +11,7 @@ import androidx.paging.PagingDataAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.btl_ptit.hotelbooking.R;
 import com.btl_ptit.hotelbooking.data.model.MyHotel;
 import com.btl_ptit.hotelbooking.databinding.HotelItemBinding;
 import com.btl_ptit.hotelbooking.listener.OnHotelClickListener;
@@ -40,14 +43,30 @@ public class HotelAdapter extends PagingDataAdapter<MyHotel, HotelAdapter.HotelV
         MyHotel currentMyHotel = getItem(position);
         // Check for null
         if (currentMyHotel != null) {
+            holder.hotelItemBinding.shimmerLayout.stopShimmer();
+            holder.hotelItemBinding.shimmerLayout.setShimmer(null);
+
+            holder.hotelItemBinding.imageViewHotel.setBackground(null);
+            holder.hotelItemBinding.tvPrice.setBackground(null);
+            holder.hotelItemBinding.labelAveragePrice.setBackground(null);
+            holder.hotelItemBinding.txtName.setBackground(null);
+            holder.hotelItemBinding.tvRating.setBackground(null);
+            holder.hotelItemBinding.tvLocation.setBackground(null);
+            holder.hotelItemBinding.layoutPrice.setBackground(null);
+
             int radius = (int) (8 * context.getResources().getDisplayMetrics().density);
             Glide.with(holder.hotelItemBinding.imageViewHotel.getContext())
                     .load(currentMyHotel.getAvatar())
                     .transform(new CenterCrop(), new RoundedCorners(radius))
                     .into(holder.hotelItemBinding.imageViewHotel);
 
-            holder.hotelItemBinding.textViewRating.setText("trung bình / một đêm");
+            holder.hotelItemBinding.tvPrice.setText(currentMyHotel.getAveragePrice() * 100000 + "₫");
+            holder.hotelItemBinding.labelAveragePrice.setText(R.string.perNight);
             holder.hotelItemBinding.txtName.setText(currentMyHotel.getName());
+            holder.hotelItemBinding.tvRating.setText(String.valueOf(currentMyHotel.getRating() / 10.0));
+            holder.hotelItemBinding.ivStar.setVisibility(VISIBLE);
+            holder.hotelItemBinding.tvLocation.setText("\uD83D\uDCCD " + currentMyHotel.getLocation());
+
 
             holder.itemView.setOnClickListener(v -> {
                 if (listener != null) {

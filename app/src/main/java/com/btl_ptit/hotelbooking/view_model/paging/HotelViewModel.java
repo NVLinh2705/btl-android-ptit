@@ -25,9 +25,20 @@ public class HotelViewModel extends ViewModel {
     private MutableLiveData<Boolean> success = new MutableLiveData<>(false);
     private MutableLiveData<String> error = new MutableLiveData<>(null);
 
-    public HotelViewModel(MyHotelRepository repository) {
+    public HotelViewModel(MyHotelRepository repository, Boolean isRecommended) {
         this.repository = repository;
-        initPaging();
+        if (isRecommended) {
+            initPagingWithPagingConfig();
+        } else {
+            initPaging();
+        }
+    }
+
+    private void initPagingWithPagingConfig() {
+        Flowable<PagingData<MyHotel>> flowable = repository.getHotelsPagingWithFixedQuantity();
+
+        CoroutineScope scope = ViewModelKt.getViewModelScope(this);
+        pagingDataFlow = PagingRx.cachedIn(flowable, scope);
     }
 
     private void initPaging() {

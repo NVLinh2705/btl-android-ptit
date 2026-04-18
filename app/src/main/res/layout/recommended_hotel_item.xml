@@ -20,7 +20,7 @@
             <ImageView
                 android:id="@+id/imageViewHotel"
                 android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_height="0dp"
                 android:background="@drawable/bg_placeholder"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -39,7 +39,7 @@
                 android:textColor="@color/md_theme_primaryFixedDim_mediumContrast"
                 android:textSize="13sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@+id/layoutRating"
+                app:layout_constraintEnd_toStartOf="@+id/tvRating"
                 app:layout_constraintStart_toEndOf="@+id/imageViewHotel"
                 app:layout_constraintTop_toTopOf="@+id/imageViewHotel" />
 
@@ -70,7 +70,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/imageViewHotel"
                 app:layout_constraintStart_toStartOf="@+id/tvLocation"
                 app:layout_constraintTop_toBottomOf="@+id/tvLocation"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintEnd_toEndOf="@+id/tvLocation">
 
                 <TextView
                     android:id="@+id/tvPrice"
@@ -84,44 +84,28 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/labelAveragePrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text=""
-                    android:textColor="#888888"
+                    android:textColor="#1A1F2B"
                     android:textSize="13sp" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/layoutRating"
+            <TextView
+                android:id="@+id/tvRating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/bg_placeholder"
+                android:text=""
+                android:textColor="#FFC107"
+                android:drawablePadding="4dp"
+                android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/txtName">
-
-                <ImageView
-                    android:id="@+id/ivStar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/outline_kid_star_24"
-                    android:visibility="invisible"/>
-
-                <TextView
-                    android:id="@+id/tvRating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:background="@drawable/bg_placeholder"
-                    android:text=""
-                    android:textColor="#FFC107"
-                    android:drawablePadding="4dp"
-                    android:textSize="15sp" />
-            </LinearLayout>
+                app:layout_constraintTop_toTopOf="@+id/txtName"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>

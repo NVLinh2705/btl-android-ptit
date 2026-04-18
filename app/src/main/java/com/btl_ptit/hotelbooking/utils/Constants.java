@@ -14,4 +14,6 @@ public class Constants {
     public static final boolean ENABLE_PLACEHOLDERS = false;
     public static final int INITIAL_LOAD_SIZE = 10;
     public static final int MAX_SIZE = 100;
+
+    public static final int NUM_OF_PLACE_HOLDER = 5;
 }

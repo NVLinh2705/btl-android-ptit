@@ -31,7 +31,23 @@ public class MyHotelRepository {
                         Constants.ENABLE_PLACEHOLDERS,   // enablePlaceholders - Enable placeholders for data which is not yet loaded
                         Constants.INITIAL_LOAD_SIZE,         // initialLoadSize - Count of items to be loaded initially
                         Constants.MAX_SIZE),      // maxSize - Count of total items to be shown in recyclerview
-                () -> new MyHotelPagingSource(hotelRestService));      // set paging source
+                () -> new MyHotelPagingSource(hotelRestService, false));      // set paging source
+
+        return PagingRx.getFlowable(pager);
+    }
+
+    public Flowable<PagingData<MyHotel>> getHotelsPagingWithFixedQuantity() {
+
+        // Create new pager
+        Pager<Integer, MyHotel> pager = new Pager<>(
+                // Create new paging config
+                new PagingConfig(
+                        Constants.NUM_OF_PLACE_HOLDER,     // pageSize - Count of items in one page
+                        1,        // prefetchDistance - Number of items to prefetch
+                        Constants.ENABLE_PLACEHOLDERS,   // enablePlaceholders - Enable placeholders for data which is not yet loaded
+                        Constants.NUM_OF_PLACE_HOLDER,         // initialLoadSize - Count of items to be loaded initially
+                        20),      // maxSize - Count of total items to be shown in recyclerview
+                () -> new MyHotelPagingSource(hotelRestService, true));      // set paging source
 
         return PagingRx.getFlowable(pager);
     }
