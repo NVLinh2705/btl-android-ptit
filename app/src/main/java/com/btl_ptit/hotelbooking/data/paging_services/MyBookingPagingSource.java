@@ -33,7 +33,7 @@ public class MyBookingPagingSource extends RxPagingSource<Integer, MyBooking> {
 // 🔥 convert page → offset
         int offset = (pageNumber - 1) * pageSize;
 
-        return mBookingRestService.getListBooking(pageSize, offset)
+        return mBookingRestService.getListBooking("*, hotels(*)",pageSize, offset)
                 .map(listBooking -> toLoadResult(listBooking, pageNumber))
                 .onErrorReturn(LoadResult.Error::new);
     }

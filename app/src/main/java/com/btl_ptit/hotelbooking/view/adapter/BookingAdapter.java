@@ -1,6 +1,7 @@
 package com.btl_ptit.hotelbooking.view.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import androidx.paging.PagingDataAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.btl_ptit.hotelbooking.R;
 import com.btl_ptit.hotelbooking.data.model.MyBooking;
 import com.btl_ptit.hotelbooking.databinding.BookingItemBinding;
 import com.btl_ptit.hotelbooking.listener.OnBookingClickListener;
@@ -44,14 +46,30 @@ public class BookingAdapter extends PagingDataAdapter<MyBooking, BookingAdapter.
         // Check for null
         if (currentMyBooking != null) {
             holder.bookingItemBinding.txtBookingId.setText("Mã: " +currentMyBooking.getId());
-            String hotelName = (currentMyBooking.getHotel() != null &&
-                    currentMyBooking.getHotel().getName() != null)
-                    ? currentMyBooking.getHotel().getName()
+            String hotelName = (currentMyBooking.getHotels() != null &&
+                    currentMyBooking.getHotels().getName() != null)
+                    ? currentMyBooking.getHotels().getName()
                     : "No hotel";
 
             holder.bookingItemBinding.txtHotelName.setText(hotelName);
-            holder.bookingItemBinding.txtStatus.setText(currentMyBooking.getStatusCode()==null ? "null " : currentMyBooking.getStatusCode().toString());
             holder.bookingItemBinding.txtPrice.setText(String.valueOf(currentMyBooking.getTotalAmount()));
+            switch (currentMyBooking.getStatusCode()) {
+                case "PENDING":
+                    holder.bookingItemBinding.txtStatus.setBackgroundResource(R.drawable.bg_pending);
+                    holder.bookingItemBinding.txtStatus.setTextColor(Color.parseColor("#FBC02D"));
+                    holder.bookingItemBinding.txtStatus.setText("Đang chờ duyệt");
+                    break;
+                case "CONFIRMED":
+                    holder.bookingItemBinding.txtStatus.setBackgroundResource(R.drawable.bg_confirmed);
+                    holder.bookingItemBinding.txtStatus.setTextColor(Color.parseColor("#388E3C"));
+                    holder.bookingItemBinding.txtStatus.setText("Đã xác nhận");
+                    break;
+                case "CANCELLED":
+                    holder.bookingItemBinding.txtStatus.setBackgroundResource(R.drawable.bg_cancelled);
+                    holder.bookingItemBinding.txtStatus.setTextColor(Color.parseColor("#D32F2F"));
+                    holder.bookingItemBinding.txtStatus.setText("Đã hủy");
+                    break;
+            }
 
             holder.itemView.setOnClickListener(v -> {
                 if (onBookingClickListener != null) {

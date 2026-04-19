@@ -1,6 +1,7 @@
 package com.btl_ptit.hotelbooking.view.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -23,6 +24,7 @@ import com.btl_ptit.hotelbooking.data.repository.MyBookingRepository;
 import com.btl_ptit.hotelbooking.databinding.FragmentMyBookingBinding;
 import com.btl_ptit.hotelbooking.listener.OnBookingClickListener;
 import com.btl_ptit.hotelbooking.utils.paging.MyComparator;
+import com.btl_ptit.hotelbooking.view.activity.BookingHistoryDetailActivity;
 import com.btl_ptit.hotelbooking.view.activity.LoginActivity;
 import com.btl_ptit.hotelbooking.view.adapter.BookingAdapter;
 import com.btl_ptit.hotelbooking.view.adapter.LoadStateAdapter;
@@ -82,6 +84,9 @@ public class MyBookingFragment extends Fragment {
             @Override
             public void onBookingClick(MyBooking myBooking) {
                 Toast.makeText(mContext, "Booking clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, BookingHistoryDetailActivity.class);
+                intent.putExtra("bookingId", myBooking.getId());
+                startActivity(intent);
             }
         });
         LinearLayoutManager layoutManager = new LinearLayoutManager(
