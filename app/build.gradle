@@ -80,4 +80,9 @@ dependencies {
     implementation libs.rxandroid
 
     implementation libs.shimmer
+    compileOnly(libs.lombok)
+    annotationProcessor(libs.lombok)
+
+    testCompileOnly(libs.lombok)
+    testAnnotationProcessor(libs.lombok)
 }
