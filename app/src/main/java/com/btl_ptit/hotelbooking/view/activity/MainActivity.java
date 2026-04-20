@@ -10,6 +10,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.btl_ptit.hotelbooking.R;
+import com.btl_ptit.hotelbooking.data.session.SessionManager;
 import com.btl_ptit.hotelbooking.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding mActivityMainBinding;
     private Context mContext;
     private String TAG = "MainActivityTAG";
+    private final SessionManager sessionManager = SessionManager.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,5 +44,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sessionManager.clearSelectedHotelBrief();
     }
 }

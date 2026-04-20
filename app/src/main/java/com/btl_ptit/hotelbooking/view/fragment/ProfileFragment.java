@@ -38,7 +38,7 @@ public class ProfileFragment extends Fragment {
         Context context = getContext();
         if (context == null) return;
 
-        User user = new SessionManager().getUser();
+        User user = SessionManager.getInstance().getUser();
         if (user == null) {
             binding.tvFullName.setText("Guest");
             binding.imgAvatar.setImageResource(R.mipmap.ic_launcher);
