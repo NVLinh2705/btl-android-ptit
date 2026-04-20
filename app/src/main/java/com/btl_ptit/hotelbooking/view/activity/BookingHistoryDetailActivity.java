@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.btl_ptit.hotelbooking.R;
@@ -43,6 +44,7 @@ public class BookingHistoryDetailActivity extends AppCompatActivity {
         bookingId = getIntent().getStringExtra("bookingId");
         bookingRestService = SupabaseClient.createService(BookingRestService.class);
 
+        setupToolbar();
         // 1. Khởi tạo Adapter và RecyclerView
         initRecyclerView();
 
@@ -127,5 +129,17 @@ public class BookingHistoryDetailActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         compositeDisposable.clear();
+    }
+
+    private void setupToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
+
+        toolbar.setNavigationOnClickListener(v -> finish());
     }
 }
