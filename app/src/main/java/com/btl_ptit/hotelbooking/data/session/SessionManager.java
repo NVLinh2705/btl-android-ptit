@@ -8,6 +8,9 @@ import androidx.annotation.Nullable;
 import com.btl_ptit.hotelbooking.MyApplication;
 import com.btl_ptit.hotelbooking.data.model.User;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 public class SessionManager {
     private static final String PREF_NAME = "session";
     private static final String KEY_ACCESS_TOKEN = "access_token";
@@ -19,10 +22,34 @@ public class SessionManager {
 
     private static final String KEY_ID = "id";
 
-    private final SharedPreferences prefs;
+    private static volatile SessionManager instance;
 
-    public SessionManager() {
+    private final SharedPreferences prefs;
+    private SelectedHotelBrief selectedHotelBrief;
+
+    private SessionManager() {
         this.prefs = MyApplication.getAppContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+    }
+
+    public static SessionManager getInstance() {
+        if (instance == null) {
+            synchronized (SessionManager.class) {
+                if (instance == null) {
+                    instance = new SessionManager();
+                }
+            }
+        }
+        return instance;
+    }
+
+    @Nullable
+    public String getAccessToken() {
+        return prefs.getString(KEY_ACCESS_TOKEN, null);
+    }
+
+    @Nullable
+    public String getRefreshToken() {
+        return prefs.getString(KEY_REFRESH_TOKEN, null);
     }
 
     public void saveSession(String accessToken, String refreshToken, @Nullable User user) {
@@ -52,6 +79,28 @@ public class SessionManager {
     }
     public void clear() {
         prefs.edit().clear().apply();
+        clearSelectedHotelBrief();
+    }
+
+    public void saveSelectedHotelBrief(String hotelName, String hotelAddress, double avgRating) {
+        selectedHotelBrief = new SelectedHotelBrief(hotelName, hotelAddress, avgRating);
+    }
+
+    @Nullable
+    public SelectedHotelBrief getSelectedHotelBrief() {
+        return selectedHotelBrief;
+    }
+
+    public void clearSelectedHotelBrief() {
+        selectedHotelBrief = null;
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static final class SelectedHotelBrief {
+        private final String hotelName;
+        private final String hotelAddress;
+        private final double avgRating;
     }
 }
 
