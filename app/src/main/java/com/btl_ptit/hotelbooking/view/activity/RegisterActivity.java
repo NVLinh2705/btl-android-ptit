@@ -97,7 +97,7 @@ public class RegisterActivity extends AppCompatActivity {
                         public void onResponse(Call<Void> call, Response<Void> restResponse) {
                             if (restResponse.isSuccessful()) {
                                 // 4. Save Session & Navigate
-                                new SessionManager().saveSession(
+                                SessionManager.getInstance().saveSession(
                                         authData.getAccessToken(),
                                         authData.getRefreshToken(),
                                         newUser

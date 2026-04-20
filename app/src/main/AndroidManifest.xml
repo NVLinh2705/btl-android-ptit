@@ -14,7 +14,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HotelBookingPTIT">
-
+        <activity
+            android:name=".view.activity.BookingHistoryDetailActivity"
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -26,8 +28,7 @@
             android:theme="@style/Theme.HotelBookingPTIT.HotelDetail" />
         <activity
             android:name=".view.activity.RegisterActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".view.activity.LoginActivity"
             android:exported="true">
@@ -41,8 +42,7 @@
             android:name=".view.activity.MainActivity"
             android:exported="false"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme">
-        </activity>
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>
