@@ -103,6 +103,10 @@ public final class RoomSelectionStore {
         return getSelectedRoomCount() > 0;
     }
 
+    public static synchronized Integer getCurrentHotelId() {
+        return currentHotelId;
+    }
+
     public static synchronized List<SelectionItem> getSelectionItems() {
         if (selectedRooms.isEmpty()) {
             return Collections.emptyList();

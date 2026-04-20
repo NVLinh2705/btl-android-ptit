@@ -69,4 +69,30 @@
     <string name="error_enter_phone">Vui lòng nhập số điện thoại hợp lệ</string>
     <string name="confirm_booking_title">Xác nhận đặt phòng</string>
     <string name="confirm_booking_placeholder">Màn hình xác nhận đặt phòng đang được phát triển</string>
+
+    <string name="booking_summary_hotel_name">Khách sạn</string>
+    <string name="booking_summary_hotel_address">Địa chỉ</string>
+    <string name="booking_checkin_label">Nhận phòng</string>
+    <string name="booking_checkout_label">Trả phòng</string>
+    <string name="booking_nights_rooms_adults">%1$d đêm • %2$d phòng • %3$d người lớn</string>
+    <string name="booking_guest_info_title">Thông tin khách đặt</string>
+    <string name="booking_full_name">Họ tên</string>
+    <string name="booking_email">Địa chỉ email</string>
+    <string name="booking_phone">Số điện thoại</string>
+    <string name="booking_your_choice_title">Lựa chọn của bạn</string>
+    <string name="booking_special_request_title">Yêu cầu đặc biệt</string>
+    <string name="booking_special_request_hint">Nhập yêu cầu đặc biệt của bạn...</string>
+    <string name="booking_special_request_note">Xin lưu ý tất cả yêu cầu đều không đảm bảo và tuỳ thuộc vào trình trạng sẵn có của chỗ nghỉ</string>
+    <string name="booking_special_request_count">%1$d/1000</string>
+    <string name="booking_room_payment">Thanh toán: %1$s</string>
+    <string name="booking_room_cancellation">Huỷ phòng: %1$s</string>
+    <string name="booking_room_max_guests">Tối đa %1$d khách</string>
+    <string name="booking_room_beds">%1$d %2$s</string>
+    <string name="booking_room_selected_count">Số phòng đã chọn: %1$d</string>
+    <string name="booking_room_subtotal">Tạm tính: %1$s</string>
+    <string name="booking_unknown_hotel">Chưa có tên khách sạn</string>
+    <string name="booking_unknown_address">Chưa có địa chỉ</string>
+    <string name="booking_not_available">Chưa có thông tin</string>
+    <string name="pay_at_property_chip">Thanh toán khi nhận phòng</string>
+    <string name="confirm">Xác nhận</string>
 </resources>

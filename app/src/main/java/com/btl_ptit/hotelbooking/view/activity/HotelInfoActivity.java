@@ -22,6 +22,7 @@ import com.btl_ptit.hotelbooking.data.dto.HotelImage;
 import com.btl_ptit.hotelbooking.data.dto.HotelResponse;
 import com.btl_ptit.hotelbooking.data.dto.LikeHotelRequest;
 import com.btl_ptit.hotelbooking.data.session.RoomSelectionStore;
+import com.btl_ptit.hotelbooking.data.session.SessionManager;
 import com.btl_ptit.hotelbooking.data.remote.SupabaseClient;
 import com.btl_ptit.hotelbooking.data.remote.api_services.SupabaseRestService;
 import com.btl_ptit.hotelbooking.databinding.ActivityHotelInfoBinding;
@@ -59,6 +60,7 @@ public class HotelInfoActivity extends AppCompatActivity implements OnMapReadyCa
     private HotelResponse hotelResponse;
 
     private SupabaseRestService restService;
+    private final SessionManager sessionManager = SessionManager.getInstance();
 
     private LinearLayout emptyState;
     private final DateTimeFormatter apiDateFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
@@ -384,6 +386,15 @@ public class HotelInfoActivity extends AppCompatActivity implements OnMapReadyCa
     private void setupBottomCta() {
         b.btnSelectRoom.setOnClickListener(v -> {
             if (hotelResponse == null) return;
+
+            double avgRating = hotelResponse.getStats() != null && hotelResponse.getStats().getAvgRating() != null
+                    ? hotelResponse.getStats().getAvgRating()
+                    : 0.0;
+            sessionManager.saveSelectedHotelBrief(
+                    hotelResponse.getName(),
+                    hotelResponse.getAddress(),
+                    avgRating
+            );
 
             LocalDate today = LocalDate.now();
             String checkinDate = getIntent().getStringExtra(ListRoomTypeActivity.EXTRA_CHECKIN_DATE);

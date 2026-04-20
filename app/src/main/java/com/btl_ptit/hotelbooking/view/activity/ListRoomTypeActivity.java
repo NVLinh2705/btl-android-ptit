@@ -87,7 +87,12 @@ public class ListRoomTypeActivity extends AppCompatActivity
                 Toast.makeText(this, "Vui lòng chọn phòng trước khi tiếp tục", Toast.LENGTH_SHORT).show();
                 return;
             }
-            startActivity(new Intent(this, FillBookingInfoActivity.class));
+            Intent intent = new Intent(this, FillBookingInfoActivity.class);
+            intent.putExtra(FillBookingInfoActivity.EXTRA_HOTEL_ID, getIntent().getIntExtra(EXTRA_HOTEL_ID, -1));
+            intent.putExtra(FillBookingInfoActivity.EXTRA_CHECKIN_DATE, checkinApi);
+            intent.putExtra(FillBookingInfoActivity.EXTRA_CHECKOUT_DATE, checkoutApi);
+            intent.putExtra(FillBookingInfoActivity.EXTRA_ADULTS, adults);
+            startActivity(intent);
         });
 
         getWindow().setStatusBarColor(getColor(R.color.toolbar_blue));
@@ -175,6 +180,7 @@ public class ListRoomTypeActivity extends AppCompatActivity
         intent.putExtra(EXTRA_CHECKIN_DATE, checkinApi);
         intent.putExtra(EXTRA_CHECKOUT_DATE, checkoutApi);
         intent.putExtra(EXTRA_HOTEL_ID, roomType.getHotelId());
+        intent.putExtra(EXTRA_ADULTS, adults);
         startActivity(intent);
     }
 
