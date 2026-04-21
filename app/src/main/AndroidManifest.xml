@@ -28,16 +28,31 @@
             android:theme="@style/Theme.HotelBookingPTIT.HotelDetail" />
         <activity
             android:name=".view.activity.RegisterActivity"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
+
+        <!-- 2. Login xử lý Deep Link (vẫn giữ logic ở đây) -->
         <activity
             android:name=".view.activity.LoginActivity"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="hotelbooking"
+                    android:host="auth-callback" />
+            </intent-filter>
         </activity>
+        <activity
+            android:name=".view.activity.EditProfileActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.activity.MainActivity"
             android:exported="false"

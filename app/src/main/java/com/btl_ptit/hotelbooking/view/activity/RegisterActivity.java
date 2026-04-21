@@ -14,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.btl_ptit.hotelbooking.data.dto.LoginRequest;
 import com.btl_ptit.hotelbooking.data.dto.LoginResponse;
 import com.btl_ptit.hotelbooking.data.dto.RegisterRequest;
+import com.btl_ptit.hotelbooking.data.dto.RegisterResponse;
 import com.btl_ptit.hotelbooking.data.model.User;
 import com.btl_ptit.hotelbooking.data.remote.SupabaseClient;
 import com.btl_ptit.hotelbooking.data.remote.api_services.SupabaseAuthService;
@@ -82,40 +83,15 @@ public class RegisterActivity extends AppCompatActivity {
 
         // 2. Auth SignUp
         RegisterRequest signUpRequest = new RegisterRequest(fullName,phone, email, password);
-        authService.signUp(signUpRequest).enqueue(new Callback<LoginResponse>() {
+        authService.signUp("hotelbooking://auth-callback",signUpRequest).enqueue(new Callback<RegisterResponse>() {
             @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    LoginResponse authData = response.body();
-                    String userId = authData.getUser().getId();
-                    String bearerToken = "Bearer " + authData.getAccessToken();
-
-                    // 3. Insert into public.users
-                    User newUser = new User(userId, email, phone, fullName, null);
-                    restService.insertUser(bearerToken, newUser).enqueue(new Callback<Void>() {
-                        @Override
-                        public void onResponse(Call<Void> call, Response<Void> restResponse) {
-                            if (restResponse.isSuccessful()) {
-                                // 4. Save Session & Navigate
-                                SessionManager.getInstance().saveSession(
-                                        authData.getAccessToken(),
-                                        authData.getRefreshToken(),
-                                        newUser
-                                );
-                                Toast.makeText(RegisterActivity.this, "Đăng ký thành công! Hãy xác thực email của bạn để đăng nhập", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                                finish();
-                            } else {
-                                Toast.makeText(RegisterActivity.this, "Lỗi tạo profile người dùng", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
-                            Toast.makeText(RegisterActivity.this, "Lỗi kết nối database", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
+                    RegisterResponse authData = response.body();
+                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                    intent.putExtra("message", "Đăng ký thành công! Hãy xác thực email của bạn để đăng nhập");
+                    startActivity(intent);
+                    finish();
                 } else {
                     Toast.makeText(RegisterActivity.this,
                             "Auth error: " + response.message(),
@@ -124,7 +100,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<LoginResponse> call, Throwable t) {
+            public void onFailure(Call<RegisterResponse> call, Throwable t) {
                 Toast.makeText(RegisterActivity.this, "Lỗi hệ thống: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
