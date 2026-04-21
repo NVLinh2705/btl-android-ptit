@@ -2,11 +2,14 @@ package com.btl_ptit.hotelbooking.data.session;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Base64;
 
 import androidx.annotation.Nullable;
 
 import com.btl_ptit.hotelbooking.MyApplication;
 import com.btl_ptit.hotelbooking.data.model.User;
+
+import org.json.JSONObject;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -56,15 +59,39 @@ public class SessionManager {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(KEY_ACCESS_TOKEN, accessToken);
         editor.putString(KEY_REFRESH_TOKEN, refreshToken);
+
+        String userId = null;
+        if (user != null && user.getId() != null) {
+            userId = user.getId();
+        } else if (accessToken != null) {
+            userId = getUserIdFromToken(accessToken);
+        }
+
+        if (userId != null) {
+            editor.putString(KEY_ID, userId);
+        }
+
         if (user != null) {
-            editor.putString(KEY_ID, user.getId());
             editor.putString(KEY_FULL_NAME, user.getFullName());
             editor.putString(KEY_AVATAR_URL, user.getAvatarUrl());
             editor.putString(KEY_EMAIL, user.getEmail());
-            editor.putString(KEY_PHONE,user.getPhone());
+            editor.putString(KEY_PHONE, user.getPhone());
         }
         editor.apply();
     }
+
+    private String getUserIdFromToken(String token) {
+        try {
+            String[] parts = token.split("\\.");
+            if (parts.length < 2) return null;
+            String payload = new String(Base64.decode(parts[1], Base64.DEFAULT));
+            JSONObject json = new JSONObject(payload);
+            return json.getString("sub");
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 
     @Nullable
     public User getUser() {
