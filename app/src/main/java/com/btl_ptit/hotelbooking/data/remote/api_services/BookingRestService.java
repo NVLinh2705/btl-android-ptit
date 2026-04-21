@@ -17,6 +17,7 @@ public interface BookingRestService {
     @GET("rest/v1/bookings")
     Single<List<MyBooking>> getListBooking(
             @Query("select") String select,
+            @Query("customer_id") String customerId,
             @Query("limit") int limit,
             @Query("offset") int offset
     );

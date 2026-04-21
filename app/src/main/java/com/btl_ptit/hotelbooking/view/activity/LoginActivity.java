@@ -135,6 +135,8 @@ public class LoginActivity extends AppCompatActivity {
                             if (resp.isSuccessful() && resp.body() != null && !resp.body().isEmpty()) {
                                 user = resp.body().get(0);
                             }
+                            user.setId(userId);
+                            System.out.println("id= "+user.getId()+" fullname "+user.getFullName());
 
                             sessionManager.saveSession(
                                 body.getAccessToken(),
