@@ -1,5 +1,7 @@
 package com.btl_ptit.hotelbooking.data.paging_services;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.paging.PagingState;
@@ -9,8 +11,10 @@ import com.btl_ptit.hotelbooking.data.model.MyBooking;
 import com.btl_ptit.hotelbooking.data.model.MyHotel;
 import com.btl_ptit.hotelbooking.data.model.MyPopularDestination;
 import com.btl_ptit.hotelbooking.data.remote.api_services.BookingRestService;
+import com.btl_ptit.hotelbooking.data.session.SessionManager;
 
 import java.util.List;
+import java.util.Optional;
 
 import io.reactivex.rxjava3.core.Single;
 
@@ -32,8 +36,10 @@ public class MyBookingPagingSource extends RxPagingSource<Integer, MyBooking> {
 
 // 🔥 convert page → offset
         int offset = (pageNumber - 1) * pageSize;
+        String customerId=SessionManager.getInstance().getUser().getId() !=null ? SessionManager.getInstance().getUser().getId() : "";
+        Log.d("DEBUG","customer id= "+customerId);
 
-        return mBookingRestService.getListBooking("*, hotels(*)",pageSize, offset)
+        return mBookingRestService.getListBooking("*, hotels(*)","eq." + customerId,pageSize, offset)
                 .map(listBooking -> toLoadResult(listBooking, pageNumber))
                 .onErrorReturn(LoadResult.Error::new);
     }
