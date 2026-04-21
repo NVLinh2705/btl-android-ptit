@@ -19,8 +19,11 @@ public class MyHotelPagingSource extends RxPagingSource<Integer, MyHotel> {
     @NonNull
     private HotelRestService mHotelRestService;
 
-    public MyHotelPagingSource(@NonNull HotelRestService mHotelRestService) {
+    private Boolean isRecommended;
+
+    public MyHotelPagingSource(@NonNull HotelRestService mHotelRestService, Boolean isRecommended) {
         this.mHotelRestService = mHotelRestService;
+        this.isRecommended = isRecommended;
     }
 
     @NotNull
@@ -39,8 +42,8 @@ public class MyHotelPagingSource extends RxPagingSource<Integer, MyHotel> {
     private LoadResult<Integer, MyHotel> toLoadResult(@NonNull List<MyHotel> responseData, int pageNumber) {
         return new LoadResult.Page<>(
                 responseData,
-                pageNumber == 1 ? null : pageNumber - 1,
-                (responseData == null || responseData.isEmpty()) ? null : pageNumber + 1,
+                (pageNumber == 1 || isRecommended) ? null : pageNumber - 1,
+                (responseData == null || responseData.isEmpty() || isRecommended) ? null : pageNumber + 1,
                 LoadResult.Page.COUNT_UNDEFINED,
                 LoadResult.Page.COUNT_UNDEFINED);
     }
@@ -56,7 +59,7 @@ public class MyHotelPagingSource extends RxPagingSource<Integer, MyHotel> {
         //  * both prevKey and nextKey are null -> anchorPage is the
         //    initial page, so return null.
         Integer anchorPosition = state.getAnchorPosition();
-        if (anchorPosition == null) {
+        if (anchorPosition == null || isRecommended) {
             return null;
         }
 

@@ -32,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
     private SupabaseRestService restService;
     private SupabaseAuthService authService;
+    private final SessionManager sessionManager = SessionManager.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(this, "Xác thực thành công! Đang đăng nhập...", Toast.LENGTH_SHORT).show();
 
         // Thực hiện lưu session tạm thời và vào Main (User profile sẽ được cập nhật sau)
-        new SessionManager().saveSession(at, rt, null);
+        sessionManager.saveSession(at, rt, null);
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
@@ -172,7 +173,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (userId == null || userId.trim().isEmpty()) {
                     Toast.makeText(LoginActivity.this, "Login ok, missing user id", Toast.LENGTH_SHORT).show();
                     // still save tokens only
-                    new SessionManager().saveSession(body.getAccessToken(), body.getRefreshToken(), null);
+                    sessionManager.saveSession(body.getAccessToken(), body.getRefreshToken(), null);
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finish();
                     return;
@@ -190,7 +191,7 @@ public class LoginActivity extends AppCompatActivity {
                                 user = resp.body().get(0);
                             }
 
-                            new SessionManager().saveSession(
+                            sessionManager.saveSession(
                                 body.getAccessToken(),
                                 body.getRefreshToken(),
                                 user
@@ -204,7 +205,7 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(Call<List<User>> call, Throwable t) {
                             // Still allow entering app even if profile fetch fails
-                            new SessionManager().saveSession(body.getAccessToken(), body.getRefreshToken(), null);
+                            sessionManager.saveSession(body.getAccessToken(), body.getRefreshToken(), null);
                             Toast.makeText(LoginActivity.this, "Login ok, profile fetch failed", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
@@ -223,5 +224,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onNewIntent(intent);
         setIntent(intent);
         handleDeepLink();
+        String message = getIntent().getStringExtra("message");
+        if (message != null) {
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            getIntent().removeExtra("message");
+        }
     }
 }

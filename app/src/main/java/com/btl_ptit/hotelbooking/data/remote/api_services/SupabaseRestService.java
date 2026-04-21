@@ -8,6 +8,8 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Headers;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -30,6 +32,13 @@ public interface SupabaseRestService {
     @POST("rest/v1/users")
     Call<Void> insertUser(
         @Header("Authorization") String bearerToken,
+        @Body User user
+    );
+
+    @PATCH("rest/v1/users")
+    Call<Void> updateUser(
+        @Header("Authorization") String bearerToken,
+        @Query("id") String idEq,
         @Body User user
     );
 }
