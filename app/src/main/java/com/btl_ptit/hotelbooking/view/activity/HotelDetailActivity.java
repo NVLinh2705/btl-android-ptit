@@ -10,13 +10,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.btl_ptit.hotelbooking.R;
+import com.btl_ptit.hotelbooking.data.session.SessionManager;
 import com.btl_ptit.hotelbooking.view.adapter.FacilityAdapter;
 import com.btl_ptit.hotelbooking.view.adapter.HotelImagePagerAdapter;
+import com.btl_ptit.hotelbooking.viewmodel.FavoriteViewModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -38,6 +41,9 @@ public class HotelDetailActivity extends AppCompatActivity implements OnMapReady
     private boolean isFavorite = false;
     private android.graphics.drawable.Drawable favoriteFilledDrawable;
 
+    private FavoriteViewModel favoriteViewModel;
+    private String hotelId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +51,12 @@ public class HotelDetailActivity extends AppCompatActivity implements OnMapReady
         // unless window insets are handled very carefully. We keep a classic layout
         // and set the status bar color via theme instead.
         setContentView(R.layout.activity_hotel_detail);
+
+        // Lấy hotelId từ Intent
+        hotelId = getIntent().getStringExtra("hotel_id");
+
+        // Khởi tạo ViewModel
+        favoriteViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
 
         setupToolbar();
         setupImageSlider();
@@ -98,29 +110,42 @@ public class HotelDetailActivity extends AppCompatActivity implements OnMapReady
     }
 
     private void toggleFavorite(android.view.MenuItem item) {
-        isFavorite = !isFavorite;
+        String userId = SessionManager.getInstance().getUser().getId();
 
+        if (userId == null) {
+            Toast.makeText(this, "Vui lòng đăng nhập để lưu yêu thích", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (hotelId == null) {
+            Toast.makeText(this, "Không tìm thấy thông tin khách sạn", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Giao diện thay đổi (Optimistic UI)
+        isFavorite = !isFavorite;
+        updateFavoriteIcon(item);
+
+        // Gọi API lưu vào Supabase qua ViewModel
+        favoriteViewModel.toggleLike(userId, hotelId);
+    }
+
+    private void updateFavoriteIcon(android.view.MenuItem item) {
         if (isFavorite) {
             if (favoriteFilledDrawable == null) {
                 android.graphics.drawable.Drawable d = ContextCompat.getDrawable(this, R.drawable.ic_heart_filled);
                 if (d != null) {
                     d = DrawableCompat.wrap(d.mutate());
-                    DrawableCompat.setTint(d, ContextCompat.getColor(this, R.color.color_likedHeartIcon)); // pink
-                    Toast.makeText(this, "liked: first change", Toast.LENGTH_SHORT).show();
+                    DrawableCompat.setTint(d, ContextCompat.getColor(this, R.color.color_likedHeartIcon));
                     favoriteFilledDrawable = d;
                 }
             }
-
             if (favoriteFilledDrawable != null) {
                 item.setIcon(favoriteFilledDrawable);
-                Toast.makeText(this, "liked: subsequent change", Toast.LENGTH_SHORT).show();
-                // Make sure framework/iconTint from theme doesn't override our drawable tint
                 item.setIconTintList(null);
             }
         } else {
-            // Back to outline-only (stroke white, fill transparent) so toolbar color is visible inside.
             item.setIcon(R.drawable.ic_heart_outline);
-            Toast.makeText(this, "unliked", Toast.LENGTH_SHORT).show();
             item.setIconTintList(null);
         }
     }

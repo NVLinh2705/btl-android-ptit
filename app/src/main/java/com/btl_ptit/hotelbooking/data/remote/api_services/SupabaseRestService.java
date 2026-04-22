@@ -1,9 +1,12 @@
 package com.btl_ptit.hotelbooking.data.remote.api_services;
 
+import com.btl_ptit.hotelbooking.data.model.Favorite;
+import com.btl_ptit.hotelbooking.data.model.FavoriteResponse;
 import com.btl_ptit.hotelbooking.data.model.User;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Single;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -40,5 +43,17 @@ public interface SupabaseRestService {
         @Header("Authorization") String bearerToken,
         @Query("id") String idEq,
         @Body User user
+    );
+    @Headers("Auth: True")
+    @POST("functions/v1/like-hotel")
+    Single<Void> toggleLikeHotel(
+        @Body Favorite favoriteRequest
+    );
+
+    @Headers("Auth: True")
+    @GET("rest/v1/favorites")
+    Single<List<FavoriteResponse>> getFavorites(
+        @Query("customer_id") String customerIdEq,
+        @Query("select") String select
     );
 }
