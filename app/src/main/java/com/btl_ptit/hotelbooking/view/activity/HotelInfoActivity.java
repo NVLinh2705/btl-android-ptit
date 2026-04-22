@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -30,6 +31,7 @@ import com.btl_ptit.hotelbooking.view.adapter.FacilityAdapter;
 import com.btl_ptit.hotelbooking.view.adapter.HotelImagePagerAdapter;
 import com.btl_ptit.hotelbooking.view.adapter.PolicyAdapter;
 import com.btl_ptit.hotelbooking.view.adapter.ReviewSummaryAdapter;
+import com.btl_ptit.hotelbooking.viewmodel.FavoriteViewModel;
 import com.google.gson.Gson;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -66,6 +68,9 @@ public class HotelInfoActivity extends AppCompatActivity implements OnMapReadyCa
     private final DateTimeFormatter apiDateFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
     private final DateTimeFormatter displayDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
+    private FavoriteViewModel favoriteViewModel;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +78,8 @@ public class HotelInfoActivity extends AppCompatActivity implements OnMapReadyCa
         setContentView(b.getRoot());
 
         restService = SupabaseClient.createService(SupabaseRestService.class);
+        // Khởi tạo ViewModel
+        favoriteViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
 
         setupToolbar();
         setupMap();
@@ -230,22 +237,17 @@ public class HotelInfoActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     private void toggleFavorite(android.view.MenuItem item) {
+        String userId = SessionManager.getInstance().getUser().getId();
+
+        if (userId == null) {
+            Toast.makeText(this, "Vui lòng đăng nhập để lưu yêu thích", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (hotelResponse == null) return;
         boolean isLiked = hotelResponse.isLiked();
-        LikeHotelRequest likeHotelRequest = new LikeHotelRequest(hotelResponse.getId());
-        Call<Void> call = restService.likeHotel(likeHotelRequest);
-        call.enqueue(new retrofit2.Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
-                renderFavoriteIcon(item);
-                Toast.makeText(HotelInfoActivity.this, isLiked  ? "Added to favorites" : "Removed from favorites", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.e(TAG, "onFailure: Failed to update favorites state ", t);
-            }
-        });
+        renderFavoriteIcon(item);
+        favoriteViewModel.toggleLike(userId, hotelResponse.getId());
+        Toast.makeText(HotelInfoActivity.this, isLiked  ? "Added to favorites" : "Removed from favorites", Toast.LENGTH_SHORT).show();
     }
 
     private void setupMap(){

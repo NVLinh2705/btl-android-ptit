@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.btl_ptit.hotelbooking.databinding.ActivityHotelDetailBinding;
 import com.btl_ptit.hotelbooking.view.adapter.HotelDetailTabsPagerAdapter;
 import com.google.android.material.tabs.TabLayoutMediator;
-
+import com.btl_ptit.hotelbooking.viewmodel.FavoriteViewModel;
 import java.time.LocalDate;
 
 public class HotelDetailActivity extends AppCompatActivity {
@@ -28,6 +28,9 @@ public class HotelDetailActivity extends AppCompatActivity {
     private static final String[] TAB_TITLES = new String[]{"Mô tả", "Tiện nghi", "Chính sách", "Đánh giá"};
 
     private ActivityHotelDetailBinding b;
+
+    private FavoriteViewModel favoriteViewModel;
+    private String hotelId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
