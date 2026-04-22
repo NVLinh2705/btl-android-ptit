@@ -265,6 +265,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onHotelClick(MyHotel myHotel) {
                 Intent intent = new Intent(mContext, HotelDetailActivity.class);
+                intent.putExtra("hotel_id", myHotel.getId()); // Truyền ID sang để bên kia gọi API
+                intent.putExtra("hotel_name", myHotel.getName());
                 startActivity(intent);
             }
         });
