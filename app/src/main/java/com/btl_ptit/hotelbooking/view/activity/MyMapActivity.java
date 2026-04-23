@@ -120,7 +120,7 @@ public class MyMapActivity extends AppCompatActivity implements OnMapReadyCallba
     private void observeHotelsFromViewModel() {
         mMyMapViewModel.getHotels().observe(this, hotels -> {
             if (hotels != null && !hotels.isEmpty()) {
-                mActivityMyMapBinding.viewPagerHotels.setVisibility(View.VISIBLE);
+                MyUtils.showViewPager(mActivityMyMapBinding.viewPagerHotels);
                 mHotelsInBoundAdapter.updateData(hotels);
                 // Ép ViewPager2 tính toán lại toàn bộ hiệu ứng cho danh sách mới
                 mActivityMyMapBinding.viewPagerHotels.requestTransform();
@@ -264,6 +264,20 @@ public class MyMapActivity extends AppCompatActivity implements OnMapReadyCallba
 
         googleMap.setOnMarkerClickListener(this);
 
+        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(@NonNull LatLng latLng) {
+                // Kiểm tra xem ViewPager có đang hiển thị không
+                if (mActivityMyMapBinding.viewPagerHotels.getVisibility() == View.VISIBLE) {
+                    // Hiệu ứng ẩn
+                    MyUtils.hideViewPager(mActivityMyMapBinding.viewPagerHotels);
+                } else {
+                    // Nếu đang ẩn thì hiện lại
+                    MyUtils.showViewPager(mActivityMyMapBinding.viewPagerHotels);
+                }
+            }
+        });
+
         // Khi Camera bắt đầu di chuyển (do người dùng kéo hoặc zoom)
 //        googleMap.setOnCameraMoveStartedListener(reason -> {
 //            if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
@@ -399,6 +413,7 @@ public class MyMapActivity extends AppCompatActivity implements OnMapReadyCallba
             if (position != -1) {
                 mActivityMyMapBinding.viewPagerHotels.setCurrentItem(position, true);
             }
+            MyUtils.showViewPager(mActivityMyMapBinding.viewPagerHotels);
         }
 
         return false;

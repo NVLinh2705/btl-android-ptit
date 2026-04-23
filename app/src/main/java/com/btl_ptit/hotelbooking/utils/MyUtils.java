@@ -17,6 +17,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.btl_ptit.hotelbooking.R;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -126,5 +127,27 @@ public class MyUtils {
                 .setMenuColor(Color.WHITE)
                 .setSelectedMenuColor(ContextCompat.getColor(mContext, R.color.md_theme_inversePrimary_mediumContrast))
                 .build();
+    }
+
+    public static void hideViewPager(ViewPager2 viewPager) {
+        if (viewPager != null) {
+            viewPager.animate()
+                    .translationY(viewPager.getHeight() + 100) // Đẩy xuống dưới màn hình
+                    .alpha(0.0f) // Làm mờ dần
+                    .setDuration(300)
+                    .withEndAction(() -> viewPager.setVisibility(View.GONE))
+                    .start();
+        }
+    }
+
+    public static void showViewPager(ViewPager2 viewPager) {
+        if (viewPager != null) {
+            viewPager.setVisibility(View.VISIBLE);
+            viewPager.animate()
+                    .translationY(0) // Kéo ngược lại vị trí cũ
+                    .alpha(1.0f)
+                    .setDuration(300)
+                    .start();
+        }
     }
 }
