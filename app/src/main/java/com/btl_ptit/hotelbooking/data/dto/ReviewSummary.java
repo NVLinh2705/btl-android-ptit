@@ -20,7 +20,7 @@ public class ReviewSummary {
     
 
     @SerializedName("created_at")
-    private LocalDateTime createdAt;
+    private String createdAt;
 
     @SerializedName("comment")
     private String comment;

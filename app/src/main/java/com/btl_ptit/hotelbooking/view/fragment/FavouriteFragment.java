@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import com.btl_ptit.hotelbooking.data.session.SessionManager;
 import com.btl_ptit.hotelbooking.databinding.FragmentFavouriteBinding;
 import com.btl_ptit.hotelbooking.view.activity.HotelDetailActivity;
+import com.btl_ptit.hotelbooking.view.activity.HotelInfoActivity;
 import com.btl_ptit.hotelbooking.view.adapter.FavoriteHotelAdapter;
 import com.btl_ptit.hotelbooking.viewmodel.FavoriteViewModel;
 
@@ -51,7 +52,7 @@ public class FavouriteFragment extends Fragment {
         adapter = new FavoriteHotelAdapter(
                 hotel -> {
                     // Click vào card để xem chi tiết
-                    Intent intent = new Intent(getContext(), HotelDetailActivity.class);
+                    Intent intent = new Intent(getContext(), HotelInfoActivity.class);
                     intent.putExtra("hotel_id", hotel.getId());
                     startActivity(intent);
                 },

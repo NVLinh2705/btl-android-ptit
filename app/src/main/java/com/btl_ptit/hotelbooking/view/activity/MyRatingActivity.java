@@ -99,7 +99,7 @@ public class MyRatingActivity extends AppCompatActivity {
             reviewRequest.setBookingId(booking.getId());
             reviewRequest.setRating(Integer.parseInt(binding.spinnerRating.getSelectedItem().toString()));
             reviewRequest.setComment(binding.edtComment.getText().toString());
-            reviewRequest.setHotelId(booking.getHotels().getId());
+            reviewRequest.setHotelId(String.valueOf(booking.getHotels().getId()));
             reviewRequest.setCustomerId(SessionManager.getInstance().getUser().getId());
             compositeDisposable.add(
                     reviewRestService.upsertReview("booking_id",reviewRequest)

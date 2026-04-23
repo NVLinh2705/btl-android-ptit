@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MyHotel implements DiffUtilModel {
+public class MyHotel implements DiffUtilModel, Serializable {
     private Integer id;
     private String name, avatar, location;
     private double rating;
