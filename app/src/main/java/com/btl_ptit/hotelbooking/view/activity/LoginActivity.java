@@ -37,6 +37,11 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (sessionManager.getAccessToken() != null && (getIntent() == null || getIntent().getData() == null)) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+            return;
+        }
         EdgeToEdge.enable(this);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());

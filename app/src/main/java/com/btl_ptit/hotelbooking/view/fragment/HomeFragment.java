@@ -47,6 +47,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.btl_ptit.hotelbooking.view.activity.HotelInfoActivity;
 import com.google.android.material.appbar.AppBarLayout;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -265,6 +266,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onHotelClick(MyHotel myHotel) {
                 Intent intent = new Intent(mContext, HotelDetailActivity.class);
+                intent.putExtra("hotel_id", myHotel.getId()); // Truyền ID sang để bên kia gọi API
+                intent.putExtra("hotel_name", myHotel.getName());
                 startActivity(intent);
             }
         });

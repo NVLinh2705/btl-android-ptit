@@ -154,4 +154,5 @@
     <color name="colorOnOutlineContainer_highContrast">#FFFFFF</color>
     <color name="backgroundColor">#FAFAFA</color>
     <color name="color_likedHeartIcon">#BC2457</color>
+    <color name="bright_blue">#1E88E5</color>
 </resources>
