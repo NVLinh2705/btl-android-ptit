@@ -1,6 +1,8 @@
 package com.btl_ptit.hotelbooking.data.model;
 
-public enum BookingStatus {
+import java.io.Serializable;
+
+public enum BookingStatus implements Serializable {
     PENDING("Pending"),
     CONFIRMED("Confirmed"),
     CANCELLED("Cancelled");
