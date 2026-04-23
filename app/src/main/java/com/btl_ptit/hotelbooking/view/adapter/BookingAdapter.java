@@ -19,6 +19,9 @@ import com.btl_ptit.hotelbooking.utils.paging.MyComparator;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+
 import kotlin.coroutines.CoroutineContext;
 
 public class BookingAdapter extends PagingDataAdapter<MyBooking, BookingAdapter.BookingViewHolder> {
@@ -53,6 +56,9 @@ public class BookingAdapter extends PagingDataAdapter<MyBooking, BookingAdapter.
 
             holder.bookingItemBinding.txtHotelName.setText(hotelName);
             holder.bookingItemBinding.txtPrice.setText(String.valueOf(currentMyBooking.getTotalAmount()));
+            OffsetDateTime dt = OffsetDateTime.parse(currentMyBooking.getCreatedAt());
+            LocalDate bookingDate = dt.toLocalDate();
+            holder.bookingItemBinding.txtBookingDate.setText(bookingDate.toString());
             switch (currentMyBooking.getStatusCode()) {
                 case "PENDING":
                     holder.bookingItemBinding.txtStatus.setBackgroundResource(R.drawable.bg_pending);

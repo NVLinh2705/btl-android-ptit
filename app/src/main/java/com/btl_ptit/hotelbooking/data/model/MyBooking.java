@@ -6,6 +6,14 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class MyBooking implements DiffUtilModel, Serializable {
 
     @SerializedName("id")
@@ -41,23 +49,16 @@ public class MyBooking implements DiffUtilModel, Serializable {
     @SerializedName("customer_email")
     private String customerEmail;
 
+    @SerializedName("created_at")
+    private String createdAt;
 
 
-
-    // Lưu ý: JSON trả về hotel_id (số), không phải object hotel.
-    // Nếu muốn hiển thị tên khách sạn, bạn cần API trả về nested object hoặc map thủ công.
     private MyHotel hotels;
 
     @SerializedName("booked_rooms")
     private List<MyBookedRoom> bookedRooms;
 
-    public List<MyBookedRoom> getBookedRooms() {
-        return bookedRooms;
-    }
 
-    public void setBookedRooms(List<MyBookedRoom> bookedRooms) {
-        this.bookedRooms = bookedRooms;
-    }
 
     @Override
     public Object getUniqueIdentifier() {
@@ -71,102 +72,7 @@ public class MyBooking implements DiffUtilModel, Serializable {
         this.statusCode = statusCode;
     }
 
-    public MyBooking() {
-    }
 
-    public String getId() {
-        return id;
-    }
 
-    public void setId(String id) {
-        this.id = id;
-    }
 
-    public String getBookingCode() {
-        return bookingCode;
-    }
-
-    public void setBookingCode(String bookingCode) {
-        this.bookingCode = bookingCode;
-    }
-
-    public double getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(double totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    public String getStatusCode() {
-        return statusCode;
-    }
-
-    public void setStatusCode(String statusCode) {
-        this.statusCode = statusCode;
-    }
-
-    public MyHotel getHotels() {
-        return hotels;
-    }
-
-    public void setHotels(MyHotel hotels) {
-        this.hotels = hotels;
-    }
-
-    public String getCheckinDate() {
-        return checkinDate;
-    }
-
-    public void setCheckinDate(String checkinDate) {
-        this.checkinDate = checkinDate;
-    }
-
-    public String getCheckoutDate() {
-        return checkoutDate;
-    }
-
-    public void setCheckoutDate(String checkoutDate) {
-        this.checkoutDate = checkoutDate;
-    }
-
-    public int getNumAdults() {
-        return numAdults;
-    }
-
-    public void setNumAdults(int numAdults) {
-        this.numAdults = numAdults;
-    }
-
-    public int getNumChildren() {
-        return numChildren;
-    }
-
-    public void setNumChildren(int numChildren) {
-        this.numChildren = numChildren;
-    }
-
-    public String getCustomerFullname() {
-        return customerFullname;
-    }
-
-    public void setCustomerFullname(String customerFullname) {
-        this.customerFullname = customerFullname;
-    }
-
-    public String getCustomerPhone() {
-        return customerPhone;
-    }
-
-    public void setCustomerPhone(String customerPhone) {
-        this.customerPhone = customerPhone;
-    }
-
-    public String getCustomerEmail() {
-        return customerEmail;
-    }
-
-    public void setCustomerEmail(String customerEmail) {
-        this.customerEmail = customerEmail;
-    }
 }

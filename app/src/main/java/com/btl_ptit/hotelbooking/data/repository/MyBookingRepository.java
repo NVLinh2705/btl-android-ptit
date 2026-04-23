@@ -16,11 +16,12 @@ public class MyBookingRepository {
 
     private final BookingRestService bookingRestService;
 
+
     public MyBookingRepository(BookingRestService bookingRestService) {
         this.bookingRestService = bookingRestService;
     }
 
-    public Flowable<PagingData<MyBooking>> getBookingsPaging() {
+    public Flowable<PagingData<MyBooking>> getBookingsPaging(String status,String order) {
         // Create new pager
         Pager<Integer,MyBooking> pager = new Pager<>(
                 // Create new paging config
@@ -30,7 +31,7 @@ public class MyBookingRepository {
                         Constants.ENABLE_PLACEHOLDERS,   // enablePlaceholders - Enable placeholders for data which is not yet loaded
                         Constants.INITIAL_LOAD_SIZE,         // initialLoadSize - Count of items to be loaded initially
                         Constants.MAX_SIZE),      // maxSize - Count of total items to be shown in recyclerview
-                () -> new MyBookingPagingSource(bookingRestService));      // set paging source
+                () -> new MyBookingPagingSource(bookingRestService,status,order));      // set paging source
 
         return PagingRx.getFlowable(pager);
     }

@@ -23,6 +23,56 @@
             app:titleTextColor="@android:color/white"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:title="Danh sách đặt phòng" />
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:paddingBottom="8dp">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="16dp"
+                app:singleSelection="true"
+                app:selectionRequired="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipAll"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tất cả"
+                    android:checked="true"
+                    app:chipBackgroundColor="@color/md_theme_onPrimary"
+                     />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipPending"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Chờ duyệt"
+                    app:chipBackgroundColor="@color/md_theme_onPrimary" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipConfirmed"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Đã xác nhận"
+                    app:chipBackgroundColor="@color/md_theme_onPrimary" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipCancelled"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Đã hủy"
+                    app:chipBackgroundColor="@color/md_theme_onPrimary" />
+
+            </com.google.android.material.chip.ChipGroup>
+        </HorizontalScrollView>
 
     </com.google.android.material.appbar.AppBarLayout>
 

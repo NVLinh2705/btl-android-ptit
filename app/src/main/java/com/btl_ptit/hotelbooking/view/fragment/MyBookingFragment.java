@@ -64,6 +64,20 @@ public class MyBookingFragment extends Fragment {
         myBookingRepository = new MyBookingRepository(bookingRestService);
         bookingViewModel = new ViewModelProvider(requireActivity(), new BookingViewModelFactory(myBookingRepository)).get(BookingViewModel.class);
         initBookingAdapter();
+        mFragmentMyBookingBinding.chipGroupFilter.setOnCheckedChangeListener((group, checkedId) -> {
+            String status = "";
+            if (checkedId == mFragmentMyBookingBinding.chipPending.getId()) {
+                status="PENDING";
+            }else if (checkedId == mFragmentMyBookingBinding.chipConfirmed.getId()) {
+                status= "CONFIRMED";
+
+            }else if (checkedId == mFragmentMyBookingBinding.chipCancelled.getId()) {
+                status= "CANCELLED";
+            }
+            bookingViewModel.filterByStatus(status);
+        });
+
+
 
 
 

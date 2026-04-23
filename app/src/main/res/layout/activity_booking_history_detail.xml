@@ -258,6 +258,7 @@
                        android:layout_width="wrap_content"
                        android:id="@+id/txtCheckin"
                        android:textStyle="bold"
+
                        android:text="20/12/2026"/>
                    <View
                        android:layout_width="match_parent"
@@ -371,6 +372,7 @@
                </LinearLayout>
            </androidx.cardview.widget.CardView>
 
+
            <!-- PRICE DETAIL -->
            <androidx.cardview.widget.CardView
                android:layout_marginTop="10dp"
@@ -408,11 +410,54 @@
                        android:layout_width="wrap_content"
                        android:layout_marginTop="8dp"
                        android:textStyle="bold"
-                       android:textSize="16sp"
+                       android:textAppearance="?attr/textAppearanceTitleLarge"
                        android:text="Tổng: --"/>
 
                </LinearLayout>
            </androidx.cardview.widget.CardView>
+           <!-- CANCEL BOOKING CARD -->
+           <androidx.cardview.widget.CardView
+               android:id="@+id/cancelCard"
+               android:layout_marginTop="10dp"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               app:cardCornerRadius="12dp">
+
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="vertical"
+                   android:padding="12dp">
+
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:text="Hủy đặt phòng"
+                       android:textStyle="bold"
+                       android:textColor="#D32F2F"/>
+
+                   <TextView
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:layout_marginTop="8dp"
+                       android:text="Lưu ý: Bạn chỉ có thể hủy đặt phòng khi đơn đang ở trạng thái chờ duyệt (Pending)."
+                       android:textSize="13sp"
+                       android:textColor="#666666"/>
+
+                   <Button
+                       android:id="@+id/btnCancelBooking"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:layout_marginTop="12dp"
+                       android:backgroundTint="#D32F2F"
+                       android:text="Hủy đặt phòng"
+                       android:textAllCaps="false"
+                       app:cornerRadius="8dp"/>
+
+               </LinearLayout>
+           </androidx.cardview.widget.CardView>
+
+
 
        </LinearLayout>
 
