@@ -1,0 +1,72 @@
+<com.google.android.material.card.MaterialCardView android:layout_marginBottom="10dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="0dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:backgroundTint="#FFFFFF"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:padding="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Status -->
+        <TextView
+            android:id="@+id/txtStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:text="Đặt thành công"
+            android:textSize="12sp"
+            android:background="@drawable/bg_rating_pill"/>
+
+        <!-- Hotel name -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtHotelName"
+            android:text="Khách sạn Pullman"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_marginTop="6dp"/>
+
+        <!-- Divider line -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#EEEEEE"
+            android:layout_marginVertical="10dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <!-- Booking id -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtBookingId"
+                android:text="Mã đặt chỗ: 123456"
+                android:textSize="12sp"
+                android:layout_weight="1"
+                android:textColor="#666"/>
+
+            <!-- Price -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtPrice"
+                android:text="8.000.000 đ"
+                android:textColor="#0B4AA2"
+                android:textStyle="bold"
+                android:layout_gravity="end"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

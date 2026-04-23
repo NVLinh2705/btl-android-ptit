@@ -5,6 +5,7 @@ import com.btl_ptit.hotelbooking.interceptor.request.AddAuthTokenInterceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SupabaseClient {
@@ -23,6 +24,7 @@ public class SupabaseClient {
                             .baseUrl(BASE_URL)
                             .client(HttpClientInterceptor.getClient())
                             .addConverterFactory(GsonConverterFactory.create())
+                            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                             .build();
                 }
             }

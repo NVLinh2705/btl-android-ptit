@@ -15,6 +15,89 @@
     <string name="averagePerNight">trung bình / đêm</string>
     <string name="perNight">/ đêm</string>
     <string name="labelHotelNearYou">Khách sạn gần bạn  🏨</string>
+    <!-- Activity titles -->
+    <string name="choose_your_stay">Chọn phòng</string>
+    <string name="room_information">Room information</string>
+
+    <!-- Room card -->
+    <string name="room_image_desc">Ảnh phòng</string>
+    <string name="price_for_1_night">Giá cho 1 đêm</string>
+    <string name="price_for_n_adults">Cho %d khách</string>
+    <string name="price_for_n_adults_nights">Giá cho %1$d khách · %2$d đêm: %3$s</string>
+    <string name="price_for_n_nights">Giá cho %1$d đêm: %2$s</string>
+    <string name="includes_taxes">Đã bao gồm thuế và phí</string>
+    <string name="select">Chọn</string>
+    <string name="book_now">Đặt ngay</string>
+    <string name="no_rooms_available">Không còn phòng phù hợp</string>
+    <string name="choose_room_quantity">Chọn số lượng phòng</string>
+    <string name="room_quantity_available">Còn tối đa %1$d phòng</string>
+    <string name="confirm_select">Xác nhận chọn</string>
+    <string name="selected_room_button">Đã chọn: %1$d phòng</string>
+    <string name="decrease_quantity">Giảm số lượng</string>
+    <string name="increase_quantity">Tăng số lượng</string>
+    <string name="no_room_reviews">Chưa có đánh giá nào cho phòng này</string>
+
+    <!-- Policy labels -->
+    <string name="total_cost_to_cancel">Chi phí hủy phòng áp dụng theo chính sách</string>
+    <string name="free_cancellation">Miễn phí hủy phòng</string>
+    <!-- Note: use SpannableString in code to make "No prepayment needed" bold -->
+    <string name="no_prepayment_needed">Không cần thanh toán trước</string>
+    <string name="pay_at_property"> - thanh toán tại nơi lưu trú</string>
+    <string name="no_credit_card_needed">Không cần thẻ tín dụng</string>
+    <string name="view_booking_conditions">Xem điều kiện đặt phòng</string>
+
+    <!-- Last room warning -->
+    <string name="we_have_1_left">Chỉ còn 1 phòng</string>
+    <string name="we_have_n_left">Còn lại %d phòng</string>
+    <string name="selected_room_bed_summary">%1$d phòng • %2$d giường</string>
+
+    <string name="error_load_room_types">Không tải được danh sách phòng</string>
+    <string name="error_network">Lỗi kết nối mạng</string>
+
+    <!-- Detail screen -->
+    <string name="great_for_your_stay">Great for your stay</string>
+    <string name="room_size_label">Room size: %d m²</string>
+
+    <string name="not_found_message">Không tìm thấy kết quả</string>
+
+    <string name="fill_booking_info_title">Điền thông tin đặt phòng</string>
+    <string name="booking_full_name_label">Họ Tên *</string>
+    <string name="booking_email_label">Địa chỉ email *</string>
+    <string name="booking_phone_label">Điện thoại *</string>
+    <string name="selected_rooms_title">Phòng đã chọn</string>
+    <string name="fill_missing_info">Điền thông tin còn thiếu</string>
+    <string name="next_step">Bước tiếp theo</string>
+    <string name="error_enter_full_name">Vui lòng nhập họ tên hợp lệ</string>
+    <string name="error_enter_email">Vui lòng nhập email hợp lệ</string>
+    <string name="error_enter_phone">Vui lòng nhập số điện thoại hợp lệ</string>
+    <string name="confirm_booking_title">Xác nhận đặt phòng</string>
+    <string name="confirm_booking_placeholder">Màn hình xác nhận đặt phòng đang được phát triển</string>
+
+    <string name="booking_summary_hotel_name">Khách sạn</string>
+    <string name="booking_summary_hotel_address">Địa chỉ</string>
+    <string name="booking_checkin_label">Nhận phòng</string>
+    <string name="booking_checkout_label">Trả phòng</string>
+    <string name="booking_nights_rooms_adults">%1$d đêm • %2$d phòng • %3$d người lớn</string>
+    <string name="booking_guest_info_title">Thông tin khách đặt</string>
+    <string name="booking_full_name">Họ tên</string>
+    <string name="booking_email">Địa chỉ email</string>
+    <string name="booking_phone">Số điện thoại</string>
+    <string name="booking_your_choice_title">Lựa chọn của bạn</string>
+    <string name="booking_special_request_title">Yêu cầu đặc biệt</string>
+    <string name="booking_special_request_hint">Nhập yêu cầu đặc biệt của bạn...</string>
+    <string name="booking_special_request_note">Xin lưu ý tất cả yêu cầu đều không đảm bảo và tuỳ thuộc vào trình trạng sẵn có của chỗ nghỉ</string>
+    <string name="booking_special_request_count">%1$d/1000</string>
+    <string name="booking_room_payment">Thanh toán: %1$s</string>
+    <string name="booking_room_cancellation">Huỷ phòng: %1$s</string>
+    <string name="booking_room_max_guests">Tối đa %1$d khách</string>
+    <string name="booking_room_beds">%1$d %2$s</string>
+    <string name="booking_room_selected_count">Số phòng đã chọn: %1$d</string>
+    <string name="booking_room_subtotal">Tạm tính: %1$s</string>
+    <string name="booking_unknown_hotel">Chưa có tên khách sạn</string>
+    <string name="booking_unknown_address">Chưa có địa chỉ</string>
+    <string name="booking_not_available">Chưa có thông tin</string>
+    <string name="pay_at_property_chip">Thanh toán khi nhận phòng</string>
+    <string name="confirm">Xác nhận</string>
     <string name="labelYourLocation">Vị trí của bạn</string>
     <string name="labelBlockYourLocation">Bạn đã chặn quyền vị trí! Vui lòng vào Cài đặt để bật lại</string>
     <string name="labelRequireYourLocation">App cần quyền vị trí để hoạt động!</string>

@@ -1,6 +1,7 @@
 package com.btl_ptit.hotelbooking.view.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Toast;
@@ -31,10 +32,16 @@ public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
     private SupabaseRestService restService;
     private SupabaseAuthService authService;
+    private final SessionManager sessionManager = SessionManager.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (sessionManager.getAccessToken() != null && (getIntent() == null || getIntent().getData() == null)) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+            return;
+        }
         EdgeToEdge.enable(this);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -47,9 +54,63 @@ public class LoginActivity extends AppCompatActivity {
         authService= SupabaseClient.createService(SupabaseAuthService.class);
         restService = SupabaseClient.createService(SupabaseRestService.class);
 
+        // XỬ LÝ DEEP LINK (Xác thực email)
+        // Nếu là deep link, nó sẽ tự chuyển màn và finish inside
+        handleDeepLink();
 
+        // SETUP UI & LISTENERS (Chỉ làm nếu không chuyển màn)
         setupListeners();
+
+        // HIỂN THỊ THÔNG BÁO TỪ MÀN ĐĂNG KÝ
+        String message = getIntent().getStringExtra("message");
+        if (message != null) {
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            getIntent().removeExtra("message");
+        }
     }
+
+    private void handleDeepLink() {
+        Intent intent = getIntent();
+        if (intent != null && intent.getData() != null) {
+            Uri uri = intent.getData();
+            // Supabase trả về token sau dấu # (Fragment)
+            String fragment = uri.getFragment();
+
+            if (fragment != null && fragment.contains("access_token=")) {
+                String accessToken = null;
+                String refreshToken = null;
+
+                // Tách chuỗi fragment thành các cặp key=value
+                String[] pairs = fragment.split("&");
+                for (String pair : pairs) {
+                    String[] parts = pair.split("=");
+                    if (parts.length > 1) {
+                        if (parts[0].equals("access_token")) accessToken = parts[1];
+                        else if (parts[0].equals("refresh_token")) refreshToken = parts[1];
+                    }
+                }
+
+                if (accessToken != null) {
+                    // Xóa data để tránh xử lý lại khi xoay màn hình
+                    intent.setData(null);
+                    // Gọi hàm lấy profile và chuyển màn hình
+                    fetchProfileAndNavigate(accessToken, refreshToken);
+                }
+            }
+        }
+    }
+
+    private void fetchProfileAndNavigate(String at, String rt) {
+        String bearer = "Bearer " + at;
+
+        Toast.makeText(this, "Xác thực thành công! Đang đăng nhập...", Toast.LENGTH_SHORT).show();
+
+        // Thực hiện lưu session tạm thời và vào Main (User profile sẽ được cập nhật sau)
+        sessionManager.saveSession(at, rt, null);
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
+    }
+
 
     private void setupListeners() {
         binding.btnBack.setOnClickListener(v -> finish());
@@ -117,7 +178,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (userId == null || userId.trim().isEmpty()) {
                     Toast.makeText(LoginActivity.this, "Login ok, missing user id", Toast.LENGTH_SHORT).show();
                     // still save tokens only
-                    new SessionManager().saveSession(body.getAccessToken(), body.getRefreshToken(), null);
+                    sessionManager.saveSession(body.getAccessToken(), body.getRefreshToken(), null);
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finish();
                     return;
@@ -134,8 +195,10 @@ public class LoginActivity extends AppCompatActivity {
                             if (resp.isSuccessful() && resp.body() != null && !resp.body().isEmpty()) {
                                 user = resp.body().get(0);
                             }
+                            user.setId(userId);
+                            System.out.println("id= "+user.getId()+" fullname "+user.getFullName());
 
-                            new SessionManager().saveSession(
+                            sessionManager.saveSession(
                                 body.getAccessToken(),
                                 body.getRefreshToken(),
                                 user
@@ -149,7 +212,7 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(Call<List<User>> call, Throwable t) {
                             // Still allow entering app even if profile fetch fails
-                            new SessionManager().saveSession(body.getAccessToken(), body.getRefreshToken(), null);
+                            sessionManager.saveSession(body.getAccessToken(), body.getRefreshToken(), null);
                             Toast.makeText(LoginActivity.this, "Login ok, profile fetch failed", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
@@ -162,5 +225,16 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleDeepLink();
+        String message = getIntent().getStringExtra("message");
+        if (message != null) {
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            getIntent().removeExtra("message");
+        }
     }
 }

@@ -16,6 +16,90 @@
     <string name="averagePerNight">average / night</string>
     <string name="perNight">/ night</string>
     <string name="labelHotelNearYou">Hotel near you  🏨</string>
+
+    <!-- Activity titles -->
+    <string name="choose_your_stay">Choose your stay</string>
+    <string name="room_information">Room information</string>
+
+    <!-- Room card -->
+    <string name="room_image_desc">Room image</string>
+    <string name="price_for_1_night">Price for 1 night</string>
+    <string name="price_for_n_adults">For %d guests</string>
+    <string name="price_for_n_adults_nights">Price for %1$d guests · %2$d nights: %3$s</string>
+    <string name="price_for_n_nights">Price for %1$d nights: %2$s</string>
+    <string name="includes_taxes">Includes taxes and fees</string>
+    <string name="select">Select</string>
+    <string name="book_now">Book now</string>
+    <string name="no_rooms_available">No suitable rooms available</string>
+    <string name="choose_room_quantity">Choose room quantity</string>
+    <string name="room_quantity_available">Up to %1$d rooms available</string>
+    <string name="confirm_select">Confirm selection</string>
+    <string name="selected_room_button">Selected: %1$d rooms</string>
+    <string name="decrease_quantity">Decrease quantity</string>
+    <string name="increase_quantity">Increase quantity</string>
+    <string name="no_room_reviews">No reviews for this room yet</string>
+
+    <!-- Policy labels -->
+    <string name="total_cost_to_cancel">Cancellation cost applies according to the policy</string>
+    <string name="free_cancellation">Free cancellation</string>
+    <!-- Note: use SpannableString in code to make "No prepayment needed" bold -->
+    <string name="no_prepayment_needed">No prepayment needed</string>
+    <string name="pay_at_property"> - pay at the property</string>
+    <string name="no_credit_card_needed">No credit card needed</string>
+    <string name="view_booking_conditions">View booking conditions</string>
+
+    <!-- Last room warning -->
+    <string name="we_have_1_left">Only 1 room left</string>
+    <string name="we_have_n_left">%d rooms left</string>
+    <string name="selected_room_bed_summary">%1$d rooms • %2$d beds</string>
+
+    <string name="error_load_room_types">Unable to load room types</string>
+    <string name="error_network">Network error</string>
+
+    <!-- Detail screen -->
+    <string name="great_for_your_stay">Great for your stay</string>
+    <string name="room_size_label">Room size: %d m²</string>
+
+    <string name="not_found_message">No results found</string>
+
+    <string name="fill_booking_info_title">Fill booking information</string>
+    <string name="booking_full_name_label">Full name *</string>
+    <string name="booking_email_label">Email address *</string>
+    <string name="booking_phone_label">Phone number *</string>
+    <string name="selected_rooms_title">Selected rooms</string>
+    <string name="fill_missing_info">Fill in missing information</string>
+    <string name="next_step">Next step</string>
+    <string name="error_enter_full_name">Please enter a valid full name</string>
+    <string name="error_enter_email">Please enter a valid email</string>
+    <string name="error_enter_phone">Please enter a valid phone number</string>
+    <string name="confirm_booking_title">Confirm booking</string>
+    <string name="confirm_booking_placeholder">The booking confirmation screen is under development</string>
+
+    <string name="booking_summary_hotel_name">Hotel</string>
+    <string name="booking_summary_hotel_address">Address</string>
+    <string name="booking_checkin_label">Check-in</string>
+    <string name="booking_checkout_label">Check-out</string>
+    <string name="booking_nights_rooms_adults">%1$d nights • %2$d rooms • %3$d adults</string>
+    <string name="booking_guest_info_title">Guest information</string>
+    <string name="booking_full_name">Full name</string>
+    <string name="booking_email">Email address</string>
+    <string name="booking_phone">Phone number</string>
+    <string name="booking_your_choice_title">Your choice</string>
+    <string name="booking_special_request_title">Special request</string>
+    <string name="booking_special_request_hint">Enter your special request...</string>
+    <string name="booking_special_request_note">Please note that all requests are not guaranteed and are subject to availability at the property</string>
+    <string name="booking_special_request_count">%1$d/1000</string>
+    <string name="booking_room_payment">Payment: %1$s</string>
+    <string name="booking_room_cancellation">Cancellation: %1$s</string>
+    <string name="booking_room_max_guests">Up to %1$d guests</string>
+    <string name="booking_room_beds">%1$d %2$s</string>
+    <string name="booking_room_selected_count">Rooms selected: %1$d</string>
+    <string name="booking_room_subtotal">Subtotal: %1$s</string>
+    <string name="booking_unknown_hotel">Hotel name unavailable</string>
+    <string name="booking_unknown_address">Address unavailable</string>
+    <string name="booking_not_available">Not available</string>
+    <string name="pay_at_property_chip">Pay at the property</string>
+    <string name="confirm">Confirm</string>
     <string name="labelYourLocation">Your location</string>
     <string name="labelBlockYourLocation">You have blocked location permissions! Please go to Settings to re-enable them.</string>
     <string name="labelRequireYourLocation">The app needs location permissions to run!</string>

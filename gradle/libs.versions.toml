@@ -20,6 +20,7 @@ powermenu = "2.2.4"
 retrofit = "3.0.0"
 rxandroid = "3.0.2"
 shimmer = "0.5.0"
+lombok = "1.18.30"
 
 [libraries]
 adapter-rxjava3 = { module = "com.squareup.retrofit2:adapter-rxjava3", version.ref = "retrofit" }
@@ -46,6 +47,7 @@ paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "pag
 paging-rxjava3 = { module = "androidx.paging:paging-rxjava3", version.ref = "pagingRuntime" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 shimmer = { module = "com.facebook.shimmer:shimmer", version.ref = "shimmer" }
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -22,7 +22,8 @@
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:contentDescription="@string/app_name"
-            android:tint="#1E88E5" />
+            app:tint="#1E88E5"
+            android:src="@drawable/ic_facility_default"/>
 
         <TextView
             android:id="@+id/txtName"

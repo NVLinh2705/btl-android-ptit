@@ -265,25 +265,25 @@ public class MyMapActivity extends AppCompatActivity implements OnMapReadyCallba
         googleMap.setOnMarkerClickListener(this);
 
         // Khi Camera bắt đầu di chuyển (do người dùng kéo hoặc zoom)
-        googleMap.setOnCameraMoveStartedListener(reason -> {
-            if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-                // Chỉ ẩn khi người dùng chạm tay vào kéo (không ẩn khi code tự move)
-                mActivityMyMapBinding.viewPagerHotels.animate()
-                        .translationY(mActivityMyMapBinding.viewPagerHotels.getHeight()) // Đẩy xuống dưới
-                        .alpha(0f)
-                        .setDuration(300)
-                        .start();
-            }
-        });
-
-        // Khi Camera đã đứng yên
-        googleMap.setOnCameraIdleListener(() -> {
-            mActivityMyMapBinding.viewPagerHotels.animate()
-                    .translationY(0) // Kéo lên lại
-                    .alpha(1f)
-                    .setDuration(300)
-                    .start();
-        });
+//        googleMap.setOnCameraMoveStartedListener(reason -> {
+//            if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+//                // Chỉ ẩn khi người dùng chạm tay vào kéo (không ẩn khi code tự move)
+//                mActivityMyMapBinding.viewPagerHotels.animate()
+//                        .translationY(mActivityMyMapBinding.viewPagerHotels.getHeight()) // Đẩy xuống dưới
+//                        .alpha(0f)
+//                        .setDuration(300)
+//                        .start();
+//            }
+//        });
+//
+//        // Khi Camera đã đứng yên
+//        googleMap.setOnCameraIdleListener(() -> {
+//            mActivityMyMapBinding.viewPagerHotels.animate()
+//                    .translationY(0) // Kéo lên lại
+//                    .alpha(1f)
+//                    .setDuration(300)
+//                    .start();
+//        });
     }
 
     private void enableMyLocation() {
