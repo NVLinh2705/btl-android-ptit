@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+    <TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/txtScore"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_rating_pill"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="4dp"
+
+        android:text="9.0"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:minWidth="36dp"/>
+
+
+
+

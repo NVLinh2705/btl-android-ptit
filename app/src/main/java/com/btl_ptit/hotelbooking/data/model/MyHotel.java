@@ -2,9 +2,10 @@ package com.btl_ptit.hotelbooking.data.model;
 
 import com.btl_ptit.hotelbooking.interfaces.DiffUtilModel;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class MyHotel implements DiffUtilModel {
+public class MyHotel implements DiffUtilModel, Serializable {
     private String id;
     private String name, avatar, location;
     private double rating;

@@ -34,7 +34,7 @@ public class MyBookingPagingSource extends RxPagingSource<Integer, MyBooking> {
         int pageNumber = loadParams.getKey() != null ? loadParams.getKey() : 1;
         int pageSize = loadParams.getLoadSize();
 
-// 🔥 convert page → offset
+        //  convert page → offset
         int offset = (pageNumber - 1) * pageSize;
         String customerId=SessionManager.getInstance().getUser().getId() !=null ? SessionManager.getInstance().getUser().getId() : "";
         Log.d("DEBUG","customer id= "+customerId);

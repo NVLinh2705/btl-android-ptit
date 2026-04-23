@@ -64,6 +64,12 @@ public class MyBookingFragment extends Fragment {
         myBookingRepository = new MyBookingRepository(bookingRestService);
         bookingViewModel = new ViewModelProvider(requireActivity(), new BookingViewModelFactory(myBookingRepository)).get(BookingViewModel.class);
         initBookingAdapter();
+
+
+
+        return view;
+    }
+    public void initBooking(){
         compositeDisposable.clear();
         compositeDisposable.add(
                 bookingViewModel.pagingDataFlow
@@ -74,9 +80,11 @@ public class MyBookingFragment extends Fragment {
                             bookingAdapter.submitData(getViewLifecycleOwner().getLifecycle(), pagingData);
                         } )
         );
-
-
-        return view;
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+        initBooking();
     }
 
     private void initBookingAdapter() {

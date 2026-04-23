@@ -3,9 +3,10 @@ package com.btl_ptit.hotelbooking.data.model;
 import com.btl_ptit.hotelbooking.interfaces.DiffUtilModel;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class MyBooking implements DiffUtilModel {
+public class MyBooking implements DiffUtilModel, Serializable {
 
     @SerializedName("id")
     private String id;

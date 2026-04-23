@@ -2,7 +2,9 @@ package com.btl_ptit.hotelbooking.data.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     // Adjust these field names/annotations to match your `public.users` columns
 
     @SerializedName("id")
