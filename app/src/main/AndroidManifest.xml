@@ -10,6 +10,7 @@
         <package android:name="com.google.android.apps.maps" />
     </queries>
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -65,31 +66,40 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
 
+
         <activity
             android:name=".view.activity.HotelDetailActivity"
             android:exported="false"
             android:theme="@style/Theme.HotelBookingPTIT.DarkStatusBar" />
         <activity
             android:name=".view.activity.RegisterActivity"
-            android:exported="true"></activity> <!-- 2. Login xử lý Deep Link (vẫn giữ logic ở đây) -->
+            android:exported="true">
+        </activity>
+
+        <activity
+            android:name=".view.activity.NotificationActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".view.activity.ChangePasswordActivity"
+            android:exported="true">
+        </activity>
+        <!-- 2. Login xử lý Deep Link (vẫn giữ logic ở đây) -->
         <activity
             android:name=".view.activity.LoginActivity"
             android:exported="true"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data
-                    android:host="auth-callback"
-                    android:scheme="hotelbooking" />
+                    android:scheme="hotelbooking"
+                    android:host="auth-callback" />
             </intent-filter>
         </activity>
         <activity
