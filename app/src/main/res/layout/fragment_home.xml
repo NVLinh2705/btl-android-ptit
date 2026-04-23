@@ -82,6 +82,7 @@
                         app:layout_constraintTop_toTopOf="@+id/label_name">
 
                         <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/btnSearch"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_marginEnd="8dp"
@@ -151,20 +152,31 @@
                         android:textColor="@color/md_theme_primaryFixedDim_mediumContrast" />
                 </RelativeLayout>
 
-                <LinearLayout
-                    android:id="@+id/shimmerContainer"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:visibility="invisible" />
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:id="@+id/shimmerContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:visibility="visible"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewDestinations"
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:visibility="visible"
-                    android:layout_height="wrap_content" />
-
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerViewDestinations"
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:visibility="visible"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -188,21 +200,32 @@
                         android:textColor="@color/md_theme_primaryFixedDim_mediumContrast" />
                 </RelativeLayout>
 
-
-                <LinearLayout
-                    android:id="@+id/shimmerContainer2"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="invisible" />
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:id="@+id/shimmerContainer2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="visible"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewHotels"
-                    android:layout_width="match_parent"
-                    android:orientation="vertical"
-                    android:visibility="visible"
-                    android:layout_height="wrap_content" />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerViewHotels"
+                        android:layout_width="match_parent"
+                        android:orientation="vertical"
+                        android:visibility="visible"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
 
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -217,6 +240,17 @@
                         android:textColor="@color/md_theme_inverseSurface_highContrast"
                         android:textSize="14sp"
                         android:textStyle="bold" />
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/btnZoomMap"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:padding="6dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/zoom_to_map_label"
+                        app:srcCompat="@drawable/outline_zoom_out_map_24"
+                        app:tint="@color/md_theme_primaryFixedDim_mediumContrast" />
                 </RelativeLayout>
 
                 <!-- Map stub -->
@@ -229,9 +263,8 @@
                     android:visibility="gone"
                     android:clickable="false"
                     app:cardElevation="0dp">
-                    <fragment
+                    <androidx.fragment.app.FragmentContainerView
                         android:id="@+id/mapFragment"
-                        android:name="com.google.android.gms.maps.SupportMapFragment"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
 

@@ -1,5 +1,6 @@
 package com.btl_ptit.hotelbooking.api_parsing;
 
+import com.btl_ptit.hotelbooking.data.dto.HotelInBoundResponse;
 import com.btl_ptit.hotelbooking.data.model.MyHotel;
 import com.btl_ptit.hotelbooking.data.model.MyPopularDestination;
 import com.google.gson.Gson;
@@ -21,6 +22,7 @@ public class MyGsonConverterFactory {
                     Gson gson = new GsonBuilder()
                         .registerTypeAdapter(new TypeToken<List<MyHotel>>(){}.getType(), new HotelListDeserializer())
                         .registerTypeAdapter(new TypeToken<List<MyPopularDestination>>(){}.getType(), new PopularDestinationDeserializer())
+                        .registerTypeAdapter(new TypeToken<List<HotelInBoundResponse>>(){}.getType(), new HotelInBoundDeserializer())
                         .create();
 
                     myGsonConverterFactory = GsonConverterFactory.create(gson);

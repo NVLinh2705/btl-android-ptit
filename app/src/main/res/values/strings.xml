@@ -16,4 +16,19 @@
     <string name="averagePerNight">average / night</string>
     <string name="perNight">/ night</string>
     <string name="labelHotelNearYou">Hotel near you  🏨</string>
+    <string name="labelYourLocation">Your location</string>
+    <string name="labelBlockYourLocation">You have blocked location permissions! Please go to Settings to re-enable them.</string>
+    <string name="labelRequireYourLocation">The app needs location permissions to run!</string>
+    <string name="labelGrantPermissions">Grant permissions</string>
+    <string name="search_label">Search...</string>
+    <string name="nearby_hotel_label">Nearby Hotel</string>
+    <string name="zoom_to_map_label">Zoom to map</string>
+    <string name="see_directions_label">See directions</string>
+    <string name="like">Like</string>
+    <string name="room_type_label">Room type</string>
+    <string name="price_range">Price range</string>
+    <string name="facilities_label">Facilities</string>
+    <string name="ratings_label">Ratings</string>
+    <string name="apply_filter_label">Apply Filter</string>
+    <string name="filter_by_label">Filter By</string>
 </resources>

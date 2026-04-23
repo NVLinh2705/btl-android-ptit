@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.btl_ptit.hotelbooking.R;
+import com.btl_ptit.hotelbooking.utils.Constants;
 import com.btl_ptit.hotelbooking.view.adapter.FacilityAdapter;
 import com.btl_ptit.hotelbooking.view.adapter.HotelImagePagerAdapter;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -208,7 +209,7 @@ public class HotelDetailActivity extends AppCompatActivity implements OnMapReady
         Toast.makeText(this, "onMapReady called", Toast.LENGTH_SHORT).show();
 
         LatLng hotel = new LatLng(20.9788183,105.7866833); // example
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(hotel, 14f));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(hotel, Constants.ZOOM_LEVEL));
         map.addMarker(new MarkerOptions().position(hotel).title("Hotel"));
 
         map.getUiSettings().setMapToolbarEnabled(false);

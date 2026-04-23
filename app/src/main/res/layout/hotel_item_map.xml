@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<com.google.android.material.card.MaterialCardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    app:cardBackgroundColor="#FFFFFF"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="6dp"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+        <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imgHotel"
+            android:layout_width="80dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.Corner8dp"
+            app:srcCompat="@drawable/img" />
+<!--        <LinearLayout-->
+<!--            android:id="@+id/blockText"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_marginStart="16dp"-->
+<!--            android:orientation="vertical"-->
+<!--            android:gravity="center_vertical"-->
+<!--            >-->
+
+<!--            -->
+<!--            -->
+<!--        </LinearLayout>-->
+
+        <TextView
+            android:id="@+id/tvHotelName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="Elysian Suites"
+            android:textColor="#1A1A1A"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toStartOf="@id/tvRating"
+            app:layout_constraintStart_toEndOf="@id/imgHotel"
+            app:layout_constraintTop_toTopOf="@id/imgHotel"/>
+
+        <TextView
+            android:id="@+id/tvAddress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:drawableStart="@drawable/outline_location_on_24"
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            android:text="San Diego, CA"
+            android:textColor="#888888"
+            android:textSize="11sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tvHotelName"
+            app:layout_constraintTop_toBottomOf="@id/tvHotelName"/>
+
+        <TextView
+            android:id="@+id/tvPrice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="$320 /night"
+            android:textColor="#3F51B5"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tvAddress"
+            app:layout_constraintTop_toBottomOf="@id/tvAddress" />
+
+        <TextView
+            android:id="@+id/tvRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_rating_tag"
+            android:drawablePadding="4dp"
+            android:gravity="center"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:text="4.7"
+            android:textColor="#F4B400"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            app:drawableStartCompat="@drawable/outline_kid_star_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/imgHotel" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnBooking"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:backgroundTint="#3F51B5"
+                android:text="Booking Now"
+                android:textAllCaps="false"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:cornerRadius="16dp" />
+
+            <ImageButton
+                android:id="@+id/btnHotelDetail"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/bg_circle_hotel_detail"
+                android:scaleType="center"
+                app:srcCompat="@drawable/outline_arrow_outward_24"
+                app:tint="#2253D3" />
+        </LinearLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
+</FrameLayout>

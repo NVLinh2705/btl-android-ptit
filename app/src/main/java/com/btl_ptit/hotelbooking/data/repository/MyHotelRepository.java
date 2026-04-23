@@ -5,12 +5,18 @@ import androidx.paging.PagingConfig;
 import androidx.paging.PagingData;
 import androidx.paging.rxjava3.PagingRx;
 
+import com.btl_ptit.hotelbooking.data.dto.HotelInBoundResponse;
 import com.btl_ptit.hotelbooking.data.model.MyHotel;
 import com.btl_ptit.hotelbooking.data.paging_services.MyHotelPagingSource;
 import com.btl_ptit.hotelbooking.data.remote.api_services.HotelRestService;
 import com.btl_ptit.hotelbooking.utils.Constants;
+import com.google.android.gms.maps.model.LatLngBounds;
+
+import java.util.List;
 
 import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MyHotelRepository {
 
@@ -50,5 +56,12 @@ public class MyHotelRepository {
                 () -> new MyHotelPagingSource(hotelRestService, true));      // set paging source
 
         return PagingRx.getFlowable(pager);
+    }
+
+    public Single<List<HotelInBoundResponse>> fetchHotelsInBounds(LatLngBounds bounds, float zoom) {
+        return hotelRestService.getHotelsInBounds(
+                bounds.southwest.latitude, bounds.southwest.longitude,
+                bounds.northeast.latitude, bounds.northeast.longitude, zoom
+        ).subscribeOn(Schedulers.io());
     }
 }

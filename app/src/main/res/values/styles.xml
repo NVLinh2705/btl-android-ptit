@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <style name="ShapeAppearanceOverlay.App.Corner8dp" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
+    <style name="CircleShapeAppearance" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
+    <style name="RatingButtonStyle" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+
+        <item name="android:insetLeft">4dp</item>
+        <item name="android:insetRight">4dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+
+        <item name="android:textColor">#212121</item>
+        <item name="iconTint">#FFC107</item>
+
+        <item name="shapeAppearanceOverlay">@style/CircleShapeAppearance</item>
+
+        <item name="strokeColor">@color/rating_button_stroke_selector</item>
+        <item name="strokeWidth">1dp</item>
+
+        <item name="backgroundTint">@color/rating_button_background_selector</item>
+    </style>
+
+    <style name="CustomChipStyle" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/rating_button_background_selector</item>
+        <item name="chipStrokeColor">@color/rating_button_stroke_selector</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="shapeAppearance">@style/CircleShapeAppearance</item>
+
+        <item name="chipIconVisible">true</item>
+        <item name="chipIconTint">#FFC107</item>
+
+        <item name="checkedIconVisible">false</item>
+
+        <item name="iconStartPadding">8dp</item>
+        <item name="textStartPadding">4dp</item>
+
+        <item name="iconEndPadding">4dp</item>
+
+        <item name="textEndPadding">8dp</item>
+    </style>
+</resources>

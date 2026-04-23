@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_bottom_sheet"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp"
+        android:background="#E0E0E0" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:text="@string/filter_by_label"
+        android:textColor="#212121"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="@string/room_type_label"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusTopStart="12dp"
+                app:hintTextColor="#3F51B5"
+                app:endIconTint="#3F51B5"
+                app:boxStrokeColor="#3F51B5">
+                <AutoCompleteTextView
+                    android:id="@+id/autoCompletePlaceholder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:padding="12dp"
+                    android:textSize="14sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/price_range"
+                    android:textStyle="bold"
+                    android:textColor="#212121" />
+                <TextView
+                    android:id="@+id/tvPriceRange"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:text="$0-$80"
+                    android:textColor="#BDBDBD" />
+            </RelativeLayout>
+
+            <com.google.android.material.slider.RangeSlider
+                android:id="@+id/priceSlider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:thumbColor="#3F51B5"
+                app:trackColorActive="#3F51B5"
+                app:trackColorInactive="#E0E0E0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/facilities_label"
+                android:textStyle="bold"
+                android:textColor="#212121" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="8dp">
+
+                <CheckBox
+                    android:id="@+id/cbWifi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Free Wifi"
+                    android:layoutDirection="rtl"
+                    android:paddingStart="12dp"
+                    app:buttonTint="@color/checkbox_color_selector" />
+
+                <CheckBox
+                    android:id="@+id/cbPool"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Swimming Pool"
+                    android:layoutDirection="rtl"
+                    android:paddingStart="12dp"
+                    app:buttonTint="@color/checkbox_color_selector" />
+
+                <CheckBox
+                    android:id="@+id/cbTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tv"
+                    android:layoutDirection="rtl"
+                    android:paddingStart="12dp"
+                    app:buttonTint="@color/checkbox_color_selector" />
+
+                <CheckBox
+                    android:id="@+id/cbLaundry"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Laundry"
+                    android:layoutDirection="rtl"
+                    android:paddingStart="12dp"
+                    app:buttonTint="@color/checkbox_color_selector" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/ratings_label"
+                android:textStyle="bold"
+                android:textColor="#212121" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:clipToPadding="false">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroupRatings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:singleLine="true"
+                    app:singleSelection="true"
+                    app:selectionRequired="true"
+                    app:chipSpacingHorizontal="8dp">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip5"
+                        style="@style/CustomChipStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="5"
+                        app:chipIcon="@drawable/outline_kid_star_24" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip4"
+                        style="@style/CustomChipStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="4"
+                        app:chipIcon="@drawable/outline_kid_star_24" />
+
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip3"
+                        style="@style/CustomChipStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3"
+                        app:chipIcon="@drawable/outline_kid_star_24" />
+
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip2"
+                        style="@style/CustomChipStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2"
+                        app:chipIcon="@drawable/outline_kid_star_24" />
+
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip1"
+                        style="@style/CustomChipStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1"
+                        app:chipIcon="@drawable/outline_kid_star_24" />
+
+                </com.google.android.material.chip.ChipGroup>
+            </HorizontalScrollView>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnApply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/apply_filter_label"
+        android:backgroundTint="#3F51B5"
+        android:textAllCaps="false"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textSize="16sp"
+        app:cornerRadius="12dp" />
+
+</LinearLayout>

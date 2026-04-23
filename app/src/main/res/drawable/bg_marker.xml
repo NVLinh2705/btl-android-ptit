@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="100dp"
+    android:height="42dp"
+    android:viewportWidth="102"
+    android:viewportHeight="42">
+    <path
+        android:id="@+id/bubble_path"
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#3F51B5"
+        android:strokeWidth="1"
+        android:strokeLineJoin="round"
+        android:strokeLineCap="round"
+
+        android:pathData="M19,1 H83 C92.9,1 101,9.1 101,19 C101,28.9 92.9,37 83,37 H57 L51,41 L45,37 H19 C9.1,37 1,28.9 1,19 C1,9.1 9.1,1 19,1 Z" />
+</vector>
