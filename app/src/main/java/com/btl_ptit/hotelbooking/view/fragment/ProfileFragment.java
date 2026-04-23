@@ -16,8 +16,10 @@ import com.btl_ptit.hotelbooking.R;
 import com.btl_ptit.hotelbooking.data.model.User;
 import com.btl_ptit.hotelbooking.data.session.SessionManager;
 import com.btl_ptit.hotelbooking.databinding.FragmentProfileBinding;
+import com.btl_ptit.hotelbooking.view.activity.ChangePasswordActivity;
 import com.btl_ptit.hotelbooking.view.activity.EditProfileActivity;
 import com.btl_ptit.hotelbooking.view.activity.LoginActivity;
+import com.btl_ptit.hotelbooking.view.activity.NotificationActivity;
 import com.bumptech.glide.Glide;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -55,6 +57,14 @@ public class ProfileFragment extends Fragment {
         binding.btnLogout.setOnClickListener(v -> showLogoutDialog());
         binding.btnEditProfile.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), EditProfileActivity.class);
+            startActivity(intent);
+        });
+        binding.btnNotification.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), NotificationActivity.class);
+            startActivity(intent);
+        });
+        binding.btnSecurity.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), ChangePasswordActivity.class);
             startActivity(intent);
         });
     }
