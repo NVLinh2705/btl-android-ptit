@@ -72,6 +72,7 @@ dependencies {
     annotationProcessor libs.compiler
 
     implementation libs.play.services.maps
+    implementation libs.play.services.location
 
     implementation libs.paging.runtime
     implementation libs.paging.rxjava3
@@ -85,7 +86,7 @@ dependencies {
 
     testCompileOnly(libs.lombok)
     testAnnotationProcessor(libs.lombok)
-    implementation "com.google.android.gms:play-services-maps:18.2.0"
-    implementation "androidx.viewpager2:viewpager2:1.0.0"
+//    implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation "com.google.android.flexbox:flexbox:3.0.0"
+    implementation libs.powermenu
 }

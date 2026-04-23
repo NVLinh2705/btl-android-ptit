@@ -1,5 +1,7 @@
 package com.btl_ptit.hotelbooking.view_model.paging;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

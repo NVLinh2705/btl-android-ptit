@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="initial_slider_values">
+        <item>0.0</item>
+        <item>100.0</item>
+    </array>
+
+    <string-array name="guest_options">
+        <item>1 Guest (1 Adult)</item>
+        <item>2 Guests (2 Adult)</item>
+        <item>3 Guests (2 Adult, 1 Children)</item>
+        <item>4 Guests (2 Adult, 2 Children)</item>
+    </string-array>
+</resources>

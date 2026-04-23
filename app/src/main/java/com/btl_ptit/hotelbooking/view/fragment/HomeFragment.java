@@ -2,10 +2,14 @@ package com.btl_ptit.hotelbooking.view.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.paging.LoadState;
@@ -34,6 +38,8 @@ import com.btl_ptit.hotelbooking.listener.OnHotelClickListener;
 import com.btl_ptit.hotelbooking.utils.Constants;
 import com.btl_ptit.hotelbooking.utils.paging.MyComparator;
 import com.btl_ptit.hotelbooking.view.activity.HotelDetailActivity;
+import com.btl_ptit.hotelbooking.view.activity.MyMapActivity;
+import com.btl_ptit.hotelbooking.view.activity.SearchActivity;
 import com.btl_ptit.hotelbooking.view.adapter.HotelAdapter;
 import com.btl_ptit.hotelbooking.view.adapter.LoadStateAdapter;
 import com.btl_ptit.hotelbooking.view.adapter.PopularDestinationAdapter;
@@ -41,6 +47,8 @@ import com.btl_ptit.hotelbooking.view_model.paging.HotelViewModel;
 import com.btl_ptit.hotelbooking.view_model.paging.HotelViewModelFactory;
 import com.btl_ptit.hotelbooking.view_model.paging.PopularDestinationViewModel;
 import com.btl_ptit.hotelbooking.view_model.paging.PopularDestinationViewModelFactory;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -67,40 +75,49 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private HotelRestService mHotelRestService;
     private HotelViewModel mHotelViewModel;
     private HotelAdapter mHotelAdapter;
+    private View rootView;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+    private FusedLocationProviderClient fusedLocationClient;
+
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    enableMyLocation();
+                } else {
+                    if (!shouldShowRequestPermissionRationale(android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+                        Toast.makeText(mContext, R.string.labelBlockYourLocation, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(mContext, R.string.labelRequireYourLocation, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate called");
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        if (rootView == null) { // Lần đầu tiên khởi tạo
-//            mFragmentHomeBinding = FragmentHomeBinding.inflate(inflater, container, false);
-//            rootView = mFragmentHomeBinding.getRoot();
-//            mContext = getContext();
-//
-//            initPopularDestinations();
-//            initRecommendedHotels();
-//            initListeners();
-//        } else {
-//            // tránh "View already has a parent"
-//            if (rootView.getParent() != null) {
-//                ((ViewGroup) rootView.getParent()).removeView(rootView);
-//            }
-//            rebindAdapters();
-//        }
-//
-//        observePagingData();
-//        if (googleMap == null) {
-//            setupMap();
-//        }
+        if (rootView == null) {
+            mFragmentHomeBinding = FragmentHomeBinding.inflate(inflater, container, false);
+            rootView = mFragmentHomeBinding.getRoot();
+            mContext = getContext();
 
-        mFragmentHomeBinding = FragmentHomeBinding.inflate(inflater, container, false);
-        View rootView = mFragmentHomeBinding.getRoot();
-        mContext = getContext();
+            initListeners();
 
-        initListeners();
-
-        initPopularDestinations();
-        initRecommendedHotels();
-
+            initPopularDestinations();
+            initRecommendedHotels();
+        } else {
+            // tránh "View already has a parent"
+            if (rootView.getParent() != null) {
+                ((ViewGroup) rootView.getParent()).removeView(rootView);
+            }
+            rebindAdapters();
+        }
+        setupMap();
         return rootView;
     }
 
@@ -149,60 +166,80 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             }
             return false;
         });
-    }
 
-//    private void rebindAdapters() {
-//        if (mPopularDestinationAdapter == null) {
-//            initPopularDestinations();
-//        }
-//        if (mHotelAdapter == null) {
-//            initRecommendedHotels();
-//        }
-//        if (mFragmentHomeBinding.recyclerViewDestinations.getAdapter() == null) {
-//            mFragmentHomeBinding.recyclerViewDestinations.setAdapter(mPopularDestinationAdapter);
-//        }
-//        if (mFragmentHomeBinding.recyclerViewHotels.getAdapter() == null) {
-//            mFragmentHomeBinding.recyclerViewHotels.setAdapter(mHotelAdapter);
-//        }
-//    }
-
-
-    private void initPopularDestinations() {
-        mMyDestinationRestService = MockApiClient.createService(MyDestinationRestService.class);
-        mMyDestinationRepository = new MyDestinationRepository(mMyDestinationRestService);
-        mPopularDestinationViewModel = new ViewModelProvider(requireActivity(), new PopularDestinationViewModelFactory(mMyDestinationRepository)).get(PopularDestinationViewModel.class);
-
-        initDestinationAdapter();
-
-        compositeDisposable.add(
-            mPopularDestinationViewModel.pagingDataFlow
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(pagingData -> mPopularDestinationAdapter.submitData(getViewLifecycleOwner().getLifecycle(), pagingData))
-        );
-    }
-
-    private void initDestinationAdapter() {
-        mPopularDestinationAdapter = new PopularDestinationAdapter(new MyComparator<MyPopularDestination>(), requireContext(), new OnDestinationClickListener() {
+        mFragmentHomeBinding.btnZoomMap.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDestinationClick(MyPopularDestination destination) {
-                Intent intent = new Intent(mContext, HotelDetailActivity.class);
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, MyMapActivity.class);
                 startActivity(intent);
             }
         });
+
+        mFragmentHomeBinding.btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(mContext, SearchActivity.class));
+            }
+        });
+    }
+
+    private void rebindAdapters() {
+        if (mPopularDestinationAdapter == null) {
+            initPopularDestinations();
+        }
+        if (mHotelAdapter == null) {
+            initRecommendedHotels();
+        }
+        if (mFragmentHomeBinding.recyclerViewDestinations.getAdapter() == null) {
+            mFragmentHomeBinding.recyclerViewDestinations.setAdapter(mPopularDestinationAdapter);
+        }
+        if (mFragmentHomeBinding.recyclerViewHotels.getAdapter() == null) {
+            mFragmentHomeBinding.recyclerViewHotels.setAdapter(mHotelAdapter);
+        }
+    }
+
+
+    private void initPopularDestinations() {
+        initDestinationAdapter();
+        if (mPopularDestinationAdapter != null) {
+            mMyDestinationRestService = MockApiClient.createService(MyDestinationRestService.class);
+            mMyDestinationRepository = new MyDestinationRepository(mMyDestinationRestService);
+            mPopularDestinationViewModel = new ViewModelProvider(requireActivity(), new PopularDestinationViewModelFactory(mMyDestinationRepository)).get(PopularDestinationViewModel.class);
+
+            compositeDisposable.add(
+                mPopularDestinationViewModel.pagingDataFlow
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(pagingData -> mPopularDestinationAdapter.submitData(getLifecycle(), pagingData))
+            );
+        }
+    }
+
+    private void initDestinationAdapter() {
+        if (mPopularDestinationAdapter == null) {
+            mPopularDestinationAdapter = new PopularDestinationAdapter(new MyComparator<MyPopularDestination>(), requireContext(), new OnDestinationClickListener() {
+                @Override
+                public void onDestinationClick(MyPopularDestination destination) {
+                    Intent intent = new Intent(mContext, HotelDetailActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 requireContext(),
                 LinearLayoutManager.HORIZONTAL,
                 false
         );
 
-        mFragmentHomeBinding.recyclerViewDestinations.setLayoutManager(layoutManager);
-        mFragmentHomeBinding.recyclerViewDestinations.setHasFixedSize(true);
+        if (mFragmentHomeBinding.recyclerViewDestinations.getLayoutManager() == null) {
+            mFragmentHomeBinding.recyclerViewDestinations.setLayoutManager(layoutManager);
+            mFragmentHomeBinding.recyclerViewDestinations.setHasFixedSize(true);
 
-        mFragmentHomeBinding.recyclerViewDestinations.setAdapter(
-                mPopularDestinationAdapter.withLoadStateFooter(
-                        new LoadStateAdapter(v -> mPopularDestinationAdapter.retry())
-                )
-        );
+            mFragmentHomeBinding.recyclerViewDestinations.setAdapter(
+                    mPopularDestinationAdapter.withLoadStateFooter(
+                            new LoadStateAdapter(v -> mPopularDestinationAdapter.retry())
+                    )
+            );
+        }
 
         if (mPopularDestinationAdapter.getItemCount() == 0 && mFragmentHomeBinding.shimmerContainer.getChildCount() == 0) {
             setupShimmerPlaceholder();
@@ -248,48 +285,49 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void initRecommendedHotels() {
-        mHotelRestService = MockApiClient.createService(HotelRestService.class);
-        mMyHotelRepository = new MyHotelRepository(mHotelRestService);
-        mHotelViewModel = new ViewModelProvider(requireActivity(), new HotelViewModelFactory(mMyHotelRepository, true)).get(HotelViewModel.class);
-
         initHotelAdapter();
+        if (mHotelAdapter != null) {
+            mHotelRestService = MockApiClient.createService(HotelRestService.class);
+            mMyHotelRepository = new MyHotelRepository(mHotelRestService);
+            mHotelViewModel = new ViewModelProvider(requireActivity(), new HotelViewModelFactory(mMyHotelRepository, true)).get(HotelViewModel.class);
 
-        compositeDisposable.add(
-            mHotelViewModel.pagingDataFlow
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(pagingData -> mHotelAdapter.submitData(getViewLifecycleOwner().getLifecycle(), pagingData))
-        );
+            compositeDisposable.add(
+                    mHotelViewModel.pagingDataFlow
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(pagingData -> mHotelAdapter.submitData(getLifecycle(), pagingData))
+            );
+        }
     }
 
     private void initHotelAdapter() {
-        mHotelAdapter = new HotelAdapter(new MyComparator<MyHotel>(), requireContext(), new OnHotelClickListener() {
-            @Override
-            public void onHotelClick(MyHotel myHotel) {
-                Intent intent = new Intent(mContext, HotelDetailActivity.class);
-                intent.putExtra("hotel_id", myHotel.getId()); // Truyền ID sang để bên kia gọi API
-                intent.putExtra("hotel_name", myHotel.getName());
-                startActivity(intent);
-            }
-        });
+        if (mHotelAdapter == null) {
+            mHotelAdapter = new HotelAdapter(new MyComparator<MyHotel>(), requireContext(), new OnHotelClickListener() {
+                @Override
+                public void onHotelClick(MyHotel myHotel) {
+                    Intent intent = new Intent(mContext, HotelDetailActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 requireContext(),
                 LinearLayoutManager.VERTICAL,
                 false
         );
 
-        mFragmentHomeBinding.recyclerViewHotels.setLayoutManager(layoutManager);
-        mFragmentHomeBinding.recyclerViewHotels.setHasFixedSize(true);
-        mFragmentHomeBinding.recyclerViewHotels.setAdapter(mHotelAdapter);
-        mFragmentHomeBinding.recyclerViewHotels.setNestedScrollingEnabled(false);
+        if (mFragmentHomeBinding.recyclerViewHotels.getLayoutManager() == null) {
+            mFragmentHomeBinding.recyclerViewHotels.setLayoutManager(layoutManager);
+            mFragmentHomeBinding.recyclerViewHotels.setHasFixedSize(false);
+            mFragmentHomeBinding.recyclerViewHotels.setAdapter(mHotelAdapter);
+            mFragmentHomeBinding.recyclerViewHotels.setNestedScrollingEnabled(false);
+        }
 
         if (mHotelAdapter.getItemCount() == 0 && mFragmentHomeBinding.shimmerContainer2.getChildCount() == 0) {
             setupShimmerPlaceholder(Constants.NUM_OF_PLACE_HOLDER);
-
         }
 
         mHotelAdapter.addLoadStateListener(loadState -> {
             if (loadState.getRefresh() instanceof LoadState.Loading || loadState.getRefresh() instanceof LoadState.Error) {
-                mFragmentHomeBinding.mapFragmentLayout.setVisibility(View.VISIBLE);
                 mFragmentHomeBinding.shimmerContainer2.setVisibility(View.VISIBLE);
                 mFragmentHomeBinding.recyclerViewHotels.setVisibility(View.GONE);
                 Log.d(TAG, "mHotelAdapter loading!");
@@ -297,10 +335,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 //                Log.d(TAG, mHotelAdapter.getItemCount() + " mHotelAdapter ");
                 mFragmentHomeBinding.recyclerViewHotels.setVisibility(View.VISIBLE);
                 mFragmentHomeBinding.shimmerContainer2.setVisibility(View.GONE);
-                mFragmentHomeBinding.mapFragmentLayout.setVisibility(View.VISIBLE);
-                if (googleMap == null) {
-                    setupMap();
-                }
                 Log.d(TAG, "mHotelAdapter not load!");
             }
             return null;
@@ -325,11 +359,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     private void setupMap(){
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
-        if (mapFragment != null) {
-            mapFragment.getMapAsync(this);
-        } else {
+        if (mapFragment == null) {
             Log.d(TAG, "MapFragment not found in layout");
+            mapFragment = SupportMapFragment.newInstance();
+            getChildFragmentManager().beginTransaction().replace(R.id.mapFragment, mapFragment).commit();
         }
+        mapFragment.getMapAsync(this);
         Log.d(TAG, "setupMap called");
     }
 
@@ -338,21 +373,53 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         this.googleMap = map;
         Log.d(TAG, "onMapReady called");
 
-        LatLng hotel = new LatLng(20.9788183,105.7866833); // example
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(hotel, 14f));
-        map.addMarker(new MarkerOptions().position(hotel).title("Hotel"));
+        this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
+        map.getUiSettings().setZoomControlsEnabled(false); // Dùng cử chỉ zoom
         map.getUiSettings().setMapToolbarEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(true);
 
+        // Kích hoạt vị trí
+        enableMyLocation();
+        mFragmentHomeBinding.mapFragmentLayout.setVisibility(View.VISIBLE);
         map.setOnMapLoadedCallback(() -> Log.d(TAG, "Google Map loaded"));
+    }
+
+    private void enableMyLocation() {
+        if (ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (googleMap != null) {
+                // Hiện chấm xanh và nút "My Location" mặc định
+                googleMap.setMyLocationEnabled(true);
+                googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+                // Lấy vị trí để di chuyển Camera đến đó 1 lần duy nhất lúc đầu
+                fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+                    if (location != null) {
+                        LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
+                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current, Constants.ZOOM_LEVEL));
+                    }
+                });
+            }
+        } else {
+            // Kiểm tra xem người dùng đã từng từ chối chưa
+            if (shouldShowRequestPermissionRationale(android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+                new androidx.appcompat.app.AlertDialog.Builder(mContext)
+                        .setMessage(R.string.labelRequireYourLocation)
+                        .setPositiveButton(R.string.app_name, (d, w) -> {
+                            requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION);
+                        })
+                        .show();
+            } else {
+                requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION);
+            }
+        }
     }
 
     @Override
     public void onDestroyView() {
         compositeDisposable.clear();
 //        googleMap = null;
-        mFragmentHomeBinding = null;
+//        mFragmentHomeBinding = null;
         super.onDestroyView();
     }
 

@@ -1,7 +1,5 @@
 package com.btl_ptit.hotelbooking.utils;
 
-import static androidx.paging.PagingSource.LoadResult.Page.COUNT_UNDEFINED;
-
 public class Constants {
     public static final String PREF_NAME = "session";
     public static final String KEY_ACCESS_TOKEN = "access_token";
@@ -16,4 +14,10 @@ public class Constants {
     public static final int MAX_SIZE = 100;
 
     public static final int NUM_OF_PLACE_HOLDER = 5;
+
+    public static final float ZOOM_LEVEL = 14f;
+    public static final long TIME_OUT = 500;
+
+    public static final float ZOOM_LEVEL_LOWER_THRESHOLD = 1.5f;
+    public static final int DISTANCE_LOWER_THRESHOLD = 3000;
 }

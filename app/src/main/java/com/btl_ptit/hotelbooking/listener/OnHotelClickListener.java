@@ -2,6 +2,7 @@ package com.btl_ptit.hotelbooking.listener;
 
 import android.view.View;
 
+import com.btl_ptit.hotelbooking.data.dto.HotelInBoundResponse;
 import com.btl_ptit.hotelbooking.data.model.MyHotel;
 
 import java.util.ArrayList;

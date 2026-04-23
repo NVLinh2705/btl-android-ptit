@@ -3,6 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <queries>
+        <package android:name="com.google.android.apps.maps" />
+    </queries>
 
     <application
         android:name=".MyApplication"
@@ -44,6 +50,16 @@
         <activity
             android:name=".view.activity.BookingHistoryDetailActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".view.activity.SearchActivity"
+            android:exported="false"
+            android:theme="@style/Theme.HotelBookingPTIT"/>
+        <activity
+            android:name=".view.activity.MyMapActivity"
+            android:exported="false"
+            android:theme="@style/Theme.HotelBooking.FullScreen" />
+
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

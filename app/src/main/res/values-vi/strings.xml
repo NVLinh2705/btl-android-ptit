@@ -98,4 +98,19 @@
     <string name="booking_not_available">Chưa có thông tin</string>
     <string name="pay_at_property_chip">Thanh toán khi nhận phòng</string>
     <string name="confirm">Xác nhận</string>
+    <string name="labelYourLocation">Vị trí của bạn</string>
+    <string name="labelBlockYourLocation">Bạn đã chặn quyền vị trí! Vui lòng vào Cài đặt để bật lại</string>
+    <string name="labelRequireYourLocation">App cần quyền vị trí để hoạt động!</string>
+    <string name="labelGrantPermissions">Cấp quyền</string>
+    <string name="search_label">Tìm kiếm...</string>
+    <string name="nearby_hotel_label">Khách sạn gần đây</string>
+    <string name="zoom_to_map_label">Mở bản đồ</string>
+    <string name="see_directions_label">Xem đường đi</string>
+    <string name="like">Thích</string>
+    <string name="room_type_label">Loại phòng</string>
+    <string name="price_range">Khoảng giá</string>
+    <string name="facilities_label">Dịch vụ</string>
+    <string name="ratings_label">Đánh giá</string>
+    <string name="apply_filter_label">Áp dụng bộ lọc</string>
+    <string name="filter_by_label">Bộ lọc</string>
 </resources>
