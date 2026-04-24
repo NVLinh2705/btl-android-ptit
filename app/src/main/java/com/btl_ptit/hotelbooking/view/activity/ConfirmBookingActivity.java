@@ -115,7 +115,7 @@ public class ConfirmBookingActivity extends AppCompatActivity {
     private void showSuccessDialog(int newBookingId) {
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_success);
+        dialog.setContentView(R.layout.booking_dialog_success);
         dialog.setCancelable(false); // Force user to click a button
 
         // Make dialog background transparent to show the card's rounded corners
