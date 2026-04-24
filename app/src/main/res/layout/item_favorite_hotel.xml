@@ -56,18 +56,6 @@
             app:layout_constraintTop_toTopOf="@id/ivStar" />
 
         <TextView
-            android:id="@+id/tvReviewCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="(532)"
-            android:textColor="#9E9E9E"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@id/tvRating"
-            app:layout_constraintStart_toEndOf="@id/tvRating"
-            app:layout_constraintTop_toTopOf="@id/tvRating" />
-
-        <TextView
             android:id="@+id/tvHotelName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

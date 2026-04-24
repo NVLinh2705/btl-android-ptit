@@ -138,7 +138,7 @@ public class BookingHistoryDetailActivity extends AppCompatActivity {
                 binding.txtStatus.setText("Đang chờ duyệt");
                 binding.reviewCard.setVisibility(View.GONE);
                 binding.qrCard.setVisibility(View.GONE);
-                if(ChronoUnit.DAYS.between(LocalDate.now(),checkinDate)<1&&LocalDate.now().isBefore(checkinDate)){
+                if(ChronoUnit.DAYS.between(LocalDate.now(),checkinDate)>1&&LocalDate.now().isBefore(checkinDate)){
                     binding.cancelCard.setVisibility(View.VISIBLE);
                     binding.btnCancelBooking.setOnClickListener(v -> {
                         cancelBooking();
@@ -159,7 +159,7 @@ public class BookingHistoryDetailActivity extends AppCompatActivity {
                 binding.qrCard.setOnClickListener(v -> {
                     showQrDialog(qrCode);
                 });
-                if(ChronoUnit.DAYS.between(LocalDate.now(),checkinDate)<1&&LocalDate.now().isBefore(checkinDate)){
+                if(ChronoUnit.DAYS.between(LocalDate.now(),checkinDate)>1&&LocalDate.now().isBefore(checkinDate)){
                     binding.cancelCard.setVisibility(View.VISIBLE);
                     binding.btnCancelBooking.setOnClickListener(v -> {
                         cancelBooking();
