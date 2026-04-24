@@ -61,8 +61,8 @@ public class FavoriteHotelAdapter extends ListAdapter<MyHotel, FavoriteHotelAdap
         public void bind(MyHotel hotel, OnHotelClickListener listener, OnFavoriteClickListener favoriteListener) {
             binding.tvHotelName.setText(hotel.getName());
             binding.tvLocation.setText(hotel.getLocation());
-            binding.tvRating.setText(String.valueOf(hotel.getRating() / 10.0));
-            binding.tvPrice.setText(hotel.getAveragePrice() * 100000 + "₫");
+            binding.tvRating.setText(String.valueOf(hotel.getRating()));
+//            binding.tvPrice.setText(hotel.getAveragePrice() * 100000 + "₫");
 
             Glide.with(binding.ivHotelImage.getContext())
                     .load(hotel.getAvatar())
