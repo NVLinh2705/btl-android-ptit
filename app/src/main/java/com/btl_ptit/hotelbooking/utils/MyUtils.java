@@ -1,5 +1,6 @@
 package com.btl_ptit.hotelbooking.utils;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
@@ -11,11 +12,13 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -24,6 +27,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.skydoves.powermenu.PowerMenu;
 import com.skydoves.powermenu.PowerMenuItem;
 
@@ -160,5 +164,28 @@ public class MyUtils {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         return sdf.format(new Date(timeInMillis));
+    }
+
+    public static void setupBottomSheet(Dialog dialog, FragmentActivity fragmentActivity) {
+        if (dialog != null) {
+            View bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+
+            if (bottomSheet != null) {
+                // Dùng WRAP_CONTENT để nó tự co theo nội dung khi nội dung ngắn
+                bottomSheet.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+
+                BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
+
+                // 2. Set Max Height để nếu nội dung quá dài, nó không vượt quá 90% màn hình
+                int screenHeight = fragmentActivity.getResources().getDisplayMetrics().heightPixels;
+                behavior.setMaxHeight((int) (screenHeight * 0.90));
+
+                // 3. Ép trạng thái ban đầu là EXPANDED
+                behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+                // 4. Bỏ qua trạng thái lửng lơ (Collapsed), vuốt xuống là đóng luôn
+                behavior.setSkipCollapsed(true);
+            }
+        }
     }
 }
