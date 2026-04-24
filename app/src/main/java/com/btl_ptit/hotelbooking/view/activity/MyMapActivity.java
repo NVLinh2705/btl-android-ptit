@@ -24,19 +24,23 @@ import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.btl_ptit.hotelbooking.R;
+import com.btl_ptit.hotelbooking.data.dto.Hotel;
 import com.btl_ptit.hotelbooking.data.dto.HotelInBoundResponse;
 import com.btl_ptit.hotelbooking.data.dto.MapInBoundsParams;
 import com.btl_ptit.hotelbooking.data.remote.MapServiceClient;
 import com.btl_ptit.hotelbooking.data.remote.MockApiClient;
 import com.btl_ptit.hotelbooking.data.remote.api_services.HotelRestService;
 import com.btl_ptit.hotelbooking.data.remote.api_services.MyMapService;
+import com.btl_ptit.hotelbooking.data.repository.FavoriteRepository;
 import com.btl_ptit.hotelbooking.data.repository.MyHotelRepository;
 import com.btl_ptit.hotelbooking.data.repository.MyMapRepository;
 import com.btl_ptit.hotelbooking.databinding.ActivityMyMapBinding;
+import com.btl_ptit.hotelbooking.listener.OnLikeHotelListener;
 import com.btl_ptit.hotelbooking.utils.Constants;
 import com.btl_ptit.hotelbooking.utils.MyUtils;
 import com.btl_ptit.hotelbooking.view.adapter.HotelsInBoundAdapter;
 import com.btl_ptit.hotelbooking.view.fragment.FilterBottomSheet;
+import com.btl_ptit.hotelbooking.view_model.FavoriteViewModel;
 import com.btl_ptit.hotelbooking.view_model.MyMapViewModel;
 import com.btl_ptit.hotelbooking.view_model.factory.MyMapViewModelFactory;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -67,6 +71,7 @@ public class MyMapActivity extends AppCompatActivity implements OnMapReadyCallba
     private MyMapService mMyMapService;
     private MyMapViewModel mMyMapViewModel;
     private HotelsInBoundAdapter mHotelsInBoundAdapter;
+    private FavoriteViewModel mFavoriteViewModel;
     private int cnt = 1;
     private Marker selectedMarker;
     private int currentScrollState = ViewPager2.SCROLL_STATE_IDLE;
@@ -170,7 +175,20 @@ public class MyMapActivity extends AppCompatActivity implements OnMapReadyCallba
 
     private void setupViewPager() {
         // set adapter
-        mHotelsInBoundAdapter = new HotelsInBoundAdapter(new ArrayList<>(), mContext);
+        mFavoriteViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
+        mHotelsInBoundAdapter = new HotelsInBoundAdapter(new ArrayList<>(), new OnLikeHotelListener() {
+            @Override
+            public void onLikeHotelClick(String userId, int hotelId, int position) {
+                mFavoriteViewModel.toggleLike(userId, hotelId);
+                HotelInBoundResponse hotel = mHotelsInBoundAdapter.getItems().get(position);
+                hotel.setLiked(true);
+                Marker targetMarker = markerMap.get(hotel.getId());
+
+                if (targetMarker != null) {
+                    likeMarker(targetMarker);
+                }
+            }
+        }, mContext);
         mActivityMyMapBinding.viewPagerHotels.setAdapter(mHotelsInBoundAdapter);
 
         // Để lộ một phần của card trước và sau
@@ -208,18 +226,18 @@ public class MyMapActivity extends AppCompatActivity implements OnMapReadyCallba
                     if (targetMarker != null) {
                         // Reset marker cũ
                         if (selectedMarker != null) {
-                            updateMarkerAppearance(selectedMarker, false, false);
+                            updateMarkerAppearance(selectedMarker, false, hotel.isLiked());
                         }
 
                         // Highlight marker mới
-                        updateMarkerAppearance(targetMarker, true, true);
+                        updateMarkerAppearance(targetMarker, true, hotel.isLiked());
                         selectedMarker = targetMarker;
 
                         googleMap.animateCamera(CameraUpdateFactory.newLatLng(targetMarker.getPosition()));
                     } else {
                         // Reset marker cũ
                         if (selectedMarker != null) {
-                            updateMarkerAppearance(selectedMarker, false, false);
+                            updateMarkerAppearance(selectedMarker, false, hotel.isLiked());
                         }
                     }
                 }
@@ -336,51 +354,81 @@ public class MyMapActivity extends AppCompatActivity implements OnMapReadyCallba
         markerMap.clear();
 
         // 1. Lấy vị trí tâm hiện tại
-        LatLng center = googleMap.getCameraPosition().target;
-        double lat = center.latitude;
-        double lng = center.longitude;
+//        LatLng center = googleMap.getCameraPosition().target;
+//        double lat = center.latitude;
+//        double lng = center.longitude;
+//
+//        // 2. Định nghĩa độ lệch (offset) - khoảng 500m đến 1km
+//        double offset = 0.005;
 
-        // 2. Định nghĩa độ lệch (offset) - khoảng 500m đến 1km
-        double offset = 0.005;
+        // 1. Lấy tâm màn hình hiện tại
+        LatLng centerPos = googleMap.getCameraPosition().target;
+
+        double range = 0.02;
+
+        for (int i = 0; i < hotels.size(); i++) {
+            HotelInBoundResponse currentHotel = hotels.get(i);
+
+            // 3. Tạo vị trí ngẫu nhiên dựa trên tâm
+            double randomLat = centerPos.latitude + getRandomOffset(range);
+            double randomLng = centerPos.longitude + getRandomOffset(range);
+            LatLng randomPos = new LatLng(randomLat, randomLng);
+
+            // 4. Định dạng giá tiền (Ví dụ: 1.2M)
+            String priceLabel = "₫ " + (currentHotel.getAveragePrice() * 100000);
+
+            // 5. Thêm Marker vào bản đồ
+            Marker marker = googleMap.addMarker(new MarkerOptions()
+                    .position(randomPos)
+                    .icon(MyUtils.createMarkerIcon(mContext, priceLabel, false, currentHotel.isLiked()))
+                    .anchor(0.5f, 1.0f)
+                    .zIndex(1.0f));
+
+            // 6. Lưu dữ liệu vào Tag và Map để quản lý
+            if (marker != null) {
+                marker.setTag(currentHotel);
+                markerMap.put(currentHotel.getId(), marker);
+            }
+        }
 
         // 3. Danh sách 4 vị trí giả (Đông, Tây, Nam, Bắc)
-        LatLng pos1 = new LatLng(lat + offset, lng);          // Bắc
-        LatLng pos2 = new LatLng(lat - offset, lng);          // Nam
-        LatLng pos3 = new LatLng(lat, lng + offset);          // Đông
-        LatLng pos4 = new LatLng(lat, lng - offset);          // Tây
-
-        Marker marker1 = googleMap.addMarker(new MarkerOptions()
-                .position(pos1)
-                .icon(MyUtils.createMarkerIcon(mContext, "₫ " + hotels.get(0).getAveragePrice() * 100000, false, false)) // Selected
-                .anchor(0.5f, 1.0f)
-                .zIndex(1.0f));
-        marker1.setTag(hotels.get(0));
-        markerMap.put(hotels.get(0).getId(), marker1);
-
-        Marker marker2 = googleMap.addMarker(new MarkerOptions()
-                .position(pos2)
-                .icon(MyUtils.createMarkerIcon(mContext, "₫ " + hotels.get(1).getAveragePrice() * 100000, false, false))
-                .anchor(0.5f, 1.0f)
-                .zIndex(1.0f));
-        marker2.setTag(hotels.get(1));
-        markerMap.put(hotels.get(1).getId(), marker2);
-
-        Marker marker3 = googleMap.addMarker(new MarkerOptions()
-                .position(pos3)
-                .icon(MyUtils.createMarkerIcon(mContext, "₫ " + hotels.get(2).getAveragePrice() * 100000, false, true))
-                .anchor(0.5f, 1.0f)
-                .zIndex(1.0f));
-        marker3.setTag(hotels.get(2));
-        markerMap.put(hotels.get(2).getId(), marker3);
-
-
-        Marker marker4 = googleMap.addMarker(new MarkerOptions()
-                .position(pos4)
-                .icon(MyUtils.createMarkerIcon(mContext, "₫ " + hotels.get(3).getAveragePrice() * 100000, false, false))
-                .anchor(0.5f, 1.0f)
-                .zIndex(1.0f));
-        marker4.setTag(hotels.get(3));
-        markerMap.put(hotels.get(3).getId(), marker4);
+//        LatLng pos1 = new LatLng(lat + offset, lng);          // Bắc
+//        LatLng pos2 = new LatLng(lat - offset, lng);          // Nam
+//        LatLng pos3 = new LatLng(lat, lng + offset);          // Đông
+//        LatLng pos4 = new LatLng(lat, lng - offset);          // Tây
+//
+//        Marker marker1 = googleMap.addMarker(new MarkerOptions()
+//                .position(pos1)
+//                .icon(MyUtils.createMarkerIcon(mContext, "₫ " + hotels.get(0).getAveragePrice() * 100000, false, false)) // Selected
+//                .anchor(0.5f, 1.0f)
+//                .zIndex(1.0f));
+//        marker1.setTag(hotels.get(0));
+//        markerMap.put(hotels.get(0).getId(), marker1);
+//
+//        Marker marker2 = googleMap.addMarker(new MarkerOptions()
+//                .position(pos2)
+//                .icon(MyUtils.createMarkerIcon(mContext, "₫ " + hotels.get(1).getAveragePrice() * 100000, false, false))
+//                .anchor(0.5f, 1.0f)
+//                .zIndex(1.0f));
+//        marker2.setTag(hotels.get(1));
+//        markerMap.put(hotels.get(1).getId(), marker2);
+//
+//        Marker marker3 = googleMap.addMarker(new MarkerOptions()
+//                .position(pos3)
+//                .icon(MyUtils.createMarkerIcon(mContext, "₫ " + hotels.get(2).getAveragePrice() * 100000, false, true))
+//                .anchor(0.5f, 1.0f)
+//                .zIndex(1.0f));
+//        marker3.setTag(hotels.get(2));
+//        markerMap.put(hotels.get(2).getId(), marker3);
+//
+//
+//        Marker marker4 = googleMap.addMarker(new MarkerOptions()
+//                .position(pos4)
+//                .icon(MyUtils.createMarkerIcon(mContext, "₫ " + hotels.get(3).getAveragePrice() * 100000, false, false))
+//                .anchor(0.5f, 1.0f)
+//                .zIndex(1.0f));
+//        marker4.setTag(hotels.get(3));
+//        markerMap.put(hotels.get(3).getId(), marker4);
 
 
 //        for (HotelInBoundResponse hotel : hotels) {
@@ -394,6 +442,11 @@ public class MyMapActivity extends AppCompatActivity implements OnMapReadyCallba
 //        }
     }
 
+    private double getRandomOffset(double range) {
+        // range càng nhỏ thì marker càng gần tâm (ví dụ: 0.01 tương đương ~1km)
+        return (Math.random() - 0.5) * range;
+    }
+
     @Override
     public boolean onMarkerClick(@NonNull Marker marker) {
         HotelInBoundResponse hotel = (HotelInBoundResponse) marker.getTag();
@@ -401,11 +454,11 @@ public class MyMapActivity extends AppCompatActivity implements OnMapReadyCallba
         if (hotel != null) {
             // 1. Reset marker cũ về trạng thái bình thường
             if (selectedMarker != null && !selectedMarker.equals(marker)) {
-                updateMarkerAppearance(selectedMarker, false, false);
+                updateMarkerAppearance(selectedMarker, false, hotel.isLiked());
             }
 
             // 2. Cập nhật marker vừa click thành trạng thái "Selected"
-            updateMarkerAppearance(marker, true, true);
+            updateMarkerAppearance(marker, true, hotel.isLiked());
             selectedMarker = marker;
 
             // 2. Đồng bộ ViewPager2
@@ -434,5 +487,11 @@ public class MyMapActivity extends AppCompatActivity implements OnMapReadyCallba
         } else {
             marker.setZIndex(1.0f);   // Trả về lớp dưới
         }
+    }
+
+    private void likeMarker(Marker marker) {
+        HotelInBoundResponse hotel = (HotelInBoundResponse) marker.getTag();
+        if (hotel == null) return;
+        marker.setIcon(MyUtils.createMarkerIcon(mContext, "₫ " + hotel.getAveragePrice() * 100000, true, true));
     }
 }

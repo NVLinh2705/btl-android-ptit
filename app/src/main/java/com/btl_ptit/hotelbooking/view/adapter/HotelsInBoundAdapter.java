@@ -15,10 +15,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.btl_ptit.hotelbooking.R;
 import com.btl_ptit.hotelbooking.data.dto.HotelInBoundResponse;
+import com.btl_ptit.hotelbooking.data.session.SessionManager;
 import com.btl_ptit.hotelbooking.databinding.HotelItemMapBinding;
 import com.btl_ptit.hotelbooking.listener.OnHotelClickListener;
+import com.btl_ptit.hotelbooking.listener.OnLikeHotelListener;
+import com.btl_ptit.hotelbooking.utils.Constants;
 import com.btl_ptit.hotelbooking.utils.HotelDiffCallback;
 import com.btl_ptit.hotelbooking.utils.MyUtils;
+import com.btl_ptit.hotelbooking.view.activity.HotelInfoActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -29,18 +33,20 @@ import com.skydoves.powermenu.PowerMenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class HotelsInBoundAdapter extends RecyclerView.Adapter<HotelsInBoundAdapter.HotelViewHolder> {
 
     private List<HotelInBoundResponse> hotelList;
 //    private OnHotelClickListener listener;
-    private OnMenuItemClickListener menuItemClickListener;
     private Context context;
+    private OnLikeHotelListener mOnLikeHotelListener;
 
-    public HotelsInBoundAdapter(List<HotelInBoundResponse> hotelList, Context context) {
+    public HotelsInBoundAdapter(List<HotelInBoundResponse> hotelList, OnLikeHotelListener onLikeHotelListener, Context context) {
         this.hotelList = hotelList;
 //        this.listener = listener;
         this.context = context;
+        this.mOnLikeHotelListener = onLikeHotelListener;
     }
 
     @NonNull
@@ -52,6 +58,7 @@ public class HotelsInBoundAdapter extends RecyclerView.Adapter<HotelsInBoundAdap
     @Override
     public void onBindViewHolder(@NonNull HotelViewHolder holder, int position) {
         HotelInBoundResponse hotel = hotelList.get(position);
+        int currentPosition = position;
         if (hotel != null) {
             Glide.with(holder.mHotelItemBinding.imgHotel.getContext())
                     .load(hotel.getAvatar())
@@ -71,6 +78,8 @@ public class HotelsInBoundAdapter extends RecyclerView.Adapter<HotelsInBoundAdap
                             switch (position) {
                                 case 0:
                                     Log.d("MyMapActivityTAG", "onItemClick: Like");
+                                    if (SessionManager.getInstance().getUser() == null) return;
+                                    mOnLikeHotelListener.onLikeHotelClick(SessionManager.getInstance().getUser().getId(), new Random().nextInt(4) +1, currentPosition);
                                     break;
                                 case 1:
                                     Log.d("MyMapActivityTAG", "onItemClick: Directions");
@@ -78,12 +87,24 @@ public class HotelsInBoundAdapter extends RecyclerView.Adapter<HotelsInBoundAdap
                                     break;
                                 case 2:
                                     Log.d("MyMapActivityTAG", "onItemClick: Detail");
+                                    Intent intent = new Intent(context, HotelInfoActivity.class);
+                                    intent.putExtra(Constants.HOTEL_ID, new Random().nextInt(4) +1);
+                                    context.startActivity(intent);
                                     break;
                             }
                             powerMenu.dismiss();
                         }
                     });
                     powerMenu.showAsDropDown(view, -350, -650);
+                }
+            });
+
+            holder.mHotelItemBinding.btnBooking.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, HotelInfoActivity.class);
+                    intent.putExtra(Constants.HOTEL_ID, new Random().nextInt(4) +1);
+                    context.startActivity(intent);
                 }
             });
         }
@@ -95,10 +116,6 @@ public class HotelsInBoundAdapter extends RecyclerView.Adapter<HotelsInBoundAdap
     }
     public List<HotelInBoundResponse> getItems() {
         return hotelList != null ? hotelList : new ArrayList<>();
-    }
-
-    public void setOnMenuItemClickListener(OnMenuItemClickListener listener) {
-        this.menuItemClickListener = listener;
     }
 
     private void openGoogleMapsNavigation(LatLng destination) {

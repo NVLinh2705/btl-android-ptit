@@ -8,11 +8,12 @@ public class HotelInBoundResponse {
     private double rating;
     private int averagePrice;
     private float latitude, longitude;
+    private boolean isLiked;
 
     public HotelInBoundResponse() {
     }
 
-    public HotelInBoundResponse(String id, String name, String avatar, String location, double rating, int averagePrice, float latitude, float longitude) {
+    public HotelInBoundResponse(String id, String name, String avatar, String location, double rating, int averagePrice, float latitude, float longitude, boolean isLiked) {
         this.id = id;
         this.name = name;
         this.avatar = avatar;
@@ -21,6 +22,7 @@ public class HotelInBoundResponse {
         this.averagePrice = averagePrice;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.isLiked = isLiked;
     }
 
     public String getId() {
@@ -87,6 +89,14 @@ public class HotelInBoundResponse {
         this.longitude = longitude;
     }
 
+    public boolean isLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(boolean liked) {
+        isLiked = liked;
+    }
+
     @Override
     public boolean equals(Object other) {
         if (this == other) return true;
@@ -99,12 +109,13 @@ public class HotelInBoundResponse {
                 Objects.equals(rating, myHotel.getRating()) &&
                 Objects.equals(averagePrice, myHotel.getAveragePrice()) &&
                 Objects.equals(latitude, myHotel.getLatitude()) &&
-                Objects.equals(longitude, myHotel.getLongitude());
+                Objects.equals(longitude, myHotel.getLongitude()) &&
+                isLiked == myHotel.isLiked;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, avatar, location, rating, averagePrice, latitude, longitude);
+        return Objects.hash(id, name, avatar, location, rating, averagePrice, latitude, longitude, isLiked);
     }
 
 }

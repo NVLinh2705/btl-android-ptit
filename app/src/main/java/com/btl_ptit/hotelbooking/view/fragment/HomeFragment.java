@@ -40,6 +40,7 @@ import com.btl_ptit.hotelbooking.utils.Constants;
 import com.btl_ptit.hotelbooking.utils.MyUtils;
 import com.btl_ptit.hotelbooking.utils.paging.MyComparator;
 import com.btl_ptit.hotelbooking.view.activity.HotelDetailActivity;
+import com.btl_ptit.hotelbooking.view.activity.HotelInfoActivity;
 import com.btl_ptit.hotelbooking.view.activity.ListDestinationActivity;
 import com.btl_ptit.hotelbooking.view.activity.MyMapActivity;
 import com.btl_ptit.hotelbooking.view.activity.SearchActivity;
@@ -64,6 +65,7 @@ import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 
 import java.util.Calendar;
+import java.util.Random;
 import java.util.TimeZone;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -172,6 +174,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 mFragmentHomeBinding.chipSingleBeds.setText(count + " " + mContext.getString(R.string.single_bed_txt));
             }
         });
+
+        occupancyViewModel.getSelectedLocation().observe(getViewLifecycleOwner(), location -> {
+            if (location != null && !location.isEmpty()) {
+                mFragmentHomeBinding.tvLocationSelected.setText(location);
+            } else {
+                mFragmentHomeBinding.tvLocationSelected.setText(R.string.where_to_go_label);
+            }
+        });
     }
 
 //    @Override
@@ -270,6 +280,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
+        mFragmentHomeBinding.btnLocationPopup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MyLocationBottomSheet bottomSheet = new MyLocationBottomSheet();
+                bottomSheet.show(getParentFragmentManager(), "Location filter");
+            }
+        });
+
         mFragmentHomeBinding.tvViewDestinationsSeeAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -315,7 +333,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             mPopularDestinationAdapter = new PopularDestinationAdapter(new MyComparator<MyPopularDestination>(), requireContext(), new OnDestinationClickListener() {
                 @Override
                 public void onDestinationClick(MyPopularDestination destination) {
-                    Intent intent = new Intent(mContext, HotelDetailActivity.class);
+                    Intent intent = new Intent(mContext, ListDestinationActivity.class);
                     startActivity(intent);
                 }
             });
@@ -400,7 +418,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             mHotelAdapter = new HotelAdapter(new MyComparator<MyHotel>(), requireContext(), new OnHotelClickListener() {
                 @Override
                 public void onHotelClick(MyHotel myHotel) {
-                    Intent intent = new Intent(mContext, HotelDetailActivity.class);
+                    Intent intent = new Intent(mContext, HotelInfoActivity.class);
+                    int hotelId = new Random().nextInt(4) +1;
+                    intent.putExtra(Constants.HOTEL_ID, hotelId);
+                    Log.d(TAG, "hotel ID: " + hotelId);
                     startActivity(intent);
                 }
             });
