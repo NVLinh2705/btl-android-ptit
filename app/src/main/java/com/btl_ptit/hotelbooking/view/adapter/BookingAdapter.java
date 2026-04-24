@@ -78,6 +78,26 @@ public class BookingAdapter extends PagingDataAdapter<MyBooking, BookingAdapter.
                     holder.bookingItemBinding.txtStatus.setTextColor(Color.parseColor("#D32F2F"));
                     holder.bookingItemBinding.txtStatus.setText("Đã hủy");
                     break;
+                case "CHECKED_IN":
+                    holder.bookingItemBinding.txtStatus.setBackgroundResource(R.drawable.bg_confirmed);
+                    holder.bookingItemBinding.txtStatus.setTextColor(Color.parseColor("#388E3C"));
+                    holder.bookingItemBinding.txtStatus.setText("Đã checkin");
+                    break;
+                case "NO_SHOW":
+                    holder.bookingItemBinding.txtStatus.setBackgroundResource(R.drawable.bg_cancelled);
+                    holder.bookingItemBinding.txtStatus.setTextColor(Color.parseColor("#D32F2F"));
+                    holder.bookingItemBinding.txtStatus.setText("Không có mặt");
+                    break;
+                case "COMPLETED":
+                    holder.bookingItemBinding.txtStatus.setBackgroundResource(R.drawable.bg_confirmed);
+                    holder.bookingItemBinding.txtStatus.setTextColor(Color.parseColor("#388E3C"));
+                    holder.bookingItemBinding.txtStatus.setText("Đã hoàn thành");
+                    break;
+                case "REJECTED":
+                    holder.bookingItemBinding.txtStatus.setBackgroundResource(R.drawable.bg_cancelled);
+                    holder.bookingItemBinding.txtStatus.setTextColor(Color.parseColor("#D32F2F"));
+                    holder.bookingItemBinding.txtStatus.setText("Bị từ chối");
+                    break;
             }
 
             holder.itemView.setOnClickListener(v -> {

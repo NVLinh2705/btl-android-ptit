@@ -71,6 +71,17 @@
                     android:text="Đã hủy"
                     app:chipBackgroundColor="@color/md_theme_onPrimary" />
 
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipCheckin"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Đã checkin"
+                    app:chipBackgroundColor="@color/md_theme_onPrimary" />
+
+
+
             </com.google.android.material.chip.ChipGroup>
         </HorizontalScrollView>
 

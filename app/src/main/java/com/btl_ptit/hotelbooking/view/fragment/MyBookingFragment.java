@@ -64,6 +64,7 @@ public class MyBookingFragment extends Fragment {
         myBookingRepository = new MyBookingRepository(bookingRestService);
         bookingViewModel = new ViewModelProvider(requireActivity(), new BookingViewModelFactory(myBookingRepository)).get(BookingViewModel.class);
         initBookingAdapter();
+        initBooking();
         mFragmentMyBookingBinding.chipGroupFilter.setOnCheckedChangeListener((group, checkedId) -> {
             String status = "";
             if (checkedId == mFragmentMyBookingBinding.chipPending.getId()) {
@@ -73,6 +74,8 @@ public class MyBookingFragment extends Fragment {
 
             }else if (checkedId == mFragmentMyBookingBinding.chipCancelled.getId()) {
                 status= "CANCELLED";
+            }else if (checkedId == mFragmentMyBookingBinding.chipCheckin.getId()) {
+                status = "CHECKED_IN";
             }
             bookingViewModel.filterByStatus(status);
         });
@@ -92,13 +95,17 @@ public class MyBookingFragment extends Fragment {
                             Log.d("DEBUG", "PagingData received");
                             Log.d("DEBUG", "PagingData received: " + pagingData);
                             bookingAdapter.submitData(getViewLifecycleOwner().getLifecycle(), pagingData);
+                        }, throwable -> {
+                            Log.e("TAG", "Error occurred "+ throwable.getMessage());
                         } )
         );
     }
     @Override
     public void onResume(){
         super.onResume();
-        initBooking();
+        if (bookingAdapter != null) {
+            bookingAdapter.refresh();
+        }
     }
 
     private void initBookingAdapter() {
@@ -134,5 +141,10 @@ public class MyBookingFragment extends Fragment {
         });
 
 
+    }
+    @Override
+    public void onDestroyView() {
+        compositeDisposable.clear();
+        super.onDestroyView();
     }
 }

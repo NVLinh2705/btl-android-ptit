@@ -1,10 +1,14 @@
 package com.btl_ptit.hotelbooking.view.activity;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,7 +17,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.btl_ptit.hotelbooking.R;
-import com.btl_ptit.hotelbooking.data.model.BookingStatus;
 import com.btl_ptit.hotelbooking.data.model.MyBooking;
 import com.btl_ptit.hotelbooking.data.model.Review;
 import com.btl_ptit.hotelbooking.data.remote.SupabaseClient;
@@ -22,10 +25,14 @@ import com.btl_ptit.hotelbooking.data.remote.api_services.ReviewRestService;
 import com.btl_ptit.hotelbooking.databinding.ActivityBookingHistoryDetailBinding;
 import com.btl_ptit.hotelbooking.view.adapter.BookingHistoryDetailAdapter;
 import com.bumptech.glide.Glide;
+import com.google.zxing.BarcodeFormat;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -119,19 +126,68 @@ public class BookingHistoryDetailActivity extends AppCompatActivity {
                 binding.txtStatus.setTextColor(Color.parseColor("#FBC02D"));
                 binding.txtStatus.setText("Đang chờ duyệt");
                 binding.reviewCard.setVisibility(View.GONE);
+                binding.cancelCard.setVisibility(View.VISIBLE);
+                binding.btnCancelBooking.setOnClickListener(v -> {
+                    cancelBooking();
+                });
                 break;
             case "CONFIRMED":
                 binding.txtStatus.setBackgroundResource(R.drawable.bg_confirmed);
                 binding.txtStatus.setTextColor(Color.parseColor("#388E3C"));
                 binding.txtStatus.setText("Đã xác nhận");
+                binding.reviewCard.setVisibility(View.VISIBLE);
+                binding.cancelCard.setVisibility(View.GONE);
+                binding.qrCard.setVisibility(View.VISIBLE);
+                Bitmap qrCode= generateQr(booking);
+                binding.imgQrSmall.setImageBitmap(qrCode);
+                binding.qrCard.setOnClickListener(v -> {
+                    showQrDialog(qrCode);
+                });
                 break;
             case "CANCELLED":
                 binding.txtStatus.setBackgroundResource(R.drawable.bg_cancelled);
                 binding.txtStatus.setTextColor(Color.parseColor("#D32F2F"));
                 binding.txtStatus.setText("Đã hủy");
                 binding.reviewCard.setVisibility(View.GONE);
+                binding.cancelCard.setVisibility(View.GONE);
+                binding.qrCard.setVisibility(View.GONE);
                 break;
+            case "CHECKED_IN":
+                binding.txtStatus.setBackgroundResource(R.drawable.bg_confirmed);
+                binding.txtStatus.setTextColor(Color.parseColor("#388E3C"));
+                binding.txtStatus.setText("Đã checkin");
+                binding.reviewCard.setVisibility(View.VISIBLE);
+                binding.cancelCard.setVisibility(View.GONE);
+                binding.qrCard.setVisibility(View.GONE);
+                break;
+            case "NO_SHOW":
+                binding.txtStatus.setBackgroundResource(R.drawable.bg_cancelled);
+                binding.txtStatus.setTextColor(Color.parseColor("#D32F2F"));
+                binding.txtStatus.setText("Không có mặt");
+                binding.reviewCard.setVisibility(View.GONE);
+                binding.cancelCard.setVisibility(View.GONE);
+                binding.qrCard.setVisibility(View.GONE);
+                break;
+            case "COMPLETED":
+                binding.txtStatus.setBackgroundResource(R.drawable.bg_confirmed);
+                binding.txtStatus.setTextColor(Color.parseColor("#388E3C"));
+                binding.txtStatus.setText("Đã hoàn thành");
+                binding.reviewCard.setVisibility(View.VISIBLE);
+                binding.cancelCard.setVisibility(View.GONE);
+                binding.qrCard.setVisibility(View.GONE);
+                break;
+            case "REJECTED":
+                binding.txtStatus.setBackgroundResource(R.drawable.bg_cancelled);
+                binding.txtStatus.setTextColor(Color.parseColor("#D32F2F"));
+                binding.txtStatus.setText("Bị từ chối");
+                binding.reviewCard.setVisibility(View.GONE);
+                binding.cancelCard.setVisibility(View.GONE);
+                binding.qrCard.setVisibility(View.GONE);
+                break;
+
+
         }
+
 
 
         // Tính số đêm
@@ -151,7 +207,7 @@ public class BookingHistoryDetailActivity extends AppCompatActivity {
             ).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(reviews -> {
-                        if (reviews != null && !reviews.isEmpty()&&booking.getStatusCode().equals("CONFIRMED")) {
+                        if (reviews != null && !reviews.isEmpty()) {
                             review = reviews.get(0);
                             showReview(review); 
                         } else {
@@ -168,6 +224,53 @@ public class BookingHistoryDetailActivity extends AppCompatActivity {
         if (booking.getBookedRooms() != null) {
             adapter.setData(booking.getBookedRooms());
         }
+    }
+
+    private void showQrDialog(Bitmap qrCode) {
+        Dialog dialog= new Dialog(this);
+        dialog.setContentView(R.layout.dialog_qr);
+        ImageView imgQrLarge= dialog.findViewById(R.id.imgQrLarge);
+        imgQrLarge.setImageBitmap(qrCode);
+        dialog.findViewById(R.id.btnClose).setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+        TextView txtBookingCode= dialog.findViewById(R.id.txtBookingCode);
+        txtBookingCode.setText("Booking Code: " + booking.getBookingCode());
+        dialog.show();
+    }
+
+    private Bitmap generateQr(MyBooking booking) {
+        String text = booking.getId();
+        try {
+            BarcodeEncoder encoder = new BarcodeEncoder();
+            return encoder.encodeBitmap(text, BarcodeFormat.QR_CODE, 400, 400);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private void cancelBooking() {
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle("Hủy đặt phòng");
+        alertDialog.setMessage("Bạn có chắc chắn muốn hủy đặt phòng?");
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Có", (dialog, which) -> {
+            Map<String, Object> body = new HashMap<>();
+            body.put("status_code", "CANCELLED");
+            compositeDisposable.add(
+                    bookingRestService.changeStatusBooking("eq."+bookingId,body)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(response -> {
+                                if (response.isSuccessful()) {
+                                    finish();
+                                }
+                            }, throwable -> {
+                                Log.e(TAG, "Cancel error: " + throwable.getMessage());
+                            })
+            );
+        });
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Không", (dialog, which) -> {});
+        alertDialog.show();
     }
 
     private void showWriteReviewButton() {

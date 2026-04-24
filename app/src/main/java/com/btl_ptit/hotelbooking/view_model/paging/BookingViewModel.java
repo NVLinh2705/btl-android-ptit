@@ -50,8 +50,8 @@ public class BookingViewModel extends ViewModel {
 
     @Override
     protected void onCleared() {
-        disposables.clear();
         super.onCleared();
+        disposables.clear();
     }
 
 }
