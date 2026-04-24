@@ -6,6 +6,7 @@ import java.util.List;
 
 import io.reactivex.rxjava3.core.Single;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.Query;
 
 public interface NotificationRestService {
@@ -13,6 +14,13 @@ public interface NotificationRestService {
     Single<List<MyNotification>> getNotifications(
             @Query("customer_id") String customerIdEq,
             @Query("select") String select,
-            @Query("order") String orderBy
-    );
+            @Query("order") String orderBy);
+
+    @Headers("Auth: True")
+    @GET("rest/v1/notifications")
+    Single<List<MyNotification>> getMyNotifications(
+            @Query("select") String select,
+            @Query("order") String orderBy,
+            @Query("limit") int limit,
+            @Query("offset") int offset);
 }
