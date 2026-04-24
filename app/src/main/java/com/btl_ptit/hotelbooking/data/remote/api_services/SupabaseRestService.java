@@ -2,6 +2,7 @@ package com.btl_ptit.hotelbooking.data.remote.api_services;
 
 import com.btl_ptit.hotelbooking.data.model.Favorite;
 import com.btl_ptit.hotelbooking.data.model.FavoriteResponse;
+import com.btl_ptit.hotelbooking.data.model.MyHotel;
 import com.btl_ptit.hotelbooking.data.dto.HotelResponse;
 import com.btl_ptit.hotelbooking.data.dto.HotelFacility;
 import com.btl_ptit.hotelbooking.data.dto.HotelReview;
@@ -30,64 +31,58 @@ public interface SupabaseRestService {
 
     @GET("rest/v1/users")
     Call<List<User>> getUserByEmail(
-        @Header("Authorization") String bearerToken,
-        @Query("email") String emailEq,
-        @Query("select") String select
-    );
+            @Header("Authorization") String bearerToken,
+            @Query("email") String emailEq,
+            @Query("select") String select);
 
     @GET("rest/v1/users")
     Call<List<User>> getUserById(
-        @Header("Authorization") String bearerToken,
-        @Query("id") String idEq,
-        @Query("select") String select
-    );
+            @Header("Authorization") String bearerToken,
+            @Query("id") String idEq,
+            @Query("select") String select);
 
     @GET("rest/v1/users_roles")
     Single<List<UserRole>> getRolesByUser(
             @Query("user_id") String userId,
-            @Query("select") String select
-    );
+            @Query("select") String select);
 
     @GET("rest/v1/hotels")
     Call<List<HotelResponse>> getAllHotels(
-        @Header("Authorization") String bearerToken,
-        @Query("select") String select
-    );
+            @Header("Authorization") String bearerToken,
+            @Query("select") String select);
 
     @GET("functions/v1/get-hotel")
     Call<HotelResponse> getHotelById(
-        @Query("hotel_id") int hotelId
-    );
+            @Query("hotel_id") int hotelId);
 
-//    @Headers("Auth: True")
-//    @POST("functions/v1/like-hotel") // bearer token is passed via interceptor
-//    Call<Void> likeHotel(
-//        @Body LikeHotelRequest request
-//    );
+    // @Headers("Auth: True")
+    // @POST("functions/v1/like-hotel") // bearer token is passed via interceptor
+    // Call<Void> likeHotel(
+    // @Body LikeHotelRequest request
+    // );
 
     @GET("functions/v1/get-hotel-facilities")
     Call<List<HotelFacility>> getHotelFacilities(
-        @Query("hotel_id") int hotelId
-    );
+            @Query("hotel_id") int hotelId);
 
     @GET("rest/v1/rpc/get_hotel_reviews")
     Call<PaginatedReviewsResponse> getHotelReviews(
             @Query("p_hotel_id") int hotelId,
             @Query("p_order") String order,
             @Query("p_page") int page,
-//            @Query("p_page_size") int pageSize,
+            // @Query("p_page_size") int pageSize,
             @Query("p_min_rating") Integer minRating,
             @Query("p_max_rating") Integer maxRating,
             @Query("p_begin_date") String beginDate,
             @Query("p_end_date") String endDate,
             @Query("p_keywords") String keywords
-//            @Query("query") String query
+    // @Query("query") String query
     );
 
     @GET("rest/v1/rpc/get_hotel_reviews_stats")
     Call<HotelReviewStats> getHotelReviewStats(
-            @Query("p_hotel_id") int hotelId
-    );
+            @Query("p_hotel_id") int hotelId);
+
     @GET("functions/v1/get-available-room-types")
     Call<AvailableRoomTypesResponse> getAvailableRoomTypes(
             @Query("hotel_id") int hotelId,
@@ -95,37 +90,36 @@ public interface SupabaseRestService {
             @Query("checkout") String checkout,
             @Query("room_quantity") int roomQuantity,
             @Query("adults") int adults,
-            @Query("children") int children
-    );
+            @Query("children") int children);
 
     @GET("functions/v1/get-room-type-detail")
     Call<RoomTypeDetailResponse> getRoomTypeDetail(
-            @Query("room_type_id") int roomTypeId
-    );
-
+            @Query("room_type_id") int roomTypeId);
 
     @POST("rest/v1/users")
     Call<Void> insertUser(
-        @Header("Authorization") String bearerToken,
-        @Body User user
-    );
+            @Header("Authorization") String bearerToken,
+            @Body User user);
 
     @PATCH("rest/v1/users")
     Call<Void> updateUser(
-        @Header("Authorization") String bearerToken,
-        @Query("id") String idEq,
-        @Body User user
-    );
+            @Header("Authorization") String bearerToken,
+            @Query("id") String idEq,
+            @Body User user);
+
     @Headers("Auth: True")
     @POST("functions/v1/like-hotel")
     Single<Void> toggleLikeHotel(
-        @Body Favorite favoriteRequest
-    );
+            @Body Favorite favoriteRequest);
 
     @Headers("Auth: True")
     @GET("rest/v1/favorites")
     Single<List<FavoriteResponse>> getFavorites(
-        @Query("customer_id") String customerIdEq,
-        @Query("select") String select
-    );
+            @Query("customer_id") String customerIdEq,
+            @Query("select") String select);
+
+    @Headers("Auth: True")
+    @GET("rest/v1/rpc/get_favorite_hotels")
+    Single<List<MyHotel>> getFavoriteHotels(
+            @Query("p_customer_id") String customerId);
 }
