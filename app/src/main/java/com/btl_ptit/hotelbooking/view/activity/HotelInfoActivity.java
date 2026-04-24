@@ -219,9 +219,6 @@ public class HotelInfoActivity extends AppCompatActivity implements OnMapReadyCa
                 hotelResponse.setLiked(!hotelResponse.isLiked());
                 toggleFavorite(item);
                 return true;
-            } else if (id == R.id.action_share) {
-                Toast.makeText(this, "Share clicked", Toast.LENGTH_SHORT).show();
-                return true;
             }
             return false;
         });
@@ -469,6 +466,18 @@ public class HotelInfoActivity extends AppCompatActivity implements OnMapReadyCa
 
         map.getUiSettings().setMapToolbarEnabled(false);
         map.getUiSettings().setMyLocationButtonEnabled(false);
+        // Disable gestures so the map fragment acts like a clickable image
+        map.getUiSettings().setAllGesturesEnabled(false);
+
+        // Set click listener to open MyMapActivity
+        map.setOnMapClickListener(latLng -> {
+            Intent intent = new Intent(HotelInfoActivity.this, MyMapActivity.class);
+            intent.putExtra("TARGET_LAT", hotelResponse.getLatitude());
+            intent.putExtra("TARGET_LNG", hotelResponse.getLongitude());
+            startActivity(intent);
+        });
+
+        map.setOnMapLoadedCallback(() -> Log.d(TAG, "Google Map loaded"));
 
         map.setOnMapLoadedCallback(() -> Log.d(TAG, "Google Map loaded"));
     }

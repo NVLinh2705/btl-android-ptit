@@ -1037,13 +1037,14 @@ let facilities    = [];
 
 // ─── Policy types (static — defined in DB seed, IDs are stable) ──────────
 const policyTypes = [
-  {id:1, code:'CHECKIN_CHECKOUT',      name:'Check-in và Check-out'},
-  {id:2, code:'CANCELLATION', name:'Huỷ phòng'},
-  {id:3, code:'PETS',         name:'Thú cưng'},
+  {id:1, code:'CHECKIN',      name:'Nhận phòng'},
+  {id:2, code:'CHECKOUT', name:'Trả phòng'},
+  {id:3, code:'CANCELLATION', name:'Huỷ phòng'},
   {id:4, code:'CHILDREN',     name:'Trẻ em'},
   {id:5, code:'SMOKING',      name:'Hút thuốc'},
   {id:6, code:'PAYMENT',      name:'Thanh toán và Đặt cọc'},
-  {id:7, code:'EXTRA_BED',    name:'Giường thêm'}
+  {id:7, code:'EXTRA_BED',    name:'Giường thêm'},
+  {id:8, code:'PETS',         name:'Thú cưng'},
 ];
 
 // ─── Step logic ───────────────────────────────────────────────────────────
@@ -1438,13 +1439,14 @@ async function uploadImage(file, hotelId, roomTypeId, isCover) {
 function initPolicies() {
   const list = document.getElementById('policy-list');
   const defaults = {
-    CHECKIN:      'Check-in from 14:00. Check-out by 12:00.',
-    CANCELLATION: 'Free cancellation up to 24 hours before arrival.',
-    PETS:         'Pets are not allowed.',
-    CHILDREN:     'Children of all ages are welcome.',
-    SMOKING:      'Non-smoking throughout the property.',
-    PAYMENT:      'Payment accepted in cash or card at the property.',
-    EXTRA_BED:    'Extra beds available upon request.'
+    CHECKIN:      'Nhận phòng từ 14:00',
+    CHECKOUT:     'Trả phòng trước 12:00.',
+    CANCELLATION: 'Huỷ phòng miễn phí trước 24 giờ ngày checkin',
+    CHILDREN:     'Trẻ em ở mọi lứa tuổi đều được miễn phí khi sử dụng giường hiện có.',
+    SMOKING:      'Không hút thuốc trong phòng',
+    PAYMENT:      'Thanh toán bằng thẻ hoặc tiền mặt khi nhận phòng.',
+    EXTRA_BED:    'Giường phụ có sẵn',
+    PETS:         'Không cho phép mang theo thú cưng',
   };
   list.innerHTML = policyTypes.map(pt =>
     '<div class="policy-item">' +

@@ -20,6 +20,7 @@ import com.btl_ptit.hotelbooking.data.model.RoomType;
 import com.btl_ptit.hotelbooking.data.session.RoomSelectionStore;
 import com.btl_ptit.hotelbooking.data.remote.SupabaseClient;
 import com.btl_ptit.hotelbooking.data.remote.api_services.SupabaseRestService;
+import com.btl_ptit.hotelbooking.data.session.SessionManager;
 import com.btl_ptit.hotelbooking.databinding.ActivityListRoomTypeBinding;
 import com.btl_ptit.hotelbooking.utils.CurrencyUtils;
 import com.btl_ptit.hotelbooking.view.adapter.RoomTypeAdapter;
@@ -70,6 +71,8 @@ public class ListRoomTypeActivity extends AppCompatActivity
     private int roomQuantity;
     private int adults;
     private int children;
+
+    private SessionManager sessionManager = SessionManager.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,17 +211,19 @@ public class ListRoomTypeActivity extends AppCompatActivity
     }
 
     private void initSearchParams() {
-        LocalDate today = LocalDate.now();
 
         String checkinFromIntent = getIntent().getStringExtra(EXTRA_CHECKIN_DATE);
         String checkoutFromIntent = getIntent().getStringExtra(EXTRA_CHECKOUT_DATE);
 
+        String checkinDate = sessionManager.getCheckinDate();
+        String checkoutDate = sessionManager.getCheckoutDate();
         checkinApi = !TextUtils.isEmpty(checkinFromIntent)
                 ? checkinFromIntent
-                : today.format(apiDateFormatter);
+                : checkinDate;
+
         checkoutApi = !TextUtils.isEmpty(checkoutFromIntent)
                 ? checkoutFromIntent
-                : today.plusDays(1).format(apiDateFormatter);
+                : checkoutDate;
 
         roomQuantity = getIntent().getIntExtra(EXTRA_ROOM_QUANTITY, 1);
         adults = getIntent().getIntExtra(EXTRA_ADULTS, 2);
