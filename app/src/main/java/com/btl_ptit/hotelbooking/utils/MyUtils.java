@@ -27,6 +27,11 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.skydoves.powermenu.PowerMenu;
 import com.skydoves.powermenu.PowerMenuItem;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+
 public class MyUtils {
 
     /**
@@ -149,5 +154,11 @@ public class MyUtils {
                     .setDuration(300)
                     .start();
         }
+    }
+
+    public static String myFormatDate(Long timeInMillis) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return sdf.format(new Date(timeInMillis));
     }
 }

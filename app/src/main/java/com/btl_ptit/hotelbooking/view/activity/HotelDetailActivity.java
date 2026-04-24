@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.btl_ptit.hotelbooking.databinding.ActivityHotelDetailBinding;
 import com.btl_ptit.hotelbooking.view.adapter.HotelDetailTabsPagerAdapter;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.btl_ptit.hotelbooking.viewmodel.FavoriteViewModel;
+import com.btl_ptit.hotelbooking.view_model.FavoriteViewModel;
 import java.time.LocalDate;
 
 public class HotelDetailActivity extends AppCompatActivity {

@@ -8,6 +8,10 @@
     <string name="delete">Xóa</string>
     <string name="detail">Chi tiết</string>
     <string name="trending_destinations">Điểm đến nổi tiếng 🔥</string>
+    <string name="trending_destinations2">Điểm đến nổi tiếng</string>
+    <string name="search_placeholder_label">Bạn muốn đi đâu hôm nay? ✈️</string>
+    <string name="title_date_picker">Chọn ngày nhận, trả phòng</string>
+    <string name="textEmptyList">Rỗng</string>
     <string name="see_all"><u>Xem thêm</u></string>
     <string name="retry_label">Đã có lỗi xảy ra. Vui lòng thử lại!</string>
     <string name="txt_retry">Thử lại</string>
@@ -98,6 +102,8 @@
     <string name="booking_not_available">Chưa có thông tin</string>
     <string name="pay_at_property_chip">Thanh toán khi nhận phòng</string>
     <string name="confirm">Xác nhận</string>
+    <string name="total_review_count">%d đánh giá</string>
+
     <string name="labelYourLocation">Vị trí của bạn</string>
     <string name="labelBlockYourLocation">Bạn đã chặn quyền vị trí! Vui lòng vào Cài đặt để bật lại</string>
     <string name="labelRequireYourLocation">App cần quyền vị trí để hoạt động!</string>
@@ -113,4 +119,13 @@
     <string name="ratings_label">Đánh giá</string>
     <string name="apply_filter_label">Áp dụng bộ lọc</string>
     <string name="filter_by_label">Bộ lọc</string>
+    <string name="where_to_go_label">Bạn muốn đến?</string>
+    <string name="search_hotels_label">Tìm kiếm</string>
+    <string name="double_bed_txt">Giường đôi</string>
+    <string name="for_2_persons_label">Cho 2 người</string>
+    <string name="single_bed_txt">Giường đơn</string>
+    <string name="number_of_rooms_txt">Số lượng phòng</string>
+    <string name="number_of_people_txt">Số lượng người</string>
+    <string name="person_txt">Người</string>
+    <string name="room_txt">Phòng</string>
 </resources>

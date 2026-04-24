@@ -61,6 +61,12 @@
         <item name="bottomSheetDialogTheme">@style/BottomSheetDialogTheme</item>
     </style>
 
+    <style name="Theme.HotelBookingPTIT.ListDestination" parent="AppTheme" >
+        <item name="bottomSheetDialogTheme">@style/BottomSheetDialogTheme</item>
+        <item name="android:statusBarColor">#002F77</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
     <!-- Used on HotelDetailActivity to match the blue toolbar background -->
     <style name="Theme.HotelBookingPTIT.DarkStatusBar" parent="Theme.HotelBookingPTIT">
         <item name="android:statusBarColor">#0B4AA2</item>

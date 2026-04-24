@@ -2,7 +2,7 @@ package com.btl_ptit.hotelbooking.data.dto;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.time.LocalDateTime;
+// Keep createdAt as String to avoid Gson parsing issues with OffsetDateTime/LocalDateTime.
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -46,7 +46,7 @@ public class ReviewSummary {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    private static class Reviewer {
+    public static class Reviewer {
         @SerializedName("id")
         private String id;
 
