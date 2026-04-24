@@ -1,10 +1,15 @@
 package com.btl_ptit.hotelbooking.view.activity;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
@@ -15,6 +20,7 @@ import com.btl_ptit.hotelbooking.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
+    private static final int REQ_POST_NOTIFICATIONS = 2001;
 
     private ActivityMainBinding mActivityMainBinding;
     private Context mContext;
@@ -32,12 +38,14 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
+        requestNotificationPermissionIfNeeded();
 
         // Xử lý back press
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if (navController.getCurrentDestination() != null && navController.getCurrentDestination().getId() == R.id.navigation_home_fragment) {
+                if (navController.getCurrentDestination() != null
+                        && navController.getCurrentDestination().getId() == R.id.navigation_home_fragment) {
                     finishAffinity();
                 } else {
                     navController.navigateUp();
@@ -50,5 +58,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         sessionManager.clearSelectedHotelBrief();
+    }
+
+    private void requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            return;
+        }
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        ActivityCompat.requestPermissions(
+                this,
+                new String[] { Manifest.permission.POST_NOTIFICATIONS },
+                REQ_POST_NOTIFICATIONS);
     }
 }

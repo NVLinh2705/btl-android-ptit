@@ -593,7 +593,6 @@ async function confirmSelectedBooking() {
 
   const statusField = getStatusField(booking);
   const bookingId = getBookingId(booking);
-  const customerId = getCustomerId(booking);
   if (!bookingId) {
     showDetailMessage('Cannot update booking because ID is missing.', 'error');
     return;
@@ -606,18 +605,12 @@ async function confirmSelectedBooking() {
   }
 
   try {
-    const idField = getBookingIdField(booking);
-    const endpoint = REST_BASE + '/bookings?' + encodeURIComponent(idField) + '=eq.' + encodeURIComponent(String(bookingId));
-    const payload = {};
-    payload[statusField] = 'CONFIRMED';
-
-    const res = await fetch(endpoint, {
-      method: 'PATCH',
+    const res = await fetch(SUPABASE_URL + '/functions/v1/confirm-booking', {
+      method: 'POST',
       headers: {
-        ...authHeaders(),
-        'Prefer': 'return=representation',
+        ...authHeaders()
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ booking_id: Number(bookingId) }),
     });
 
     if (res.status === 401) {
@@ -626,43 +619,18 @@ async function confirmSelectedBooking() {
       return;
     }
 
-    const body = await res.json().catch(() => []);
+    const body = await res.json().catch(() => ({}));
     if (!res.ok) {
       const msg = body?.message || body?.error_description || body?.error || ('HTTP ' + res.status);
       throw new Error(msg);
     }
 
-    const updated = Array.isArray(body) && body.length ? body[0] : null;
-    if (updated) {
-      const idx = state.bookings.findIndex(b => String(getBookingId(b)) === String(bookingId));
-      if (idx >= 0) state.bookings[idx] = updated;
-    } else {
-      const idx = state.bookings.findIndex(b => String(getBookingId(b)) === String(bookingId));
-      if (idx >= 0) state.bookings[idx][statusField] = 'CONFIRMED';
-    }
-
-    // Save a notification record for the customer (Supabase-only flow)
-<!--    if (customerId) {-->
-<!--      const saveRes = await fetch(SUPABASE_URL + '/functions/v1/save-notification', {-->
-<!--        method: 'POST',-->
-<!--        headers: authHeaders(),-->
-<!--        body: JSON.stringify({-->
-<!--          customer_id: customerId,-->
-<!--          title: 'Booking Confirmed',-->
-<!--          content: 'Your booking #' + bookingId + ' has been confirmed by the hotel.',-->
-<!--          type: 'booking_confirmed',-->
-<!--        }),-->
-<!--      });-->
-
-<!--      if (!saveRes.ok) {-->
-<!--        const saveBody = await saveRes.json().catch(() => ({}));-->
-<!--        console.warn('Failed to save notification history:', saveBody?.error || saveRes.status);-->
-<!--      }-->
-<!--    }-->
+    const idx = state.bookings.findIndex(b => String(getBookingId(b)) === String(bookingId));
+    if (idx >= 0) state.bookings[idx][statusField] = 'CONFIRMED';
 
     renderBookingList();
     renderBookingDetail();
-    showDetailMessage('Booking has been confirmed successfully. Notification history updated.', 'success');
+    showDetailMessage('Booking confirmed. Customer app will show status-bar alert when opened.', 'success');
   } catch (e) {
     showDetailMessage('Update failed: ' + e.message, 'error');
     if (btn) {
