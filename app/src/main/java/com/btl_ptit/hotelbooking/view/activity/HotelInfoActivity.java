@@ -26,6 +26,7 @@ import com.btl_ptit.hotelbooking.data.session.SessionManager;
 import com.btl_ptit.hotelbooking.data.remote.SupabaseClient;
 import com.btl_ptit.hotelbooking.data.remote.api_services.SupabaseRestService;
 import com.btl_ptit.hotelbooking.databinding.ActivityHotelInfoBinding;
+import com.btl_ptit.hotelbooking.utils.Constants;
 import com.btl_ptit.hotelbooking.view.adapter.FacilityAdapter;
 import com.btl_ptit.hotelbooking.view.adapter.HotelImagePagerAdapter;
 import com.btl_ptit.hotelbooking.view.adapter.PolicyAdapter;
@@ -84,7 +85,7 @@ public class HotelInfoActivity extends AppCompatActivity implements OnMapReadyCa
         setupMap();
         setupBottomCta();
         showLoadingState(true);
-        fetchHotelDataAsync(3);
+        fetchHotelDataAsync(getIntent().getIntExtra(Constants.HOTEL_ID, 1));
     }
 
     private void fetchHotelDataAsync(int hotelId) {
