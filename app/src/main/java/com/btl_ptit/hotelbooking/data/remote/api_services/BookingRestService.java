@@ -1,13 +1,18 @@
 package com.btl_ptit.hotelbooking.data.remote.api_services;
 
+import com.btl_ptit.hotelbooking.data.dto.CreateBookingRequest;
+import com.btl_ptit.hotelbooking.data.dto.CreateBookingResponse;
 import com.btl_ptit.hotelbooking.data.model.MyBooking;
 
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Single;
+import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -26,5 +31,11 @@ public interface BookingRestService {
     Single<List<MyBooking>> getBookingDetail(
             @Query("id") String id,
             @Query("select") String select
+    );
+
+    @Headers("Auth: True")
+    @POST("rest/v1/rpc/create_booking")
+    Call<CreateBookingResponse> createBooking(
+            @Body CreateBookingRequest request
     );
 }

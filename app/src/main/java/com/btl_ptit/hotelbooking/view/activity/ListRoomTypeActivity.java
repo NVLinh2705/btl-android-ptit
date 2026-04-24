@@ -89,9 +89,6 @@ public class ListRoomTypeActivity extends AppCompatActivity
             }
             Intent intent = new Intent(this, FillBookingInfoActivity.class);
             intent.putExtra(FillBookingInfoActivity.EXTRA_HOTEL_ID, getIntent().getIntExtra(EXTRA_HOTEL_ID, -1));
-            intent.putExtra(FillBookingInfoActivity.EXTRA_CHECKIN_DATE, checkinApi);
-            intent.putExtra(FillBookingInfoActivity.EXTRA_CHECKOUT_DATE, checkoutApi);
-            intent.putExtra(FillBookingInfoActivity.EXTRA_ADULTS, adults);
             startActivity(intent);
         });
 

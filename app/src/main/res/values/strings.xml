@@ -79,7 +79,7 @@
     <string name="booking_summary_hotel_address">Address</string>
     <string name="booking_checkin_label">Check-in</string>
     <string name="booking_checkout_label">Check-out</string>
-    <string name="booking_nights_rooms_adults">%1$d nights • %2$d rooms • %3$d adults</string>
+    <string name="booking_nights_rooms_adults">%1$d nights • %2$d rooms • %3$d adults • %4$d children</string>
     <string name="booking_guest_info_title">Guest information</string>
     <string name="booking_full_name">Full name</string>
     <string name="booking_email">Email address</string>
@@ -101,6 +101,10 @@
     <string name="pay_at_property_chip">Pay at the property</string>
     <string name="confirm">Confirm</string>
     <string name="total_review_count">%d reviews</string>
+
+    <string name="booking_success_message">Booking placed successfully! Your request is PENDING. We will notify you once the host confirms.</string>
+    <string name="back_to_home">Back to home page</string>
+    <string name="view_booking_detail">View booking detail</string>
 
     <string name="labelYourLocation">Your location</string>
     <string name="labelBlockYourLocation">You have blocked location permissions! Please go to Settings to re-enable them.</string>
