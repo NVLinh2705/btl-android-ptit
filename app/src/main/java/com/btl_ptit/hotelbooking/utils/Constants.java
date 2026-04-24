@@ -20,4 +20,7 @@ public class Constants {
 
     public static final float ZOOM_LEVEL_LOWER_THRESHOLD = 1.5f;
     public static final int DISTANCE_LOWER_THRESHOLD = 3000;
+
+    public static final String HOTEL_ID = "hotel_id";
+    public static final String HOTEL_NAME = "hotel_name";
 }

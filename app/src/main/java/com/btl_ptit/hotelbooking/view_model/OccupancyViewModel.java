@@ -9,6 +9,22 @@ public class OccupancyViewModel extends ViewModel {
     private final MutableLiveData<Integer> rooms = new MutableLiveData<>(1);
     private final MutableLiveData<Integer> doubleBed = new MutableLiveData<>(1);
     private final MutableLiveData<Integer> singleBed = new MutableLiveData<>(1);
+    private final MutableLiveData<String> selectedLocation = new MutableLiveData<>("");
+    private final MutableLiveData<Integer> selectedProvinceCode = new MutableLiveData<>(-1);
+    private final MutableLiveData<String> selectedProvinceName = new MutableLiveData<>("");
+    private final MutableLiveData<String> selectedDistrictName = new MutableLiveData<>("");
+
+    public LiveData<String> getSelectedLocation() { return selectedLocation; }
+    public LiveData<Integer> getSelectedProvinceCode() { return selectedProvinceCode; }
+    public LiveData<String> getSelectedProvinceName() { return selectedProvinceName; }
+    public LiveData<String> getSelectedDistrictName() { return selectedDistrictName; }
+
+    public void setLocationData(String fullLocation, int pCode, String pName, String dName) {
+        selectedLocation.setValue(fullLocation);
+        selectedProvinceCode.setValue(pCode);
+        selectedProvinceName.setValue(pName);
+        selectedDistrictName.setValue(dName);
+    }
     public LiveData<Integer> getPersons() { return persons; }
     public LiveData<Integer> getRooms() { return rooms; }
     public LiveData<Integer> getDoubleBed() { return doubleBed; }

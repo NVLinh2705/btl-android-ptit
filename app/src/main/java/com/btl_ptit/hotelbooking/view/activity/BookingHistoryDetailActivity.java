@@ -119,6 +119,17 @@ public class BookingHistoryDetailActivity extends AppCompatActivity {
         binding.txtEmail.setText(booking.getCustomerEmail());
         binding.txtTotal.setText(String.format("%,.0f VNĐ", booking.getTotalAmount()));
         binding.txtGuestSummary.setText(booking.getNumAdults() + " người lớn, " + booking.getNumChildren() + " trẻ em");
+        LocalDate checkinDate=null;
+        LocalDate checkoutDate=null;
+        // Tính số đêm
+        try {
+            checkinDate = LocalDate.parse(booking.getCheckinDate());
+            checkoutDate = LocalDate.parse(booking.getCheckoutDate());
+            long numberOfNights = ChronoUnit.DAYS.between(checkinDate, checkoutDate);
+            binding.txtNumberOfNight.setText(numberOfNights + " đêm");
+        } catch (Exception e) {
+            Log.e(TAG, "Lỗi parse ngày: " + e.getMessage());
+        }
 
         switch (booking.getStatusCode()) {
             case "PENDING":
@@ -126,23 +137,36 @@ public class BookingHistoryDetailActivity extends AppCompatActivity {
                 binding.txtStatus.setTextColor(Color.parseColor("#FBC02D"));
                 binding.txtStatus.setText("Đang chờ duyệt");
                 binding.reviewCard.setVisibility(View.GONE);
-                binding.cancelCard.setVisibility(View.VISIBLE);
-                binding.btnCancelBooking.setOnClickListener(v -> {
-                    cancelBooking();
-                });
+                binding.qrCard.setVisibility(View.GONE);
+                if(ChronoUnit.DAYS.between(LocalDate.now(),checkinDate)<1&&LocalDate.now().isBefore(checkinDate)){
+                    binding.cancelCard.setVisibility(View.VISIBLE);
+                    binding.btnCancelBooking.setOnClickListener(v -> {
+                        cancelBooking();
+                    });
+                }else{
+                    binding.cancelCard.setVisibility(View.GONE);
+                }
+
                 break;
             case "CONFIRMED":
                 binding.txtStatus.setBackgroundResource(R.drawable.bg_confirmed);
                 binding.txtStatus.setTextColor(Color.parseColor("#388E3C"));
                 binding.txtStatus.setText("Đã xác nhận");
                 binding.reviewCard.setVisibility(View.VISIBLE);
-                binding.cancelCard.setVisibility(View.GONE);
                 binding.qrCard.setVisibility(View.VISIBLE);
                 Bitmap qrCode= generateQr(booking);
                 binding.imgQrSmall.setImageBitmap(qrCode);
                 binding.qrCard.setOnClickListener(v -> {
                     showQrDialog(qrCode);
                 });
+                if(ChronoUnit.DAYS.between(LocalDate.now(),checkinDate)<1&&LocalDate.now().isBefore(checkinDate)){
+                    binding.cancelCard.setVisibility(View.VISIBLE);
+                    binding.btnCancelBooking.setOnClickListener(v -> {
+                        cancelBooking();
+                    });
+                }else{
+                    binding.cancelCard.setVisibility(View.GONE);
+                }
                 break;
             case "CANCELLED":
                 binding.txtStatus.setBackgroundResource(R.drawable.bg_cancelled);
@@ -190,15 +214,7 @@ public class BookingHistoryDetailActivity extends AppCompatActivity {
 
 
 
-        // Tính số đêm
-        try {
-            LocalDate checkinDate = LocalDate.parse(booking.getCheckinDate());
-            LocalDate checkoutDate = LocalDate.parse(booking.getCheckoutDate());
-            long numberOfNights = ChronoUnit.DAYS.between(checkinDate, checkoutDate);
-            binding.txtNumberOfNight.setText(numberOfNights + " đêm");
-        } catch (Exception e) {
-            Log.e(TAG, "Lỗi parse ngày: " + e.getMessage());
-        }
+
 
         compositeDisposable.add(
             reviewRestService.getReviewsByBooking(

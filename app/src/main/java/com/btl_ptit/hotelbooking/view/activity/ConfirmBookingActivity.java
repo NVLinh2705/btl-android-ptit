@@ -142,7 +142,8 @@ public class ConfirmBookingActivity extends AppCompatActivity {
         btnViewBookingDetail.setOnClickListener(v -> {
             dialog.dismiss();
             Intent intent = new Intent(this, BookingHistoryDetailActivity.class);
-            intent.putExtra("EXTRA_BOOKING_ID", newBookingId);
+            System.out.println(newBookingId);
+            intent.putExtra("bookingId", String.valueOf(newBookingId));
             startActivity(intent);
             finish();
         });
