@@ -1,6 +1,7 @@
 package com.btl_ptit.hotelbooking.view.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -77,10 +78,14 @@ public class MyMapActivity extends AppCompatActivity implements OnMapReadyCallba
     private int currentScrollState = ViewPager2.SCROLL_STATE_IDLE;
     private HashMap<String, Marker> markerMap = new HashMap<>();
 
+    private double targetLat = 0.0;
+    private double targetLng = 0.0;
+    private boolean hasTargetLocation = false;
+
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
-                    enableMyLocation();
+                    enableMyLocation(!hasTargetLocation);
                 } else {
                     if (!shouldShowRequestPermissionRationale(android.Manifest.permission.ACCESS_FINE_LOCATION)) {
                         Toast.makeText(mContext, R.string.labelBlockYourLocation, Toast.LENGTH_LONG).show();
@@ -98,6 +103,13 @@ public class MyMapActivity extends AppCompatActivity implements OnMapReadyCallba
         mActivityMyMapBinding = ActivityMyMapBinding.inflate(getLayoutInflater());
         setContentView(mActivityMyMapBinding.getRoot());
 
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("TARGET_LAT") && intent.hasExtra("TARGET_LNG")) {
+            targetLat = intent.getDoubleExtra("TARGET_LAT", 0.0);
+            targetLng = intent.getDoubleExtra("TARGET_LNG", 0.0);
+            hasTargetLocation = true;
+        }
+
         ViewCompat.setOnApplyWindowInsetsListener(mActivityMyMapBinding.btnBack, (v, windowInsets) -> {
             Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
             ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) v.getLayoutParams();
@@ -105,6 +117,8 @@ public class MyMapActivity extends AppCompatActivity implements OnMapReadyCallba
             v.setLayoutParams(params);
             return windowInsets;
         });
+
+
 
         mContext = this;
         initListeners();
@@ -161,7 +175,7 @@ public class MyMapActivity extends AppCompatActivity implements OnMapReadyCallba
         });
 
         mActivityMyMapBinding.btnMyLocation.setOnClickListener(v -> {
-            enableMyLocation();
+            enableMyLocation(true);
         });
 
         mActivityMyMapBinding.btnInnerFilter.setOnClickListener(new View.OnClickListener() {
@@ -267,10 +281,6 @@ public class MyMapActivity extends AppCompatActivity implements OnMapReadyCallba
         map.getUiSettings().setMapToolbarEnabled(false);
         map.getUiSettings().setMyLocationButtonEnabled(true);
 
-        // Kích hoạt vị trí
-        enableMyLocation();
-        map.setOnMapLoadedCallback(() -> Log.d(TAG, "Google Map loaded"));
-
         googleMap.setOnCameraIdleListener(() -> {
             LatLngBounds bounds = googleMap.getProjection().getVisibleRegion().latLngBounds;
             float zoom = googleMap.getCameraPosition().zoom;
@@ -279,8 +289,18 @@ public class MyMapActivity extends AppCompatActivity implements OnMapReadyCallba
 
             mMyMapViewModel.onMapChanged(new MapInBoundsParams(bounds, zoom, cnt, 10));
         });
-
         googleMap.setOnMarkerClickListener(this);
+        // Kích hoạt vị trí
+
+        map.setOnMapLoadedCallback(() -> Log.d(TAG, "Google Map loaded"));
+        if (hasTargetLocation) {
+            LatLng targetPos = new LatLng(targetLat, targetLng);
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(targetPos, 15f)); // Focus on hotel
+            enableMyLocation(false); // Show blue dot, but don't move camera to it
+        } else {
+            enableMyLocation(true); // Normal behavior: move to user location
+        }
+
 
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -318,7 +338,7 @@ public class MyMapActivity extends AppCompatActivity implements OnMapReadyCallba
 //        });
     }
 
-    private void enableMyLocation() {
+    private void enableMyLocation(boolean moveCameraToUser) {
         if (ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (googleMap != null) {
                 // Hiện chấm xanh mặc định
@@ -326,12 +346,14 @@ public class MyMapActivity extends AppCompatActivity implements OnMapReadyCallba
                 googleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
                 // Lấy vị trí để di chuyển Camera đến đó 1 lần duy nhất lúc đầu
-                fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
-                    if (location != null) {
-                        LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current, Constants.ZOOM_LEVEL));
-                    }
-                });
+                if (moveCameraToUser) {
+                    fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+                        if (location != null) {
+                            LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current, Constants.ZOOM_LEVEL));
+                        }
+                    });
+                }
             }
         } else {
             // Kiểm tra xem người dùng đã từng từ chối chưa
