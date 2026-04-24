@@ -55,6 +55,7 @@
                         app:layout_constraintTop_toTopOf="@id/imgProfile">
 
                         <TextView
+                            android:id="@+id/txtName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Emilio Kohler"
@@ -63,6 +64,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/txtMyLocation"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:drawablePadding="4dp"
