@@ -55,8 +55,8 @@ public class RoomTypeDetailResponse {
     @SerializedName("policies")
     private List<Policy> policies;
 
-    @SerializedName("reviews")
-    private List<HotelReview> reviews;
+//    @SerializedName("reviews")
+//    private List<HotelReview> reviews;
 
     @Data
     @AllArgsConstructor

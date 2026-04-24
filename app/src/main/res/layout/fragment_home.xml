@@ -107,6 +107,7 @@
                             app:strokeColor="#EEEEEE"
                             app:strokeWidth="1dp">
                             <ImageView
+                                android:id="@+id/btnNotification"
                                 android:layout_width="26dp"
                                 android:layout_height="26dp"
                                 android:layout_gravity="center"

@@ -102,6 +102,8 @@
     <string name="booking_not_available">Chưa có thông tin</string>
     <string name="pay_at_property_chip">Thanh toán khi nhận phòng</string>
     <string name="confirm">Xác nhận</string>
+    <string name="total_review_count">%d đánh giá</string>
+
     <string name="labelYourLocation">Vị trí của bạn</string>
     <string name="labelBlockYourLocation">Bạn đã chặn quyền vị trí! Vui lòng vào Cài đặt để bật lại</string>
     <string name="labelRequireYourLocation">App cần quyền vị trí để hoạt động!</string>

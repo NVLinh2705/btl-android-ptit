@@ -88,6 +88,6 @@ dependencies {
     testAnnotationProcessor(libs.lombok)
     implementation libs.flexbox
     implementation libs.powermenu
-
+    implementation "androidx.work:work-runtime:2.9.0"
     implementation libs.material.v190
 }
