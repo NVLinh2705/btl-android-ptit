@@ -25,13 +25,8 @@
         android:theme="@style/Theme.HotelBookingPTIT">
         <activity
             android:name=".view.activity.QrScannerActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false"
+            android:theme="@style/Theme.HotelBookingPTIT.DarkStatusBar" />
         <activity
             android:name=".view.activity.ListDestinationActivity"
             android:exported="false"
