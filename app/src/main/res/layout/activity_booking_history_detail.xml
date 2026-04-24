@@ -488,7 +488,7 @@
                        android:layout_width="match_parent"
                        android:layout_height="wrap_content"
                        android:layout_marginTop="8dp"
-                       android:text="Lưu ý: Bạn chỉ có thể hủy đặt phòng khi đơn đang ở trạng thái chờ duyệt (Pending)."
+                       android:text="Lưu ý: Bạn chỉ có thể hủy đặt phòng 1 ngày trước ngày checkin."
                        android:textSize="13sp"
                        android:textColor="#666666"/>
 
