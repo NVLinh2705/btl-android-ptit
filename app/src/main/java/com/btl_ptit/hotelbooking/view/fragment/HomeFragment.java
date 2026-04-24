@@ -333,7 +333,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             mPopularDestinationAdapter = new PopularDestinationAdapter(new MyComparator<MyPopularDestination>(), requireContext(), new OnDestinationClickListener() {
                 @Override
                 public void onDestinationClick(MyPopularDestination destination) {
-                    Intent intent = new Intent(mContext, HotelDetailActivity.class);
+                    Intent intent = new Intent(mContext, ListDestinationActivity.class);
                     startActivity(intent);
                 }
             });
