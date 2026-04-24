@@ -428,7 +428,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 @Override
                 public void onHotelClick(MyHotel myHotel) {
                     Intent intent = new Intent(mContext, HotelInfoActivity.class);
-                    int hotelId = new Random().nextInt(4) +1;
+                    int hotelId = myHotel.getId();
                     intent.putExtra(Constants.HOTEL_ID, hotelId);
                     Log.d(TAG, "hotel ID: " + hotelId);
                     startActivity(intent);
