@@ -218,7 +218,7 @@ public class RoomTypeDetailActivity extends AppCompatActivity {
 
         setupImageSlider(extractImageUrls(data.getImages()));
         setupFacilities(data);
-        setupReviews(data.getReviews());
+//        setupReviews(data.getReviews());
 
         updateSelectionCta();
         updateSelectButtonState();
@@ -309,25 +309,25 @@ public class RoomTypeDetailActivity extends AppCompatActivity {
         adapter.submitList(data.getFacilitiesFlat());
     }
 
-    private void setupReviews(List<HotelReview> reviews) {
-        androidx.recyclerview.widget.RecyclerView rvReviews = findViewById(R.id.rvReviews);
-        TextView tvNoReviews = findViewById(R.id.tvNoReviews);
-        rvReviews.setLayoutManager(new LinearLayoutManager(this));
-
-        HotelReviewsAdapter adapter = new HotelReviewsAdapter(roomTypeInfo -> {
-            // no-op on room-type card click in this screen
-        });
-        rvReviews.setAdapter(adapter);
-        if (reviews == null || reviews.isEmpty()) {
-            adapter.submitList(new ArrayList<>());
-            rvReviews.setVisibility(View.GONE);
-            tvNoReviews.setVisibility(View.VISIBLE);
-        } else {
-            adapter.submitList(reviews);
-            rvReviews.setVisibility(View.VISIBLE);
-            tvNoReviews.setVisibility(View.GONE);
-        }
-    }
+//    private void setupReviews(List<HotelReview> reviews) {
+//        androidx.recyclerview.widget.RecyclerView rvReviews = findViewById(R.id.rvReviews);
+//        TextView tvNoReviews = findViewById(R.id.tvNoReviews);
+//        rvReviews.setLayoutManager(new LinearLayoutManager(this));
+//
+//        HotelReviewsAdapter adapter = new HotelReviewsAdapter(roomTypeInfo -> {
+//            // no-op on room-type card click in this screen
+//        });
+//        rvReviews.setAdapter(adapter);
+//        if (reviews == null || reviews.isEmpty()) {
+//            adapter.submitList(new ArrayList<>());
+//            rvReviews.setVisibility(View.GONE);
+//            tvNoReviews.setVisibility(View.VISIBLE);
+//        } else {
+//            adapter.submitList(reviews);
+//            rvReviews.setVisibility(View.VISIBLE);
+//            tvNoReviews.setVisibility(View.GONE);
+//        }
+//    }
 
     private List<String> extractImageUrls(List<RoomTypeDetailResponse.ImageItem> images) {
         List<String> urls = new ArrayList<>();

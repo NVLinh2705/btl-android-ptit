@@ -43,42 +43,32 @@ public class HotelReviewsAdapter extends RecyclerView.Adapter<HotelReviewsAdapte
     @Override
     public ReviewVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_hotel_review, parent, false);
-        return new ReviewVH(view);
+        return new ReviewVH(view, onRoomTypeClickListener); // Pass listener down to ViewHolder
     }
 
     @Override
     public void onBindViewHolder(@NonNull ReviewVH holder, int position) {
         HotelReview item = items.get(position);
 
-        holder.txtReviewerName.setText(item.getReviewer() != null ? item.getReviewer().getFullName() : "Anonymous");
+        holder.txtReviewerName.setText(item.getCustomer() != null ? item.getCustomer().getFullName() : "Anonymous");
         holder.txtRatingNumber.setText(String.format(Locale.getDefault(), "%.1f", item.getRating()));
         holder.txtDate.setText(formatDate(item.getCreatedAt()));
         holder.txtRatingLabel.setText(getRatingLabel(item.getRating()));
         holder.txtComment.setText(item.getComment());
 
         Glide.with(holder.imgReviewerAvatar.getContext())
-                .load(item.getReviewer() != null ? item.getReviewer().getAvatarUrl() : null)
+                .load(item.getCustomer() != null ? item.getCustomer().getAvatarUrl() : null)
                 .placeholder(R.drawable.img)
                 .error(R.drawable.img)
                 .into(holder.imgReviewerAvatar);
 
-        HotelReview.RoomTypeInfo roomTypeInfo = item.getRoomType();
-        if (roomTypeInfo == null || roomTypeInfo.getName() == null) {
-            holder.cardRoomType.setVisibility(View.GONE);
-        } else {
-            holder.cardRoomType.setVisibility(View.VISIBLE);
-            holder.txtRoomTypeName.setText(roomTypeInfo.getName());
-            Glide.with(holder.imgRoomType.getContext())
-                    .load(roomTypeInfo.getImageUrl())
-                    .placeholder(R.drawable.placeholder_room)
-                    .error(R.drawable.placeholder_room)
-                    .into(holder.imgRoomType);
+        List<HotelReview.RoomTypeInfo> bookedRooms = item.getBookedRooms();
 
-            holder.cardRoomType.setOnClickListener(v -> {
-                if (onRoomTypeClickListener != null) {
-                    onRoomTypeClickListener.onRoomTypeClick(roomTypeInfo);
-                }
-            });
+        if (bookedRooms == null || bookedRooms.isEmpty()) {
+            holder.rvBookedRooms.setVisibility(View.GONE);
+        } else {
+            holder.rvBookedRooms.setVisibility(View.VISIBLE);
+            holder.roomTypesAdapter.submitList(bookedRooms);
         }
     }
 
@@ -105,11 +95,12 @@ public class HotelReviewsAdapter extends RecyclerView.Adapter<HotelReviewsAdapte
     }
 
     private String getRatingLabel(double rating) {
-        if (rating >= 9.0) return "Xuất săc";
+        if (rating >= 9.0) return "Xuất sắc";
         if (rating >= 8.0) return "Tốt";
-        if (rating >= 7.0) return "Khá";
-        if (rating >= 5.0) return "Tệ";
-        return "Rất tệ";
+        if (rating >= 7.0) return "Khá tốt";
+        if (rating >= 6.0) return "Trung bình";
+        if (rating >= 5.0) return "Dưới trung bình";
+        return "Kém";
     }
 
     static class ReviewVH extends RecyclerView.ViewHolder {
@@ -119,11 +110,11 @@ public class HotelReviewsAdapter extends RecyclerView.Adapter<HotelReviewsAdapte
         final TextView txtDate;
         final TextView txtRatingLabel;
         final TextView txtComment;
-        final View cardRoomType;
-        final android.widget.ImageView imgRoomType;
-        final TextView txtRoomTypeName;
 
-        ReviewVH(@NonNull View itemView) {
+        final RecyclerView rvBookedRooms;
+        final ReviewRoomTypesAdapter roomTypesAdapter;
+
+        ReviewVH(@NonNull View itemView, OnRoomTypeClickListener listener) {
             super(itemView);
             imgReviewerAvatar = itemView.findViewById(R.id.imgReviewerAvatar);
             txtReviewerName = itemView.findViewById(R.id.txtReviewerName);
@@ -131,10 +122,12 @@ public class HotelReviewsAdapter extends RecyclerView.Adapter<HotelReviewsAdapte
             txtDate = itemView.findViewById(R.id.txtReviewDate);
             txtRatingLabel = itemView.findViewById(R.id.txtReviewRatingLabel);
             txtComment = itemView.findViewById(R.id.txtReviewComment);
-            cardRoomType = itemView.findViewById(R.id.cardRoomType);
-            imgRoomType = itemView.findViewById(R.id.imgRoomType);
-            txtRoomTypeName = itemView.findViewById(R.id.txtRoomTypeName);
+
+            rvBookedRooms = itemView.findViewById(R.id.rvBookedRooms);
+
+            // Initialize the nested horizontal adapter
+            roomTypesAdapter = new ReviewRoomTypesAdapter(listener);
+            rvBookedRooms.setAdapter(roomTypesAdapter);
         }
     }
 }
-

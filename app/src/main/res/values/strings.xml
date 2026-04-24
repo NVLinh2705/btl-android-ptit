@@ -100,6 +100,8 @@
     <string name="booking_not_available">Not available</string>
     <string name="pay_at_property_chip">Pay at the property</string>
     <string name="confirm">Confirm</string>
+    <string name="total_review_count">%d reviews</string>
+
     <string name="labelYourLocation">Your location</string>
     <string name="labelBlockYourLocation">You have blocked location permissions! Please go to Settings to re-enable them.</string>
     <string name="labelRequireYourLocation">The app needs location permissions to run!</string>

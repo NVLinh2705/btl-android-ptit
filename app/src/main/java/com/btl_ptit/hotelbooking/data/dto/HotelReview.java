@@ -2,6 +2,8 @@ package com.btl_ptit.hotelbooking.data.dto;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,16 +24,16 @@ public class HotelReview {
     @SerializedName("created_at")
     private String createdAt;
 
-    @SerializedName("reviewer")
-    private Reviewer reviewer;
+    @SerializedName("customer")
+    private Customer customer;
 
-    @SerializedName("room_type")
-    private RoomTypeInfo roomType;
+    @SerializedName("booked_rooms")
+    private List<RoomTypeInfo> bookedRooms;
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class Reviewer {
+    public static class Customer {
         @SerializedName("id")
         private String id;
 
@@ -46,14 +48,16 @@ public class HotelReview {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class RoomTypeInfo {
-        @SerializedName("id")
+        @SerializedName("room_type_id")
         private Integer id;
 
-        @SerializedName("name")
-        private String name;
+        @SerializedName("room_type_name")
+        private String roomTypeName;
 
-        @SerializedName("image_url")
-        private String imageUrl;
+        @SerializedName("cover_image")
+        private String coverImage;
+        @SerializedName("nights")
+        private Integer nights;
     }
 }
 

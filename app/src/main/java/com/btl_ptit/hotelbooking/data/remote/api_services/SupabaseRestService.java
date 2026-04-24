@@ -5,6 +5,7 @@ import com.btl_ptit.hotelbooking.data.model.FavoriteResponse;
 import com.btl_ptit.hotelbooking.data.dto.HotelResponse;
 import com.btl_ptit.hotelbooking.data.dto.HotelFacility;
 import com.btl_ptit.hotelbooking.data.dto.HotelReview;
+import com.btl_ptit.hotelbooking.data.dto.HotelReviewStats;
 import com.btl_ptit.hotelbooking.data.dto.LikeHotelRequest;
 import com.btl_ptit.hotelbooking.data.dto.PaginatedReviewsResponse;
 import com.btl_ptit.hotelbooking.data.dto.AvailableRoomTypesResponse;
@@ -61,17 +62,24 @@ public interface SupabaseRestService {
         @Query("hotel_id") int hotelId
     );
 
-    @GET("functions/v1/get-hotel-reviews")
+    @GET("rest/v1/rpc/get_hotel_reviews")
     Call<PaginatedReviewsResponse> getHotelReviews(
-            @Query("hotel_id") int hotelId,
-            @Query("order") String order,
-            @Query("page") int page,
-            @Query("min_rating") Integer minRating,
-            @Query("max_rating") Integer maxRating,
-            @Query("beginDate") String beginDate,
-            @Query("endDate") String endDate
+            @Query("p_hotel_id") int hotelId,
+            @Query("p_order") String order,
+            @Query("p_page") int page,
+//            @Query("p_page_size") int pageSize,
+            @Query("p_min_rating") Integer minRating,
+            @Query("p_max_rating") Integer maxRating,
+            @Query("p_begin_date") String beginDate,
+            @Query("p_end_date") String endDate,
+            @Query("p_keywords") String keywords
+//            @Query("query") String query
     );
 
+    @GET("rest/v1/rpc/get_hotel_reviews_stats")
+    Call<HotelReviewStats> getHotelReviewStats(
+            @Query("p_hotel_id") int hotelId
+    );
     @GET("functions/v1/get-available-room-types")
     Call<AvailableRoomTypesResponse> getAvailableRoomTypes(
             @Query("hotel_id") int hotelId,

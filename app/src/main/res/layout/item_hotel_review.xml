@@ -3,10 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginTop="12dp"
+    android:background="@drawable/bg_section_card"
     android:orientation="vertical"
-    android:padding="12dp"
-    android:background="@drawable/bg_section_card">
+    android:padding="12dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,9 +27,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
+            android:text="my name"
             android:textColor="#111111"
-            android:textStyle="bold"
-            android:text="my name"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txtRatingNumber"
@@ -37,9 +38,9 @@
             android:background="@drawable/bg_rating_pill"
             android:paddingHorizontal="8dp"
             android:paddingVertical="4dp"
+            android:text="9.0"
             android:textColor="@android:color/white"
-            android:textStyle="bold"
-            android:text="9.0"/>
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -53,19 +54,19 @@
             android:id="@+id/txtReviewDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="1/1/2026"
             android:textColor="#6D6D6D"
-            android:textSize="12sp"
-            android:text="1/1/2026"/>
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/txtReviewRatingLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:text="Rất tốt"
             android:textColor="#0B4AA2"
             android:textSize="12sp"
-            android:textStyle="bold"
-            android:text="Rất tốt"/>
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -74,48 +75,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:text="nhận xét khách sạn"
         android:textColor="#3D3D3D"
-        android:textSize="13sp"
-        android:text="nhận xét khách sạn"/>
+        android:textSize="13sp" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardRoomType"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvBookedRooms"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="0dp"
-        app:strokeWidth="1dp"
-        app:strokeColor="#E0E0E0">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <ImageView
-                android:id="@+id/imgRoomType"
-                android:layout_width="54dp"
-                android:layout_height="54dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/placeholder_room" />
-
-            <TextView
-                android:id="@+id/txtRoomTypeName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:textColor="#111111"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:text="Tên loại phòng"/>
-
-        </LinearLayout>
-
-    </com.google.android.material.card.MaterialCardView>
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_review_room_type"/>
 
 </LinearLayout>
 
