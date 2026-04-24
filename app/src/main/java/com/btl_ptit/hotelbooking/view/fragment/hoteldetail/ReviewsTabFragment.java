@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.btl_ptit.hotelbooking.R;
 import com.btl_ptit.hotelbooking.data.dto.HotelReview;
+import com.btl_ptit.hotelbooking.data.dto.HotelReviewStats;
 import com.btl_ptit.hotelbooking.data.dto.PaginatedReviewsResponse;
 import com.btl_ptit.hotelbooking.data.remote.SupabaseClient;
 import com.btl_ptit.hotelbooking.data.remote.api_services.SupabaseRestService;
@@ -70,6 +71,7 @@ public class ReviewsTabFragment extends Fragment {
         setupPagination();
 
         if (hotelId > 0) {
+            loadReviewStats();
             loadReviews();
         } else {
             binding.txtState.setVisibility(View.VISIBLE);
@@ -78,6 +80,8 @@ public class ReviewsTabFragment extends Fragment {
 
         return binding.getRoot();
     }
+
+
 
     private void setupRecyclerView() {
         adapter = new HotelReviewsAdapter(roomTypeInfo -> {
@@ -109,38 +113,90 @@ public class ReviewsTabFragment extends Fragment {
         });
     }
 
+
     private void setupPagination() {
-        binding.rvReviews.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//        binding.rvReviews.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                if(dy > 0){
+//                    LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+//                    if (!isLoading && hasMore && layoutManager != null &&
+//                            layoutManager.findLastCompletelyVisibleItemPosition() == reviews.size() - 1) {
+//                        currentPage++;
+//                        loadReviews();
+//                    }
+//                }
+//
+//            }
+//        });
+        // Listen to the NestedScrollView instead of the RecyclerView
+        binding.nestedScrollView.setOnScrollChangeListener(new androidx.core.widget.NestedScrollView.OnScrollChangeListener() {
             @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                if (!isLoading && hasMore && layoutManager != null &&
-                        layoutManager.findLastCompletelyVisibleItemPosition() == reviews.size() - 1) {
-                    currentPage++;
-                    loadReviews();
+            public void onScrollChange(@NonNull androidx.core.widget.NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+
+                // Check if the user has scrolled to the very bottom
+                if (scrollY > 0 && scrollY >= (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
+
+                    if (!isLoading && hasMore) {
+                        currentPage++;
+                        loadReviews();
+                    }
                 }
             }
         });
     }
 
+    private void loadReviewStats() {
+        service.getHotelReviewStats(hotelId).enqueue(new Callback<HotelReviewStats>() {
+            @Override
+            public void onResponse(@NonNull Call<HotelReviewStats> call, @NonNull Response<HotelReviewStats> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    HotelReviewStats stats = response.body();
+                    binding.txtAvgRating.setText(String.format(Locale.getDefault(), "%.1f", stats.getAverageRating()));
+                    binding.txtTotalReviews.setText(getString(R.string.total_review_count, stats.getTotalReviews()));
+                    if (stats.getAverageRating() >= 9.0) {
+                        binding.txtAvgRatingLabel.setText("Rất tốt");
+                    } else if (stats.getAverageRating() >= 8.0) {
+                        binding.txtAvgRatingLabel.setText("Tốt");
+                    } else if (stats.getAverageRating() >= 7.0) {
+                        binding.txtAvgRatingLabel.setText("Khá tốt");
+                    }else if (stats.getAverageRating() >= 6.0) {
+                        binding.txtAvgRatingLabel.setText("Trung bình");
+                    } else if (stats.getAverageRating() >= 5.0) {
+                        binding.txtAvgRatingLabel.setText("Dưới trung bình");
+                    } else {
+                        binding.txtAvgRatingLabel.setText("Kém");
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<HotelReviewStats> call, @NonNull Throwable t) {
+                // Không hiển thị gì nếu tải thống kê thất bại
+            }
+        });
+    }
     private void loadReviews() {
         if (isLoading || !hasMore) return;
         isLoading = true;
-//        binding.progressBar.setVisibility(View.VISIBLE);
+        binding.progressBar.setVisibility(View.VISIBLE);
 
         String sortValue = getSortOrder();
         Integer minRating = parseIntOrNull(binding.edtMinRating.getText().toString());
         Integer maxRating = parseIntOrNull(binding.edtMaxRating.getText().toString());
         String beginDate = parseUiDateToApiDate(binding.txtStartDate.getText().toString());
         String endDate = parseUiDateToApiDate(binding.txtEndDate.getText().toString());
-
-        service.getHotelReviews(hotelId, sortValue, currentPage, minRating, maxRating, beginDate, endDate)
+        String keyword = binding.edtReviewKeyword.getText() != null ? binding.edtReviewKeyword.getText().toString().trim() : "";
+        String p_keyword = "";
+        if(!keyword.isEmpty())
+            p_keyword = "{\"" + keyword + "\"}" ;
+        service.getHotelReviews(hotelId, sortValue, currentPage, minRating, maxRating, beginDate, endDate, !(p_keyword.isEmpty())? p_keyword :null)
                 .enqueue(new Callback<PaginatedReviewsResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<PaginatedReviewsResponse> call, @NonNull Response<PaginatedReviewsResponse> response) {
                         isLoading = false;
-//                        binding.progressBar.setVisibility(View.GONE);
+                        binding.progressBar.setVisibility(View.GONE);
 
                         if (response.isSuccessful() && response.body() != null) {
                             PaginatedReviewsResponse paginatedResponse = response.body();
@@ -162,7 +218,7 @@ public class ReviewsTabFragment extends Fragment {
                     @Override
                     public void onFailure(@NonNull Call<PaginatedReviewsResponse> call, @NonNull Throwable t) {
                         isLoading = false;
-//                        binding.progressBar.setVisibility(View.GONE);
+                        binding.progressBar.setVisibility(View.GONE);
                         handleApiError();
                     }
                 });

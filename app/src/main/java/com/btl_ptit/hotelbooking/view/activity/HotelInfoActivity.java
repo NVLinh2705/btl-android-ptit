@@ -87,9 +87,26 @@ public class HotelInfoActivity extends AppCompatActivity implements OnMapReadyCa
             public void onResponse(Call<HotelResponse> call, Response<HotelResponse> response) {
                 if (isFinishing() || isDestroyed()) return;
 
+                if (!response.isSuccessful()) {
+                    String errBody = null;
+                    try {
+                        if (response.errorBody() != null) {
+                            errBody = response.errorBody().string();
+                        }
+                    } catch (Exception ignore) {
+                    }
+                    Log.e(TAG, "getHotelById failed: HTTP " + response.code() + " " + response.message() + 
+                            (errBody != null ? (" | body=" + errBody) : ""));
+                    showEmptyState();
+                    Toast.makeText(HotelInfoActivity.this, "Failed to load hotel details", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 HotelResponse hotelResp = response.body();
                 if (hotelResp == null) {
+                    Log.e(TAG, "getHotelById success but body is null");
                     showEmptyState();
+                    Toast.makeText(HotelInfoActivity.this, "Failed to load hotel details", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -100,7 +117,9 @@ public class HotelInfoActivity extends AppCompatActivity implements OnMapReadyCa
             @Override
             public void onFailure(Call<HotelResponse> call, Throwable t) {
                 if (isFinishing() || isDestroyed()) return;
-                Log.e(TAG, "Failed to load hotel details", t);
+                Log.e(TAG, "Failed to load hotel details. canceled=" + call.isCanceled() +
+                        ", errorType=" + (t != null ? t.getClass().getName() : "null") +
+                        ", message=" + (t != null ? t.getMessage() : "null"), t);
                 showEmptyState();
                 Toast.makeText(HotelInfoActivity.this, "Failed to load hotel details", Toast.LENGTH_SHORT).show();
             }
@@ -132,10 +151,12 @@ public class HotelInfoActivity extends AppCompatActivity implements OnMapReadyCa
         b.txtAvgRating.setText(String.format("%.1f", avgRating));
         b.txtAvgRating1.setText(String.format("%.1f", avgRating));
 
-        if (avgRating >= 8.0) {
+        if (avgRating >= 9.0) {
             b.txtRatingLabel.setText("Rất tốt");
-        } else if (avgRating >= 7.0) {
+        } else if (avgRating >= 8.0) {
             b.txtRatingLabel.setText("Tốt");
+        } else if (avgRating >= 7.0) {
+            b.txtRatingLabel.setText("Khá tốt");
         } else if (avgRating >= 6.0) {
             b.txtRatingLabel.setText("Trung bình");
         } else if (avgRating >= 5.0) {

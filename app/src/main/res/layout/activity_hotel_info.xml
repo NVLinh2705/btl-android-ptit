@@ -29,18 +29,22 @@
     <LinearLayout
         android:id="@+id/emptyState"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
+        android:layout_height="match_parent"
         android:visibility="gone"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="16dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
         <ImageView
             android:src="@drawable/not_found"
             android:layout_height="120dp"
-            android:layout_width="120dp"/>
+            android:layout_width="120dp"
+            android:layout_gravity="center_horizontal" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:layout_marginTop="10dp"
             android:text="@string/not_found_message"/>
 
     </LinearLayout>

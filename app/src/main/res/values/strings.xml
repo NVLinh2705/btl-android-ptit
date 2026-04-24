@@ -95,4 +95,6 @@
     <string name="booking_not_available">Chưa có thông tin</string>
     <string name="pay_at_property_chip">Thanh toán khi nhận phòng</string>
     <string name="confirm">Xác nhận</string>
+
+    <string name="total_review_count">%d đánh giá</string>
 </resources>
