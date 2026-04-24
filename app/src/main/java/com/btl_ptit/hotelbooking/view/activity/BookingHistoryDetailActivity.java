@@ -127,6 +127,7 @@ public class BookingHistoryDetailActivity extends AppCompatActivity {
                 binding.txtStatus.setText("Đang chờ duyệt");
                 binding.reviewCard.setVisibility(View.GONE);
                 binding.cancelCard.setVisibility(View.VISIBLE);
+                binding.qrCard.setVisibility(View.GONE);
                 binding.btnCancelBooking.setOnClickListener(v -> {
                     cancelBooking();
                 });
