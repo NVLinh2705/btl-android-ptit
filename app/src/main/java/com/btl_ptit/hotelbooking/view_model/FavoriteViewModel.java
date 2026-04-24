@@ -43,14 +43,8 @@ public class FavoriteViewModel extends ViewModel {
         disposables.add(repository.getFavoriteHotels(userId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(response -> {
+                .subscribe(hotels -> {
                     isLoading.setValue(false);
-                    List<MyHotel> hotels = new ArrayList<>();
-                    for (FavoriteResponse fav : response) {
-                        if (fav.getHotel() != null) {
-                            hotels.add(fav.getHotel());
-                        }
-                    }
                     favoriteHotels.setValue(hotels);
                 }, throwable -> {
                     isLoading.setValue(false);

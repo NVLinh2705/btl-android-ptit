@@ -642,23 +642,23 @@ async function confirmSelectedBooking() {
     }
 
     // Save a notification record for the customer (Supabase-only flow)
-    if (customerId) {
-      const saveRes = await fetch(SUPABASE_URL + '/functions/v1/save-notification', {
-        method: 'POST',
-        headers: authHeaders(),
-        body: JSON.stringify({
-          customer_id: customerId,
-          title: 'Booking Confirmed',
-          content: 'Your booking #' + bookingId + ' has been confirmed by the hotel.',
-          type: 'booking_confirmed',
-        }),
-      });
+<!--    if (customerId) {-->
+<!--      const saveRes = await fetch(SUPABASE_URL + '/functions/v1/save-notification', {-->
+<!--        method: 'POST',-->
+<!--        headers: authHeaders(),-->
+<!--        body: JSON.stringify({-->
+<!--          customer_id: customerId,-->
+<!--          title: 'Booking Confirmed',-->
+<!--          content: 'Your booking #' + bookingId + ' has been confirmed by the hotel.',-->
+<!--          type: 'booking_confirmed',-->
+<!--        }),-->
+<!--      });-->
 
-      if (!saveRes.ok) {
-        const saveBody = await saveRes.json().catch(() => ({}));
-        console.warn('Failed to save notification history:', saveBody?.error || saveRes.status);
-      }
-    }
+<!--      if (!saveRes.ok) {-->
+<!--        const saveBody = await saveRes.json().catch(() => ({}));-->
+<!--        console.warn('Failed to save notification history:', saveBody?.error || saveRes.status);-->
+<!--      }-->
+<!--    }-->
 
     renderBookingList();
     renderBookingDetail();
