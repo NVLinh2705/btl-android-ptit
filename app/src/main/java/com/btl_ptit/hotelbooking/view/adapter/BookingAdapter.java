@@ -21,6 +21,9 @@ import com.btl_ptit.hotelbooking.utils.paging.MyComparator;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+
 import kotlin.coroutines.CoroutineContext;
 
 public class BookingAdapter extends PagingDataAdapter<MyBooking, BookingAdapter.BookingViewHolder> {
@@ -55,6 +58,9 @@ public class BookingAdapter extends PagingDataAdapter<MyBooking, BookingAdapter.
 
             holder.bookingItemBinding.txtHotelName.setText(hotelName);
             holder.bookingItemBinding.txtPrice.setText(String.valueOf(currentMyBooking.getTotalAmount()));
+            OffsetDateTime dt = OffsetDateTime.parse(currentMyBooking.getCreatedAt());
+            LocalDate bookingDate = dt.toLocalDate();
+            holder.bookingItemBinding.txtBookingDate.setText(bookingDate.toString());
             switch (currentMyBooking.getStatusCode()) {
                 case "PENDING":
                     holder.bookingItemBinding.txtStatus.setBackgroundResource(R.drawable.bg_pending);
@@ -71,6 +77,26 @@ public class BookingAdapter extends PagingDataAdapter<MyBooking, BookingAdapter.
                     holder.bookingItemBinding.txtStatus.setBackgroundResource(R.drawable.bg_cancelled);
                     holder.bookingItemBinding.txtStatus.setTextColor(Color.parseColor("#D32F2F"));
                     holder.bookingItemBinding.txtStatus.setText("Đã hủy");
+                    break;
+                case "CHECKED_IN":
+                    holder.bookingItemBinding.txtStatus.setBackgroundResource(R.drawable.bg_confirmed);
+                    holder.bookingItemBinding.txtStatus.setTextColor(Color.parseColor("#388E3C"));
+                    holder.bookingItemBinding.txtStatus.setText("Đã checkin");
+                    break;
+                case "NO_SHOW":
+                    holder.bookingItemBinding.txtStatus.setBackgroundResource(R.drawable.bg_cancelled);
+                    holder.bookingItemBinding.txtStatus.setTextColor(Color.parseColor("#D32F2F"));
+                    holder.bookingItemBinding.txtStatus.setText("Không có mặt");
+                    break;
+                case "COMPLETED":
+                    holder.bookingItemBinding.txtStatus.setBackgroundResource(R.drawable.bg_confirmed);
+                    holder.bookingItemBinding.txtStatus.setTextColor(Color.parseColor("#388E3C"));
+                    holder.bookingItemBinding.txtStatus.setText("Đã hoàn thành");
+                    break;
+                case "REJECTED":
+                    holder.bookingItemBinding.txtStatus.setBackgroundResource(R.drawable.bg_cancelled);
+                    holder.bookingItemBinding.txtStatus.setTextColor(Color.parseColor("#D32F2F"));
+                    holder.bookingItemBinding.txtStatus.setText("Bị từ chối");
                     break;
             }
 

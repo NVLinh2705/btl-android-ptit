@@ -3,7 +3,9 @@ package com.btl_ptit.hotelbooking.data.model;
 import com.btl_ptit.hotelbooking.interfaces.DiffUtilModel;
 import com.google.gson.annotations.SerializedName;
 
-public class MyBookedRoom  {
+import java.io.Serializable;
+
+public class MyBookedRoom implements Serializable {
     @SerializedName("id")
     private String id;
 

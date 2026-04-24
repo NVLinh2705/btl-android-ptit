@@ -17,24 +17,31 @@ import android.widget.Toast;
 import com.btl_ptit.hotelbooking.R;
 import com.btl_ptit.hotelbooking.data.model.MyBooking;
 import com.btl_ptit.hotelbooking.data.model.MyHotel;
+import com.btl_ptit.hotelbooking.data.model.Role;
+import com.btl_ptit.hotelbooking.data.model.UserRole;
 import com.btl_ptit.hotelbooking.data.remote.SupabaseClient;
 import com.btl_ptit.hotelbooking.data.remote.api_services.BookingRestService;
 import com.btl_ptit.hotelbooking.data.remote.api_services.HotelRestService;
+import com.btl_ptit.hotelbooking.data.remote.api_services.SupabaseRestService;
 import com.btl_ptit.hotelbooking.data.repository.MyBookingRepository;
+import com.btl_ptit.hotelbooking.data.session.SessionManager;
 import com.btl_ptit.hotelbooking.databinding.FragmentMyBookingBinding;
 import com.btl_ptit.hotelbooking.listener.OnBookingClickListener;
 import com.btl_ptit.hotelbooking.utils.paging.MyComparator;
 import com.btl_ptit.hotelbooking.view.activity.BookingHistoryDetailActivity;
 import com.btl_ptit.hotelbooking.view.activity.LoginActivity;
+import com.btl_ptit.hotelbooking.view.activity.QrScannerActivity;
 import com.btl_ptit.hotelbooking.view.adapter.BookingAdapter;
 import com.btl_ptit.hotelbooking.view.adapter.LoadStateAdapter;
 import com.btl_ptit.hotelbooking.view_model.paging.BookingViewModel;
 import com.btl_ptit.hotelbooking.view_model.paging.BookingViewModelFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -46,6 +53,8 @@ public class MyBookingFragment extends Fragment {
     private String TAG = "MyBookingFragmentTAG";
 
     private BookingRestService bookingRestService;
+
+    private SupabaseRestService supabaseRestService;
 
     private BookingViewModel bookingViewModel;
 
@@ -62,8 +71,65 @@ public class MyBookingFragment extends Fragment {
         mContext = getContext();
         bookingRestService = SupabaseClient.createService(BookingRestService.class);
         myBookingRepository = new MyBookingRepository(bookingRestService);
+        supabaseRestService = SupabaseClient.createService(SupabaseRestService.class);
         bookingViewModel = new ViewModelProvider(requireActivity(), new BookingViewModelFactory(myBookingRepository)).get(BookingViewModel.class);
         initBookingAdapter();
+        initBooking();
+        mFragmentMyBookingBinding.chipGroupFilter.setOnCheckedChangeListener((group, checkedId) -> {
+            String status = "";
+            if (checkedId == mFragmentMyBookingBinding.chipPending.getId()) {
+                status="PENDING";
+            }else if (checkedId == mFragmentMyBookingBinding.chipConfirmed.getId()) {
+                status= "CONFIRMED";
+
+            }else if (checkedId == mFragmentMyBookingBinding.chipCancelled.getId()) {
+                status= "CANCELLED";
+            }else if (checkedId == mFragmentMyBookingBinding.chipCheckin.getId()) {
+                status = "CHECKED_IN";
+            }
+            bookingViewModel.filterByStatus(status);
+        });
+        String userId = SessionManager.getInstance().getUser().getId();
+
+        compositeDisposable.add(
+                supabaseRestService.getRolesByUser("eq." + userId,
+                        "roles(name)")
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(response -> {
+                            List<String> roles = new ArrayList<>();
+                            if (response != null) {
+                                for (UserRole item : response) {
+                                    roles.add(item.getRoles().getName());
+                                    System.out.println(item.getRoles().getName());
+                                }
+                                if (roles.contains("HOST")) {
+                                    mFragmentMyBookingBinding.qrButton.setVisibility(View.VISIBLE);
+                                    mFragmentMyBookingBinding.qrButton.setOnTouchListener(
+                                            (v, event) -> {
+                                                Intent intent = new Intent(mContext, QrScannerActivity.class);
+                                                startActivity(intent);
+                                                return true;
+                                            }
+                                    );
+                                }else{
+                                    mFragmentMyBookingBinding.qrButton.setVisibility(View.GONE);
+                                }
+                            }
+                        }, throwable -> {
+                            Log.e(TAG, "Error occurred: " + throwable.getMessage());
+                        }
+                )
+
+        );
+
+
+
+
+
+        return view;
+    }
+    public void initBooking(){
         compositeDisposable.clear();
         compositeDisposable.add(
                 bookingViewModel.pagingDataFlow
@@ -72,11 +138,17 @@ public class MyBookingFragment extends Fragment {
                             Log.d("DEBUG", "PagingData received");
                             Log.d("DEBUG", "PagingData received: " + pagingData);
                             bookingAdapter.submitData(getViewLifecycleOwner().getLifecycle(), pagingData);
+                        }, throwable -> {
+                            Log.e("TAG", "Error occurred "+ throwable.getMessage());
                         } )
         );
-
-
-        return view;
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (bookingAdapter != null) {
+            bookingAdapter.refresh();
+        }
     }
 
     private void initBookingAdapter() {
@@ -112,5 +184,10 @@ public class MyBookingFragment extends Fragment {
         });
 
 
+    }
+    @Override
+    public void onDestroyView() {
+        compositeDisposable.clear();
+        super.onDestroyView();
     }
 }

@@ -214,7 +214,7 @@ CREATE INDEX idx_images_hotel
 -- 8. Booking statuses
 
 
-CREATE TYPE booking_status_enum AS ENUM ('PENDING', 'CONFIRMED', 'CANCELLED', 'COMPLETED');
+CREATE TYPE booking_status_enum AS ENUM ('PENDING', 'CONFIRMED', 'CANCELLED', 'COMPLETED', 'REJECTED', 'NO_SHOW', 'CHECKED_IN');
 
 -- 9. Bookings & booked rooms
 CREATE TYPE payment_status_enum AS ENUM ('UNPAID', 'PAID');
@@ -271,7 +271,7 @@ CREATE TABLE reviews (
     booking_id   INTEGER NOT NULL UNIQUE REFERENCES bookings(id) ON DELETE CASCADE,
     hotel_id     INTEGER NOT NULL REFERENCES hotels(id) ON DELETE CASCADE,
     customer_id  uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    rating       INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    rating       INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 10),
     comment      TEXT,
     created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -318,6 +318,9 @@ grant select on table districts to anon, service_role;
 grant select on table wards to anon, service_role;
 grant select on table facilities to anon, service_role;
 grant select on table facility_types to anon, service_role;
+grant select on table bookings to anon, service_role;
+REVOKE SELECT ON TABLE bookings FROM anon;
+grant all privileges on all tables in schema public to anon;
 
 grant all privileges on all tables in schema public to service_role;
 -- 3. Đảm bảo các bảng tạo trong tương lai cũng tự động cấp quyền
