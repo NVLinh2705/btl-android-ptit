@@ -17,7 +17,7 @@ import com.btl_ptit.hotelbooking.data.session.SessionManager;
 import com.btl_ptit.hotelbooking.databinding.FragmentFavouriteBinding;
 import com.btl_ptit.hotelbooking.view.activity.HotelDetailActivity;
 import com.btl_ptit.hotelbooking.view.adapter.FavoriteHotelAdapter;
-import com.btl_ptit.hotelbooking.viewmodel.FavoriteViewModel;
+import com.btl_ptit.hotelbooking.view_model.FavoriteViewModel;
 
 public class FavouriteFragment extends Fragment {
 

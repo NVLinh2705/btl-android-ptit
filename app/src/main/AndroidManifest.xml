@@ -21,9 +21,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HotelBookingPTIT">
         <activity
+            android:name=".view.activity.ListDestinationActivity"
+            android:exported="false"
+            android:theme="@style/Theme.HotelBookingPTIT.ListDestination" />
+        <activity
             android:name=".view.activity.ConfirmBookingActivity"
             android:exported="false"
-            android:theme="@style/Theme.HotelBookingPTIT.DarkStatusBar"/>
+            android:theme="@style/Theme.HotelBookingPTIT.DarkStatusBar" />
         <activity
             android:name=".view.activity.FillBookingInfoActivity"
             android:exported="false"
@@ -31,25 +35,22 @@
         <activity
             android:name=".view.activity.RoomTypeDetailActivity"
             android:exported="false"
-            android:theme="@style/Theme.HotelBookingPTIT.DarkStatusBar"/>
+            android:theme="@style/Theme.HotelBookingPTIT.DarkStatusBar" />
         <activity
             android:name=".view.activity.ListRoomTypeActivity"
             android:exported="false"
-            android:theme="@style/Theme.HotelBookingPTIT.DarkStatusBar"/>
-
+            android:theme="@style/Theme.HotelBookingPTIT.DarkStatusBar" />
         <activity
             android:name=".view.activity.BookingHistoryDetailActivity"
             android:exported="false" />
-
         <activity
             android:name=".view.activity.SearchActivity"
             android:exported="false"
-            android:theme="@style/Theme.HotelBookingPTIT"/>
+            android:theme="@style/Theme.HotelBookingPTIT" />
         <activity
             android:name=".view.activity.MyMapActivity"
             android:exported="false"
             android:theme="@style/Theme.HotelBooking.FullScreen" />
-
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -59,7 +60,6 @@
             android:name=".view.activity.HotelInfoActivity"
             android:exported="false"
             android:theme="@style/Theme.HotelBookingPTIT.DarkStatusBar" />
-
         <activity
             android:name=".view.activity.HotelDetailActivity"
             android:exported="false"
@@ -76,15 +76,18 @@
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
-                    android:scheme="hotelbooking"
-                    android:host="auth-callback" />
+                    android:host="auth-callback"
+                    android:scheme="hotelbooking" />
             </intent-filter>
         </activity>
         <activity

@@ -86,7 +86,8 @@ dependencies {
 
     testCompileOnly(libs.lombok)
     testAnnotationProcessor(libs.lombok)
-//    implementation "androidx.viewpager2:viewpager2:1.0.0"
-    implementation "com.google.android.flexbox:flexbox:3.0.0"
+    implementation libs.flexbox
     implementation libs.powermenu
+
+    implementation libs.material.v190
 }

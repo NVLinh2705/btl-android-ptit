@@ -10,6 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.paging.LoadState;
@@ -36,13 +37,16 @@ import com.btl_ptit.hotelbooking.databinding.PopularDestinationItemBinding;
 import com.btl_ptit.hotelbooking.listener.OnDestinationClickListener;
 import com.btl_ptit.hotelbooking.listener.OnHotelClickListener;
 import com.btl_ptit.hotelbooking.utils.Constants;
+import com.btl_ptit.hotelbooking.utils.MyUtils;
 import com.btl_ptit.hotelbooking.utils.paging.MyComparator;
 import com.btl_ptit.hotelbooking.view.activity.HotelDetailActivity;
+import com.btl_ptit.hotelbooking.view.activity.ListDestinationActivity;
 import com.btl_ptit.hotelbooking.view.activity.MyMapActivity;
 import com.btl_ptit.hotelbooking.view.activity.SearchActivity;
 import com.btl_ptit.hotelbooking.view.adapter.HotelAdapter;
 import com.btl_ptit.hotelbooking.view.adapter.LoadStateAdapter;
 import com.btl_ptit.hotelbooking.view.adapter.PopularDestinationAdapter;
+import com.btl_ptit.hotelbooking.view_model.OccupancyViewModel;
 import com.btl_ptit.hotelbooking.view_model.paging.HotelViewModel;
 import com.btl_ptit.hotelbooking.view_model.paging.HotelViewModelFactory;
 import com.btl_ptit.hotelbooking.view_model.paging.PopularDestinationViewModel;
@@ -54,9 +58,14 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.btl_ptit.hotelbooking.view.activity.HotelInfoActivity;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.DateValidatorPointForward;
+import com.google.android.material.datepicker.MaterialDatePicker;
+
+import java.util.Calendar;
+import java.util.TimeZone;
+
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
@@ -66,6 +75,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private FragmentHomeBinding mFragmentHomeBinding;
     private Context mContext;
     private String TAG = "HomeFragmentTAG";
+    private long checkInDate;
+    private long checkOutDate;
     private GoogleMap googleMap;
     private PopularDestinationAdapter mPopularDestinationAdapter;
     private PopularDestinationViewModel mPopularDestinationViewModel;
@@ -75,6 +86,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private HotelRestService mHotelRestService;
     private HotelViewModel mHotelViewModel;
     private HotelAdapter mHotelAdapter;
+
+    private OccupancyViewModel occupancyViewModel;
     private View rootView;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -97,6 +110,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate called");
+        initDefaultDates();
     }
 
     @Override
@@ -107,6 +121,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             mContext = getContext();
 
             initListeners();
+
+            initOccupancyViewModel();
 
             initPopularDestinations();
             initRecommendedHotels();
@@ -121,6 +137,38 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         return rootView;
     }
 
+    private void initOccupancyViewModel() {
+        occupancyViewModel = new ViewModelProvider(requireActivity()).get(OccupancyViewModel.class);
+
+        occupancyViewModel.getPersons().observe(getViewLifecycleOwner(), count -> {
+            mFragmentHomeBinding.chipGuests.setText(count + " " + mContext.getString(R.string.person_txt));
+        });
+
+        occupancyViewModel.getRooms().observe(getViewLifecycleOwner(), count -> {
+            mFragmentHomeBinding.chipRooms.setText(count + " " + mContext.getString(R.string.room_txt));
+        });
+
+        occupancyViewModel.getDoubleBed().observe(getViewLifecycleOwner(), count -> {
+            if (count == 0) {
+                mFragmentHomeBinding.chipDoubleBeds.setVisibility(View.GONE);
+                return;
+            } else {
+                mFragmentHomeBinding.chipDoubleBeds.setVisibility(View.VISIBLE);
+                mFragmentHomeBinding.chipDoubleBeds.setText(count + " " + mContext.getString(R.string.double_bed_txt));
+            }
+        });
+
+        occupancyViewModel.getSingleBed().observe(getViewLifecycleOwner(), count -> {
+            if (count == 0) {
+                mFragmentHomeBinding.chipSingleBeds.setVisibility(View.GONE);
+                return;
+            } else {
+                mFragmentHomeBinding.chipSingleBeds.setVisibility(View.VISIBLE);
+                mFragmentHomeBinding.chipSingleBeds.setText(count + " " + mContext.getString(R.string.single_bed_txt));
+            }
+        });
+    }
+
 //    @Override
 //    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 //        super.onViewCreated(view, savedInstanceState);
@@ -132,6 +180,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 //    }
 
     private void initListeners() {
+        mFragmentHomeBinding.tvCheckInDate.setText(MyUtils.myFormatDate(checkInDate));
+        mFragmentHomeBinding.tvCheckOutDate.setText(MyUtils.myFormatDate(checkOutDate));
+
         mFragmentHomeBinding.appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBar, int verticalOffset) {
@@ -179,6 +230,46 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(mContext, SearchActivity.class));
+            }
+        });
+
+        mFragmentHomeBinding.btnDatePopup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
+                constraintsBuilder.setValidator(DateValidatorPointForward.now());
+
+                MaterialDatePicker<Pair<Long, Long>> dateRangePicker = MaterialDatePicker.Builder.dateRangePicker()
+                        .setTitleText(R.string.title_date_picker)
+                        .setCalendarConstraints(constraintsBuilder.build())
+                        .setSelection(new Pair<>(checkInDate, checkOutDate)) // Truyền giá trị hiện tại
+                        .build();
+
+                dateRangePicker.show(getParentFragmentManager(), "DATE_PICKER");
+
+                dateRangePicker.addOnPositiveButtonClickListener(selection -> {
+                    checkInDate = selection.first;
+                    checkOutDate = selection.second;
+
+                    mFragmentHomeBinding.tvCheckInDate.setText(MyUtils.myFormatDate(checkInDate));
+                    mFragmentHomeBinding.tvCheckOutDate.setText(MyUtils.myFormatDate(checkOutDate));
+                });
+            }
+        });
+
+        mFragmentHomeBinding.btnOccupancyPopup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SearchRoomBottomSheet bottomSheet = new SearchRoomBottomSheet();
+                bottomSheet.show(getParentFragmentManager(), "Occupancy filter");
+            }
+        });
+
+        mFragmentHomeBinding.tvViewDestinationsSeeAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, ListDestinationActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -413,6 +504,18 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION);
             }
         }
+    }
+
+    private void initDefaultDates() {
+        // 1. Khởi tạo Calendar cho ngày hôm nay (Check-in)
+        checkInDate = MaterialDatePicker.todayInUtcMilliseconds();
+
+        // 2. Để tính "Ngày mai", chúng ta dùng Calendar nhưng ép về múi giờ UTC
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        calendar.setTimeInMillis(checkInDate);
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+
+        checkOutDate = calendar.getTimeInMillis();
     }
 
     @Override

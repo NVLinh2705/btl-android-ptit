@@ -129,7 +129,296 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingVertical="8dp"
-                android:paddingHorizontal="16dp">
+                android:paddingHorizontal="16dp"
+                android:descendantFocusability="blocksDescendants"
+                android:focusableInTouchMode="true">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="8dp"
+                    android:layout_marginBottom="8dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/search_placeholder_label"
+                        android:textColor="@color/md_theme_inverseSurface_highContrast"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="8dp"
+                    app:strokeWidth="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/btnLocationPopup"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:paddingHorizontal="8dp"
+                            android:gravity="center_vertical"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackground">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/outline_location_on_24"
+                                app:tint="#3F51B5" />
+                            <TextView
+                                android:id="@+id/tvLocationSelected"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:text="@string/where_to_go_label"
+                                android:textColor="#212121"
+                                android:textSize="15sp" />
+                        </LinearLayout>
+
+<!--                        <LinearLayout-->
+<!--                            android:id="@+id/btnDatePopup"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="60dp"-->
+<!--                            android:gravity="center_vertical"-->
+<!--                            android:clickable="true">-->
+<!--                            <ImageView-->
+<!--                                android:layout_width="24dp"-->
+<!--                                android:layout_height="24dp"-->
+<!--                                android:src="@drawable/ic_facility_minibar"-->
+<!--                                app:tint="#3F51B5" />-->
+<!--                            <TextView-->
+<!--                                android:id="@+id/tvDateSelected"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_marginStart="12dp"-->
+<!--                                android:text="Select Date (Check-in - Out)"-->
+<!--                                android:textColor="#212121"-->
+<!--                                android:textSize="15sp" />-->
+<!--                        </LinearLayout>-->
+
+                        <LinearLayout
+                            android:id="@+id/btnDatePopup"
+                            android:layout_width="match_parent"
+                            android:layout_height="70dp"
+                            android:paddingHorizontal="8dp"
+                            android:orientation="horizontal"
+                            android:baselineAligned="false"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackground">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:src="@drawable/ic_checkin"
+                                    app:tint="@color/green_700" />
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/booking_checkin_label"
+                                        android:textColor="#888888"
+                                        android:textSize="11sp" />
+
+                                    <TextView
+                                        android:id="@+id/tvCheckInDate"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="01-12-2026"
+                                        android:textColor="#212121"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="30dp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginHorizontal="8dp"
+                                android:background="?attr/colorPrimary"
+                                android:alpha="0.3"/>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingStart="8dp">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:src="@drawable/ic_checkin_out"
+                                    app:tint="#F44336" />
+                                <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/booking_checkout_label"
+                                    android:textColor="#888888"
+                                    android:textSize="11sp" />
+
+                                <TextView
+                                    android:id="@+id/tvCheckOutDate"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="11-12-2026"
+                                    android:textColor="#212121"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+
+<!--                        <LinearLayout-->
+<!--                            android:id="@+id/btnOccupancyPopup"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="60dp"-->
+<!--                            android:gravity="center_vertical"-->
+<!--                            android:clickable="true">-->
+<!--                            <ImageView-->
+<!--                                android:layout_width="24dp"-->
+<!--                                android:layout_height="24dp"-->
+<!--                                android:src="@drawable/outline_filter_list_24"-->
+<!--                                app:tint="#3F51B5" />-->
+<!--                            <TextView-->
+<!--                                android:id="@+id/tvOccupancySelected"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_marginStart="12dp"-->
+<!--                                android:text="1 Room, 2 Guests, 1 Double Bed"-->
+<!--                                android:textColor="#212121"-->
+<!--                                android:textSize="14sp" />-->
+<!--                        </LinearLayout>-->
+
+                        <LinearLayout
+                            android:id="@+id/btnOccupancyPopup"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="8dp"
+                            android:minHeight="65dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingVertical="8dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackground">
+
+                            <com.google.android.material.chip.ChipGroup
+                                android:id="@+id/occupancyBadgeContainer"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="4dp"
+                                app:chipSpacingHorizontal="6dp"
+                                app:chipSpacingVertical="0dp">
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipRooms"
+                                    style="@style/Widget.MaterialComponents.Chip.Action"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="1 Room"
+                                    android:textSize="12sp"
+                                    android:textColor="#212121"
+                                    app:chipBackgroundColor="?attr/colorSurfaceVariant"
+                                    app:chipIcon="@drawable/placeholder_room"
+                                    app:chipIconSize="16dp"
+                                    app:chipIconTint="#3F51B5"
+                                    app:chipSurfaceColor="@android:color/transparent"
+                                    app:chipStrokeWidth="0dp" />
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipGuests"
+                                    style="@style/Widget.MaterialComponents.Chip.Action"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="2 Person"
+                                    android:textSize="12sp"
+                                    android:textColor="#212121"
+                                    app:chipBackgroundColor="?attr/colorSurfaceVariant"
+                                    app:chipIcon="@drawable/ic_person"
+                                    app:chipIconSize="16dp"
+                                    app:chipIconTint="#3F51B5"
+                                    app:chipStrokeWidth="0dp" />
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipDoubleBeds"
+                                    style="@style/Widget.MaterialComponents.Chip.Action"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="1 Double"
+                                    android:textSize="12sp"
+                                    android:textColor="#212121"
+                                    app:chipBackgroundColor="?attr/colorSurfaceVariant"
+                                    app:chipIcon="@drawable/ic_extra_bed"
+                                    app:chipIconSize="16dp"
+                                    app:chipIconTint="#3F51B5"
+                                    app:chipStrokeWidth="0dp" />
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipSingleBeds"
+                                    style="@style/Widget.MaterialComponents.Chip.Action"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="1 Single"
+                                    android:textSize="12sp"
+                                    android:textColor="#212121"
+                                    app:chipBackgroundColor="?attr/colorSurfaceVariant"
+                                    app:chipIcon="@drawable/ic_bed"
+                                    app:chipIconSize="16dp"
+                                    app:chipIconTint="#3F51B5"
+                                    app:chipStrokeWidth="0dp" />
+
+                            </com.google.android.material.chip.ChipGroup>
+                        </LinearLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMainSearch"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="12dp"
+                            android:layout_marginHorizontal="8dp"
+                            android:text="@string/search_hotels_label"
+                            android:textAllCaps="false"
+                            android:textStyle="bold"
+                            app:cornerRadius="16dp"
+                            app:backgroundTint="#3F51B5" />
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -144,6 +433,7 @@
                         android:textSize="14sp"
                         android:textStyle="bold" />
                     <TextView
+                        android:id="@+id/tvViewDestinationsSeeAll"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
