@@ -15,6 +15,7 @@ import com.btl_ptit.hotelbooking.R;
 import com.btl_ptit.hotelbooking.data.model.MyHotel;
 import com.btl_ptit.hotelbooking.databinding.HotelItemBinding;
 import com.btl_ptit.hotelbooking.listener.OnHotelClickListener;
+import com.btl_ptit.hotelbooking.utils.CurrencyUtils;
 import com.btl_ptit.hotelbooking.utils.paging.MyComparator;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
@@ -60,10 +61,10 @@ public class HotelAdapter extends PagingDataAdapter<MyHotel, HotelAdapter.HotelV
                     .transform(new CenterCrop(), new RoundedCorners(radius))
                     .into(holder.hotelItemBinding.imageViewHotel);
 
-            holder.hotelItemBinding.tvPrice.setText(currentMyHotel.getAveragePrice() * 100000 + "₫");
+            holder.hotelItemBinding.tvPrice.setText(CurrencyUtils.formatVnd(currentMyHotel.getAveragePrice()));
             holder.hotelItemBinding.labelAveragePrice.setText(R.string.perNight);
             holder.hotelItemBinding.txtName.setText(currentMyHotel.getName());
-            holder.hotelItemBinding.tvRating.setText(String.valueOf(currentMyHotel.getRating() / 10.0));
+            holder.hotelItemBinding.tvRating.setText(String.valueOf(currentMyHotel.getRating()));
             holder.hotelItemBinding.ivStar.setVisibility(VISIBLE);
             holder.hotelItemBinding.tvLocation.setText("\uD83D\uDCCD " + currentMyHotel.getLocation());
 

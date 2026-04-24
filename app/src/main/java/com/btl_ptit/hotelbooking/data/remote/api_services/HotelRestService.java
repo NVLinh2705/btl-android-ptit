@@ -6,15 +6,22 @@ import com.btl_ptit.hotelbooking.data.model.MyHotel;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Single;
-import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.Query;
 
 public interface HotelRestService {
-    @GET("hotels")
+//    @GET("hotels")
+//    Single<List<MyHotel>> getListHotel(
+//        @Query("page") Integer page,
+//        @Query("limit") Integer limit
+//    );
+
+    @Headers("Auth: True")
+    @GET("rest/v1/rpc/get_hotel_list_v2")
     Single<List<MyHotel>> getListHotel(
-        @Query("page") Integer page,
-        @Query("limit") Integer limit
+        @Query("page_num") int page,
+        @Query("page_size") int limit
     );
 
     @GET("hotels/nearby")
