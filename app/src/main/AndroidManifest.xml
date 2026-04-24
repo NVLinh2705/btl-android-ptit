@@ -5,11 +5,14 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.Camera"/>
+
     <queries>
         <package android:name="com.google.android.apps.maps" />
     </queries>
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -20,6 +23,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HotelBookingPTIT">
+        <activity
+            android:name=".view.activity.QrScannerActivity"
+            android:exported="false"
+            android:theme="@style/Theme.HotelBookingPTIT.DarkStatusBar" />
         <activity
             android:name=".view.activity.ListDestinationActivity"
             android:exported="false"
@@ -40,6 +47,12 @@
             android:name=".view.activity.ListRoomTypeActivity"
             android:exported="false"
             android:theme="@style/Theme.HotelBookingPTIT.DarkStatusBar" />
+        <activity
+            android:name=".view.activity.MyRatingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.activity.ReviewActivity"
+            android:exported="false" />
         <activity
             android:name=".view.activity.BookingHistoryDetailActivity"
             android:exported="false" />
@@ -66,18 +79,13 @@
             android:theme="@style/Theme.HotelBookingPTIT.DarkStatusBar" />
         <activity
             android:name=".view.activity.RegisterActivity"
-            android:exported="true">
-        </activity>
-
+            android:exported="true"></activity>
         <activity
             android:name=".view.activity.NotificationActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".view.activity.ChangePasswordActivity"
-            android:exported="true">
-        </activity>
-        <!-- 2. Login xử lý Deep Link (vẫn giữ logic ở đây) -->
+            android:exported="true"></activity> <!-- 2. Login xử lý Deep Link (vẫn giữ logic ở đây) -->
         <activity
             android:name=".view.activity.LoginActivity"
             android:exported="true"

@@ -35,7 +35,7 @@
         >
        <LinearLayout
            android:layout_width="match_parent"
-           android:layout_height="wrap_content"
+           android:layout_height="match_parent"
            android:orientation="vertical">
            <!-- STATUS -->
            <TextView
@@ -103,12 +103,143 @@
                </LinearLayout>
            </androidx.cardview.widget.CardView>
 
+           <androidx.cardview.widget.CardView
+               android:id="@+id/reviewCard"
+               android:layout_marginTop="10dp"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               app:cardCornerRadius="12dp">
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="vertical"
+                   android:padding="12dp">
+
+                   <LinearLayout
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:orientation="horizontal"
+                       >
+                       <TextView
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:text="Bài đánh giá của bạn"
+                           android:layout_weight="1"
+                           android:textStyle="bold"/>
+                       <ImageView
+                           android:id="@+id/menuMore"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:src="@drawable/baseline_more_vert_24"
+                           />
+                   </LinearLayout>
+
+
+                   <LinearLayout
+                       android:id="@+id/reviewSection"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:layout_marginTop="12dp"
+                       android:orientation="vertical"
+                       android:padding="12dp"
+                       android:background="@drawable/bg_section_card">
+
+                       <LinearLayout
+                           android:layout_width="match_parent"
+                           android:layout_height="wrap_content"
+                           android:gravity="center_vertical"
+                           android:orientation="horizontal">
+
+                           <de.hdodenhof.circleimageview.CircleImageView
+                               android:id="@+id/imgReviewerAvatar"
+                               android:layout_width="40dp"
+                               android:layout_height="40dp"
+                               android:src="@drawable/img" />
+
+                           <TextView
+                               android:id="@+id/txtReviewerName"
+                               android:layout_width="0dp"
+                               android:layout_height="wrap_content"
+                               android:layout_marginStart="8dp"
+                               android:layout_weight="1"
+                               android:textColor="#111111"
+                               android:textStyle="bold"
+                               android:text="my name"/>
+
+                           <TextView
+                               android:id="@+id/txtRatingNumber"
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:background="@drawable/bg_rating_pill"
+                               android:paddingHorizontal="8dp"
+                               android:paddingVertical="4dp"
+                               android:textColor="@android:color/white"
+                               android:textStyle="bold"
+                               android:text="9.0"/>
+
+                       </LinearLayout>
+
+                       <LinearLayout
+                           android:layout_width="match_parent"
+                           android:layout_height="wrap_content"
+                           android:layout_marginTop="8dp"
+                           android:orientation="horizontal">
+
+                           <TextView
+                               android:id="@+id/txtReviewDate"
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:textColor="#6D6D6D"
+                               android:textSize="12sp"
+                               android:text="1/1/2026"/>
+
+                           <TextView
+                               android:id="@+id/txtReviewRatingLabel"
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:layout_marginStart="8dp"
+                               android:textColor="#0B4AA2"
+                               android:textSize="12sp"
+                               android:textStyle="bold"
+                               android:text="Rất tốt"/>
+
+                       </LinearLayout>
+
+                       <TextView
+                           android:id="@+id/txtReviewComment"
+                           android:layout_width="match_parent"
+                           android:layout_height="wrap_content"
+                           android:layout_marginTop="8dp"
+                           android:textColor="#3D3D3D"
+                           android:textSize="13sp"
+                           android:text="nhận xét khách sạn"/>
+
+
+                   </LinearLayout>
+
+                   <TextView
+                       android:id="@+id/txtToDoRating"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:text="Viết bài đánh giá của bạn"
+                       android:textColor="#1E88E5"
+                       android:layout_marginTop="15dp"
+                       android:textSize="13sp"
+                       android:textStyle="bold" />
+
+
+               </LinearLayout>
+
+           </androidx.cardview.widget.CardView>
+
            <!-- BOOKING INFO -->
            <androidx.cardview.widget.CardView
                android:layout_marginTop="10dp"
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                app:cardCornerRadius="12dp">
+
+
 
                <LinearLayout
                    android:padding="12dp"
@@ -127,6 +258,7 @@
                        android:layout_width="wrap_content"
                        android:id="@+id/txtCheckin"
                        android:textStyle="bold"
+
                        android:text="20/12/2026"/>
                    <View
                        android:layout_width="match_parent"
@@ -240,10 +372,12 @@
                </LinearLayout>
            </androidx.cardview.widget.CardView>
 
+
            <!-- PRICE DETAIL -->
            <androidx.cardview.widget.CardView
                android:layout_marginTop="10dp"
                android:layout_width="match_parent"
+               android:layout_marginBottom="12dp"
                android:layout_height="wrap_content"
                app:cardCornerRadius="12dp">
 
@@ -277,11 +411,104 @@
                        android:layout_width="wrap_content"
                        android:layout_marginTop="8dp"
                        android:textStyle="bold"
-                       android:textSize="16sp"
+                       android:textAppearance="?attr/textAppearanceTitleLarge"
                        android:text="Tổng: --"/>
 
                </LinearLayout>
            </androidx.cardview.widget.CardView>
+           <androidx.cardview.widget.CardView
+               android:id="@+id/qrCard"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="10dp"
+               app:cardCornerRadius="12dp"
+               android:layout_marginBottom="12dp"
+               app:cardElevation="3dp">
+
+               <LinearLayout
+                   android:padding="12dp"
+                   android:orientation="horizontal"
+                   android:gravity="center_vertical"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+
+                   <ImageView
+                       android:id="@+id/imgQrSmall"
+                       android:layout_width="80dp"
+                       android:layout_height="80dp"
+                       android:src="@drawable/ic_qr_placeholder"/>
+
+                   <LinearLayout
+                       android:layout_marginStart="12dp"
+                       android:orientation="vertical"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content">
+
+                       <TextView
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:text="Mã check-in"
+                           android:textStyle="bold"
+                           android:textSize="15sp"/>
+
+                       <TextView
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:text="Nhấn để xem mã QR"
+                           android:textColor="#666"
+                           android:textSize="13sp"/>
+                   </LinearLayout>
+
+               </LinearLayout>
+
+           </androidx.cardview.widget.CardView>
+           <!-- CANCEL BOOKING CARD -->
+           <androidx.cardview.widget.CardView
+               android:id="@+id/cancelCard"
+               android:layout_marginTop="10dp"
+               android:layout_marginBottom="12dp"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               app:cardCornerRadius="12dp">
+
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="vertical"
+                   android:padding="12dp">
+
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:text="Hủy đặt phòng"
+                       android:textStyle="bold"
+                       android:textColor="#D32F2F"/>
+
+                   <TextView
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:layout_marginTop="8dp"
+                       android:text="Lưu ý: Bạn chỉ có thể hủy đặt phòng khi đơn đang ở trạng thái chờ duyệt (Pending)."
+                       android:textSize="13sp"
+                       android:textColor="#666666"/>
+
+                   <Button
+                       android:id="@+id/btnCancelBooking"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:layout_marginTop="12dp"
+                       android:backgroundTint="#D32F2F"
+                       android:text="Hủy đặt phòng"
+                       android:textAllCaps="false"
+                       app:cornerRadius="8dp"/>
+
+               </LinearLayout>
+           </androidx.cardview.widget.CardView>
+
+
+
+
+
 
        </LinearLayout>
 
