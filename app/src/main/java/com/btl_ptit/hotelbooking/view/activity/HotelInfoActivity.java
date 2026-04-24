@@ -413,6 +413,7 @@ public class HotelInfoActivity extends AppCompatActivity implements OnMapReadyCa
                     ? hotelResponse.getStats().getAvgRating()
                     : 0.0;
             sessionManager.saveSelectedHotelBrief(
+                    hotelResponse.getId(),
                     hotelResponse.getName(),
                     hotelResponse.getAddress(),
                     avgRating
