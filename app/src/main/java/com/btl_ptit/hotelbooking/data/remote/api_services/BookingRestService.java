@@ -40,10 +40,7 @@ public interface BookingRestService {
 
     @Headers("Auth: True")
     @POST("rest/v1/rpc/create_booking")
-    Call<CreateBookingResponse> createBooking(
-            @Body CreateBookingRequest request
-
-    );
+    Call<CreateBookingResponse> createBooking(@Body CreateBookingRequest request);
     @Headers({
             "Content-Type: application/json",
             "Prefer: return=representation"
