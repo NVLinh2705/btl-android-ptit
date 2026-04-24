@@ -50,8 +50,8 @@ public class SearchRoomBottomSheet extends BottomSheetDialogFragment {
     }
 
     private void setupObservers() {
-        occupancyViewModel.getPersons().observe(getViewLifecycleOwner(), count ->
-                mRoomTypeBottomSheetPopupBinding.rowPerson.tvCount.setText(String.valueOf(count)));
+//        occupancyViewModel.getPersons().observe(getViewLifecycleOwner(), count ->
+//                mRoomTypeBottomSheetPopupBinding.rowPerson.tvCount.setText(String.valueOf(count)));
 
         occupancyViewModel.getRooms().observe(getViewLifecycleOwner(), count ->
                 mRoomTypeBottomSheetPopupBinding.rowRoom.tvCount.setText(String.valueOf(count)));
@@ -64,8 +64,8 @@ public class SearchRoomBottomSheet extends BottomSheetDialogFragment {
     }
 
     private void setupClickListeners() {
-        mRoomTypeBottomSheetPopupBinding.rowPerson.btnPlus.setOnClickListener(v -> occupancyViewModel.incrementPersons());
-        mRoomTypeBottomSheetPopupBinding.rowPerson.btnMinus.setOnClickListener(v -> occupancyViewModel.decrementPersons());
+//        mRoomTypeBottomSheetPopupBinding.rowPerson.btnPlus.setOnClickListener(v -> occupancyViewModel.incrementPersons());
+//        mRoomTypeBottomSheetPopupBinding.rowPerson.btnMinus.setOnClickListener(v -> occupancyViewModel.decrementPersons());
 
         mRoomTypeBottomSheetPopupBinding.rowRoom.btnPlus.setOnClickListener(v -> {occupancyViewModel.incrementRooms();});
         mRoomTypeBottomSheetPopupBinding.rowRoom.btnMinus.setOnClickListener(v -> {occupancyViewModel.decrementRooms();});

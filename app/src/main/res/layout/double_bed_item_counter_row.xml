@@ -12,16 +12,16 @@
             android:id="@+id/label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/double_bed_txt"
+            android:text="@string/adult"
             android:textStyle="bold"
             android:textColor="#212121"
             android:textSize="16sp"/>
-        <TextView
-            android:id="@+id/subLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/for_2_persons_label"
-            android:textSize="12sp"/>
+<!--        <TextView-->
+<!--            android:id="@+id/subLabel"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/for_2_persons_label"-->
+<!--            android:textSize="12sp"/>-->
     </LinearLayout>
 
     <LinearLayout

@@ -148,9 +148,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         if (occupancyViewModel == null) {
             initOccupancyViewModel();
         }
-        occupancyViewModel.getPersons().observe(getViewLifecycleOwner(), count -> {
-            mFragmentHomeBinding.chipGuests.setText(count + " " + mContext.getString(R.string.person_txt));
-        });
+//        occupancyViewModel.getPersons().observe(getViewLifecycleOwner(), count -> {
+//            mFragmentHomeBinding.chipGuests.setText(count + " " + mContext.getString(R.string.person_txt));
+//        });
 
         occupancyViewModel.getRooms().observe(getViewLifecycleOwner(), count -> {
             mFragmentHomeBinding.chipRooms.setText(count + " " + mContext.getString(R.string.room_txt));
@@ -163,19 +163,19 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             } else {
                 SessionManager.getInstance().setNumAdults(count);
                 mFragmentHomeBinding.chipDoubleBeds.setVisibility(View.VISIBLE);
-                mFragmentHomeBinding.chipDoubleBeds.setText(count + " " + mContext.getString(R.string.double_bed_txt));
+                mFragmentHomeBinding.chipDoubleBeds.setText(count + " " + mContext.getString(R.string.adult));
             }
         });
 
         occupancyViewModel.getSingleBed().observe(getViewLifecycleOwner(), count -> {
+            SessionManager.getInstance().setNumChildren(count);
             if (count == 0) {
                 mFragmentHomeBinding.chipSingleBeds.setVisibility(View.GONE);
                 return;
             } else {
                 mFragmentHomeBinding.chipSingleBeds.setVisibility(View.VISIBLE);
-                mFragmentHomeBinding.chipSingleBeds.setText(count + " " + mContext.getString(R.string.single_bed_txt));
+                mFragmentHomeBinding.chipSingleBeds.setText(count + " " + mContext.getString(R.string.children));
             }
-            SessionManager.getInstance().setNumChildren(count);
         });
 
         occupancyViewModel.getSelectedLocation().observe(getViewLifecycleOwner(), location -> {

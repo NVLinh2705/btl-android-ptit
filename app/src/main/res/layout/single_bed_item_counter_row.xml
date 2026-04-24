@@ -12,7 +12,7 @@
             android:id="@+id/label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/single_bed_txt"
+            android:text="@string/children"
             android:textStyle="bold"
             android:textColor="#212121"
             android:textSize="16sp"/>

@@ -134,4 +134,6 @@
     <string name="number_of_people_txt">Number of people</string>
     <string name="person_txt">Person</string>
     <string name="room_txt">Room</string>
+    <string name="adult">Adult</string>
+    <string name="children">Children</string>
 </resources>

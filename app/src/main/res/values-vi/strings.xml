@@ -132,4 +132,6 @@
     <string name="number_of_people_txt">Số lượng người</string>
     <string name="person_txt">Người</string>
     <string name="room_txt">Phòng</string>
+    <string name="adult">Người lớn</string>
+    <string name="children">Trẻ em</string>
 </resources>
