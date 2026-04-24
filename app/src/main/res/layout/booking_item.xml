@@ -35,6 +35,14 @@
             android:textStyle="bold"
             android:layout_marginTop="6dp"/>
 
+        <TextView
+            android:id="@+id/txtBookingDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ngày đặt: 20/04/2024"
+            android:textSize="12sp"
+            android:textColor="#888888"
+            android:layout_marginTop="2dp"/>
         <!-- Divider line -->
         <View
             android:layout_width="match_parent"

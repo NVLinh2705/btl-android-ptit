@@ -1,4 +1,4 @@
-package com.btl_ptit.hotelbooking.viewmodel;
+package com.btl_ptit.hotelbooking.view_model;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

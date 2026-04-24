@@ -60,6 +60,12 @@
         <item name="bottomSheetDialogTheme">@style/BottomSheetDialogTheme</item>
     </style>
 
+    <style name="Theme.HotelBookingPTIT.ListDestination" parent="AppTheme" >
+        <item name="bottomSheetDialogTheme">@style/BottomSheetDialogTheme</item>
+        <item name="android:statusBarColor">#002F77</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
     <style name="Theme.App.BottomNavMaterial2" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/md_theme_primary</item>

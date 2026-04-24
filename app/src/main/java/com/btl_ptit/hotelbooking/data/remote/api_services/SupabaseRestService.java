@@ -10,7 +10,9 @@ import com.btl_ptit.hotelbooking.data.dto.LikeHotelRequest;
 import com.btl_ptit.hotelbooking.data.dto.PaginatedReviewsResponse;
 import com.btl_ptit.hotelbooking.data.dto.AvailableRoomTypesResponse;
 import com.btl_ptit.hotelbooking.data.dto.RoomTypeDetailResponse;
+import com.btl_ptit.hotelbooking.data.model.Role;
 import com.btl_ptit.hotelbooking.data.model.User;
+import com.btl_ptit.hotelbooking.data.model.UserRole;
 
 import java.util.List;
 
@@ -38,6 +40,12 @@ public interface SupabaseRestService {
         @Header("Authorization") String bearerToken,
         @Query("id") String idEq,
         @Query("select") String select
+    );
+
+    @GET("rest/v1/users_roles")
+    Single<List<UserRole>> getRolesByUser(
+            @Query("user_id") String userId,
+            @Query("select") String select
     );
 
     @GET("rest/v1/hotels")

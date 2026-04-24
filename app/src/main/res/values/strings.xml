@@ -9,6 +9,10 @@
     <string name="delete">Delete</string>
     <string name="detail">Detail</string>
     <string name="trending_destinations">Trending destinations 🔥</string>
+    <string name="trending_destinations2">Trending destinations</string>
+    <string name="search_placeholder_label">Where do you want to go today? ✈️</string>
+    <string name="title_date_picker">Select Check-in, Check-out Date</string>
+    <string name="textEmptyList">Empty list</string>
     <string name="see_all"><u>See All</u></string>
     <string name="retry_label">An error has occurred, please try again!</string>
     <string name="txt_retry">Retry</string>
@@ -121,4 +125,13 @@
     <string name="ratings_label">Ratings</string>
     <string name="apply_filter_label">Apply Filter</string>
     <string name="filter_by_label">Filter By</string>
+    <string name="where_to_go_label">Where to go?</string>
+    <string name="search_hotels_label">Search Hotels</string>
+    <string name="double_bed_txt">Double Bed</string>
+    <string name="for_2_persons_label">For 2 persons</string>
+    <string name="single_bed_txt">Single Bed</string>
+    <string name="number_of_rooms_txt">Number of rooms</string>
+    <string name="number_of_people_txt">Number of people</string>
+    <string name="person_txt">Person</string>
+    <string name="room_txt">Room</string>
 </resources>
