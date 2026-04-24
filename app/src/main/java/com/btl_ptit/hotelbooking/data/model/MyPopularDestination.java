@@ -1,12 +1,17 @@
 package com.btl_ptit.hotelbooking.data.model;
 
 import com.btl_ptit.hotelbooking.interfaces.DiffUtilModel;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.Objects;
 
 public class MyPopularDestination implements DiffUtilModel {
     private String id;
-    private String name, avatar, averagePrice;
+    private String name;
+    @SerializedName("img_url")
+    private String avatar;
+    @SerializedName("average_price")
+    private String averagePrice;
 
     public MyPopularDestination() {
     }
