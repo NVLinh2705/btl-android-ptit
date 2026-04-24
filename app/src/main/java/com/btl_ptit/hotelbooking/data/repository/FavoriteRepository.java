@@ -2,6 +2,7 @@ package com.btl_ptit.hotelbooking.data.repository;
 
 import com.btl_ptit.hotelbooking.data.model.Favorite;
 import com.btl_ptit.hotelbooking.data.model.FavoriteResponse;
+import com.btl_ptit.hotelbooking.data.model.MyHotel;
 import com.btl_ptit.hotelbooking.data.remote.SupabaseClient;
 import com.btl_ptit.hotelbooking.data.remote.api_services.SupabaseRestService;
 
@@ -20,7 +21,7 @@ public class FavoriteRepository {
         return apiService.toggleLikeHotel(new Favorite(userId, hotelId));
     }
 
-    public Single<List<FavoriteResponse>> getFavoriteHotels(String userId) {
-        return apiService.getFavorites("eq." + userId, "*,hotels(*)");
+    public Single<List<MyHotel>> getFavoriteHotels(String userId) {
+        return apiService.getFavoriteHotels(userId);
     }
 }
