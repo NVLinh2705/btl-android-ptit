@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.btl_ptit.hotelbooking.data.model.MyPopularDestination;
 import com.btl_ptit.hotelbooking.databinding.PopularDestinationItemBinding;
 import com.btl_ptit.hotelbooking.listener.OnDestinationClickListener;
+import com.btl_ptit.hotelbooking.utils.CurrencyUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -54,7 +55,7 @@ public class PopularDestinationAdapter extends PagingDataAdapter<MyPopularDestin
                     .transform(new CenterCrop(), new RoundedCorners(radius))
                     .into(holder.popularDestinationItemBinding.imageViewDestination);
 
-            holder.popularDestinationItemBinding.tvPrice.setText(currentMyPopularDestination.getAveragePrice() + "₫");
+            holder.popularDestinationItemBinding.tvPrice.setText(CurrencyUtils.formatVnd(Long.parseLong(currentMyPopularDestination.getAveragePrice())));
             holder.popularDestinationItemBinding.labelAveragePrice.setText("trung bình / một đêm");
             holder.popularDestinationItemBinding.txtName.setText(currentMyPopularDestination.getName());
 

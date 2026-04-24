@@ -53,6 +53,7 @@ import com.btl_ptit.hotelbooking.view_model.paging.HotelViewModel;
 import com.btl_ptit.hotelbooking.view_model.paging.HotelViewModelFactory;
 import com.btl_ptit.hotelbooking.view_model.paging.PopularDestinationViewModel;
 import com.btl_ptit.hotelbooking.view_model.paging.PopularDestinationViewModelFactory;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -198,6 +199,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 //    }
 
     private void initListeners() {
+        Glide.with(mFragmentHomeBinding.imgProfile.getContext())
+                .load(SessionManager.getInstance().getUser().getAvatarUrl())
+                .into(mFragmentHomeBinding.imgProfile);
+        mFragmentHomeBinding.txtName.setText(SessionManager.getInstance().getUser().getFullName());
         mFragmentHomeBinding.tvCheckInDate.setText(MyUtils.myFormatDate(checkInDate));
         mFragmentHomeBinding.tvCheckOutDate.setText(MyUtils.myFormatDate(checkOutDate));
 
@@ -423,7 +428,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 @Override
                 public void onHotelClick(MyHotel myHotel) {
                     Intent intent = new Intent(mContext, HotelInfoActivity.class);
-                    int hotelId = new Random().nextInt(4) +1;
+                    int hotelId = myHotel.getId();
                     intent.putExtra(Constants.HOTEL_ID, hotelId);
                     Log.d(TAG, "hotel ID: " + hotelId);
                     startActivity(intent);
