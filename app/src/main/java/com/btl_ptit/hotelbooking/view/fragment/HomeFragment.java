@@ -111,6 +111,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate called");
         initDefaultDates();
+        initOccupancyViewModel();
     }
 
     @Override
@@ -122,8 +123,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
             initListeners();
 
-            initOccupancyViewModel();
-
             initPopularDestinations();
             initRecommendedHotels();
         } else {
@@ -133,13 +132,19 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             }
             rebindAdapters();
         }
+        observeOccupancyViewModel();
         setupMap();
         return rootView;
     }
 
     private void initOccupancyViewModel() {
         occupancyViewModel = new ViewModelProvider(requireActivity()).get(OccupancyViewModel.class);
+    }
 
+    private void observeOccupancyViewModel() {
+        if (occupancyViewModel == null) {
+            initOccupancyViewModel();
+        }
         occupancyViewModel.getPersons().observe(getViewLifecycleOwner(), count -> {
             mFragmentHomeBinding.chipGuests.setText(count + " " + mContext.getString(R.string.person_txt));
         });
