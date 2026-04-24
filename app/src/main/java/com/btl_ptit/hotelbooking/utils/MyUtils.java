@@ -166,6 +166,12 @@ public class MyUtils {
         return sdf.format(new Date(timeInMillis));
     }
 
+    public static String myFormatDateForSessionManager(Long timeInMillis) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return sdf.format(new Date(timeInMillis));
+    }
+
     public static void setupBottomSheet(Dialog dialog, FragmentActivity fragmentActivity) {
         if (dialog != null) {
             View bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);

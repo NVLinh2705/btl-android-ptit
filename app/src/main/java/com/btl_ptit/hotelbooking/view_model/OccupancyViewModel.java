@@ -43,14 +43,14 @@ public class OccupancyViewModel extends ViewModel {
     }
 
     public void setDoubleBed(int count) {
-        if (count >= 0 && count <= 5) {
+        if (count >= 1 && count <= 10) {
             if (count == 0 && singleBed.getValue() != null && singleBed.getValue() == 0) return;
             doubleBed.setValue(count);
         }
     }
 
     public void setSingleBed(int count) {
-        if (count >= 0 && count <= 5) {
+        if (count >= 0 && count <= 10) {
             if (count == 0 && doubleBed.getValue() != null && doubleBed.getValue() == 0) return;
             singleBed.setValue(count);
         }
@@ -78,7 +78,7 @@ public class OccupancyViewModel extends ViewModel {
 
     public void incrementDoubleBed() {
         Integer current = doubleBed.getValue();
-        if (current != null && current < 5) setDoubleBed(current + 1);
+        if (current != null && current < 10) setDoubleBed(current + 1);
     }
 
     public void decrementDoubleBed() {
@@ -88,7 +88,7 @@ public class OccupancyViewModel extends ViewModel {
 
     public void incrementSingleBed() {
         Integer current = singleBed.getValue();
-        if (current != null && current < 5) setSingleBed(current + 1);
+        if (current != null && current < 10) setSingleBed(current + 1);
     }
 
     public void decrementSingleBed() {

@@ -31,6 +31,7 @@ import com.btl_ptit.hotelbooking.data.remote.api_services.HotelRestService;
 import com.btl_ptit.hotelbooking.data.remote.api_services.MyDestinationRestService;
 import com.btl_ptit.hotelbooking.data.repository.MyDestinationRepository;
 import com.btl_ptit.hotelbooking.data.repository.MyHotelRepository;
+import com.btl_ptit.hotelbooking.data.session.SessionManager;
 import com.btl_ptit.hotelbooking.databinding.FragmentHomeBinding;
 import com.btl_ptit.hotelbooking.databinding.HotelItemBinding;
 import com.btl_ptit.hotelbooking.databinding.PopularDestinationItemBinding;
@@ -147,9 +148,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         if (occupancyViewModel == null) {
             initOccupancyViewModel();
         }
-        occupancyViewModel.getPersons().observe(getViewLifecycleOwner(), count -> {
-            mFragmentHomeBinding.chipGuests.setText(count + " " + mContext.getString(R.string.person_txt));
-        });
+//        occupancyViewModel.getPersons().observe(getViewLifecycleOwner(), count -> {
+//            mFragmentHomeBinding.chipGuests.setText(count + " " + mContext.getString(R.string.person_txt));
+//        });
 
         occupancyViewModel.getRooms().observe(getViewLifecycleOwner(), count -> {
             mFragmentHomeBinding.chipRooms.setText(count + " " + mContext.getString(R.string.room_txt));
@@ -160,18 +161,20 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 mFragmentHomeBinding.chipDoubleBeds.setVisibility(View.GONE);
                 return;
             } else {
+                SessionManager.getInstance().setNumAdults(count);
                 mFragmentHomeBinding.chipDoubleBeds.setVisibility(View.VISIBLE);
-                mFragmentHomeBinding.chipDoubleBeds.setText(count + " " + mContext.getString(R.string.double_bed_txt));
+                mFragmentHomeBinding.chipDoubleBeds.setText(count + " " + mContext.getString(R.string.adult));
             }
         });
 
         occupancyViewModel.getSingleBed().observe(getViewLifecycleOwner(), count -> {
+            SessionManager.getInstance().setNumChildren(count);
             if (count == 0) {
                 mFragmentHomeBinding.chipSingleBeds.setVisibility(View.GONE);
                 return;
             } else {
                 mFragmentHomeBinding.chipSingleBeds.setVisibility(View.VISIBLE);
-                mFragmentHomeBinding.chipSingleBeds.setText(count + " " + mContext.getString(R.string.single_bed_txt));
+                mFragmentHomeBinding.chipSingleBeds.setText(count + " " + mContext.getString(R.string.children));
             }
         });
 
@@ -265,7 +268,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 dateRangePicker.addOnPositiveButtonClickListener(selection -> {
                     checkInDate = selection.first;
                     checkOutDate = selection.second;
-
+                    SessionManager.getInstance().setCheckinDate(MyUtils.myFormatDateForSessionManager(checkInDate));
+                    SessionManager.getInstance().setCheckoutDate(MyUtils.myFormatDateForSessionManager(checkInDate));
                     mFragmentHomeBinding.tvCheckInDate.setText(MyUtils.myFormatDate(checkInDate));
                     mFragmentHomeBinding.tvCheckOutDate.setText(MyUtils.myFormatDate(checkOutDate));
                 });

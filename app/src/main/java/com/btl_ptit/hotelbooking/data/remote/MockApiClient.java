@@ -9,7 +9,8 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 
 public class MockApiClient {
-    private static final String BASE_URL = "https://69c10873085e1a9fae3fd076.mockapi.io/api/android-ptit/";
+//    private static final String BASE_URL = "https://69c10873085e1a9fae3fd076.mockapi.io/api/android-ptit/";
+    private static final String BASE_URL = com.btl_ptit.hotelbooking.BuildConfig.SUPABASE_URL;
     private static volatile Retrofit retrofit;
 
     private static Retrofit getRetrofit() {

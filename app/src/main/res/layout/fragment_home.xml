@@ -360,12 +360,26 @@
                                     app:chipSurfaceColor="@android:color/transparent"
                                     app:chipStrokeWidth="0dp" />
 
+<!--                                <com.google.android.material.chip.Chip-->
+<!--                                    android:id="@+id/chipGuests"-->
+<!--                                    style="@style/Widget.MaterialComponents.Chip.Action"-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:text="2 Person"-->
+<!--                                    android:textSize="12sp"-->
+<!--                                    android:textColor="#212121"-->
+<!--                                    app:chipBackgroundColor="?attr/colorSurfaceVariant"-->
+<!--                                    app:chipIcon="@drawable/ic_person"-->
+<!--                                    app:chipIconSize="16dp"-->
+<!--                                    app:chipIconTint="#3F51B5"-->
+<!--                                    app:chipStrokeWidth="0dp" />-->
+
                                 <com.google.android.material.chip.Chip
-                                    android:id="@+id/chipGuests"
+                                    android:id="@+id/chipDoubleBeds"
                                     style="@style/Widget.MaterialComponents.Chip.Action"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="2 Person"
+                                    android:text="1 Người lớn"
                                     android:textSize="12sp"
                                     android:textColor="#212121"
                                     app:chipBackgroundColor="?attr/colorSurfaceVariant"
@@ -375,29 +389,15 @@
                                     app:chipStrokeWidth="0dp" />
 
                                 <com.google.android.material.chip.Chip
-                                    android:id="@+id/chipDoubleBeds"
-                                    style="@style/Widget.MaterialComponents.Chip.Action"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="1 Double"
-                                    android:textSize="12sp"
-                                    android:textColor="#212121"
-                                    app:chipBackgroundColor="?attr/colorSurfaceVariant"
-                                    app:chipIcon="@drawable/ic_extra_bed"
-                                    app:chipIconSize="16dp"
-                                    app:chipIconTint="#3F51B5"
-                                    app:chipStrokeWidth="0dp" />
-
-                                <com.google.android.material.chip.Chip
                                     android:id="@+id/chipSingleBeds"
                                     style="@style/Widget.MaterialComponents.Chip.Action"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="1 Single"
+                                    android:text="1 Trẻ em"
                                     android:textSize="12sp"
                                     android:textColor="#212121"
                                     app:chipBackgroundColor="?attr/colorSurfaceVariant"
-                                    app:chipIcon="@drawable/ic_bed"
+                                    app:chipIcon="@drawable/ic_children"
                                     app:chipIconSize="16dp"
                                     app:chipIconTint="#3F51B5"
                                     app:chipStrokeWidth="0dp" />

@@ -1,6 +1,7 @@
 package com.btl_ptit.hotelbooking.data.model;
 
 import com.btl_ptit.hotelbooking.interfaces.DiffUtilModel;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -16,6 +17,7 @@ public class MyHotel implements DiffUtilModel, Serializable {
     private Integer id;
     private String name, avatar, location;
     private double rating;
+    @SerializedName("average_price")
     private int averagePrice;
 
     @Override
