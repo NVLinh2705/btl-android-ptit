@@ -23,8 +23,14 @@ public class MyBookingPagingSource extends RxPagingSource<Integer, MyBooking> {
     @NonNull
     private BookingRestService mBookingRestService;
 
-    public MyBookingPagingSource(@NonNull BookingRestService mBookingRestService) {
+    private  final String status;
+
+    private final String order;
+
+    public MyBookingPagingSource(@NonNull BookingRestService mBookingRestService,String status,String order) {
         this.mBookingRestService = mBookingRestService;
+        this.status=status;
+        this.order=order;
     }
 
     @NonNull
@@ -34,12 +40,17 @@ public class MyBookingPagingSource extends RxPagingSource<Integer, MyBooking> {
         int pageNumber = loadParams.getKey() != null ? loadParams.getKey() : 1;
         int pageSize = loadParams.getLoadSize();
 
-// 🔥 convert page → offset
+        //  convert page → offset
         int offset = (pageNumber - 1) * pageSize;
+        // status query format cho Supabase: "eq.PENDING" hoặc null
+        String statusQuery = (status == null || status.isEmpty()) ? null : "eq." + status;
+
+        // Sắp xếp theo ngày mới nhất
+        String orderQuery = "created_at.desc";
         String customerId=SessionManager.getInstance().getUser().getId() !=null ? SessionManager.getInstance().getUser().getId() : "";
         Log.d("DEBUG","customer id= "+customerId);
 
-        return mBookingRestService.getListBooking("*, hotels(*)","eq." + customerId,pageSize, offset)
+        return mBookingRestService.getListBooking("*, hotels(*)","eq." + customerId,statusQuery,orderQuery,pageSize, offset)
                 .map(listBooking -> toLoadResult(listBooking, pageNumber))
                 .onErrorReturn(LoadResult.Error::new);
     }

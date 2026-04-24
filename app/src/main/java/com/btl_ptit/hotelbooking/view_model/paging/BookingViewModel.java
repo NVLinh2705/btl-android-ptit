@@ -12,10 +12,13 @@ import com.btl_ptit.hotelbooking.data.repository.MyBookingRepository;
 
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.processors.BehaviorProcessor;
 import kotlinx.coroutines.CoroutineScope;
 
 public class BookingViewModel extends ViewModel {
     public Flowable<PagingData<MyBooking>> pagingDataFlow;
+
+    private final BehaviorProcessor<String> statusProcessor = BehaviorProcessor.createDefault("");
     private MyBookingRepository repository;
     private final CompositeDisposable disposables = new CompositeDisposable();
     private MutableLiveData<Boolean> loading = new MutableLiveData<>(false);
@@ -28,9 +31,16 @@ public class BookingViewModel extends ViewModel {
     }
 
     private void initPaging() {
-        Flowable<PagingData<MyBooking>> flowable= repository.getBookingsPaging();
         CoroutineScope scope = ViewModelKt.getViewModelScope(this);
+        Flowable<PagingData<MyBooking>> flowable = statusProcessor
+                .flatMap(status -> repository.getBookingsPaging(status, "created_at.desc"));
+
+
         pagingDataFlow = PagingRx.cachedIn(flowable, scope);
+    }
+
+    public void filterByStatus(String status) {
+        statusProcessor.onNext(status);
     }
 
 
@@ -40,8 +50,8 @@ public class BookingViewModel extends ViewModel {
 
     @Override
     protected void onCleared() {
-        disposables.clear();
         super.onCleared();
+        disposables.clear();
     }
 
 }

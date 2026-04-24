@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StayAdmin - Manage Bookings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/lucide-static@latest/font/lucide.css">
+
+<style>
+:root {
+  --bg: #f7f5f0;
+  --surface: #ffffff;
+  --surface-2: #f0ede6;
+  --border: #e2ddd5;
+  --border-focus: #2c2c2c;
+  --text: #1a1a1a;
+  --text-muted: #7a7570;
+  --accent: #1a1a1a;
+  --success: #2d6a4f;
+  --success-light: #d8f3dc;
+  --warning: #8b5e00;
+  --warning-light: #fff3cd;
+  --danger: #b33a3a;
+  --danger-light: #fdeaea;
+  --radius: 10px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.07);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 24px;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.topbar-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 24px;
+  letter-spacing: -0.3px;
+}
+
+.topbar-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.btn {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.btn:hover { background: var(--surface-2); border-color: var(--border-focus); }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(320px, 460px) 1fr;
+  gap: 16px;
+  padding: 20px 24px 28px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.card-header {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
+.search-wrap {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.search-wrap input {
+  width: 100%;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  outline: none;
+}
+
+.search-wrap input:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(26,26,26,0.07);
+}
+
+.booking-list {
+  max-height: calc(100vh - 220px);
+  overflow-y: auto;
+}
+
+.booking-item {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.booking-item:hover { background: var(--surface-2); }
+.booking-item.active { background: #f2efe8; }
+
+.booking-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.booking-code {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.booking-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.badge-pending {
+  color: var(--warning);
+  background: var(--warning-light);
+}
+
+.badge-confirmed {
+  color: var(--success);
+  background: var(--success-light);
+}
+
+.badge-other {
+  color: #475467;
+  background: #eaecf0;
+}
+
+.detail-body {
+  padding: 18px;
+}
+
+.empty {
+  padding: 28px 18px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.field {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  background: var(--surface);
+}
+
+.field-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 4px;
+}
+
+.field-value {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.action-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-confirm {
+  border: 1px solid var(--success);
+  background: var(--success);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.btn-confirm:hover:not(:disabled) {
+  filter: brightness(0.95);
+}
+
+.msg {
+  margin-top: 14px;
+  font-size: 13px;
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  display: none;
+}
+
+.msg.show { display: block; }
+.msg.error { background: var(--danger-light); color: var(--danger); border: 1px solid rgba(179,58,58,0.25); }
+.msg.success { background: var(--success-light); color: var(--success); border: 1px solid rgba(45,106,79,0.25); }
+
+@media (max-width: 980px) {
+  .layout { grid-template-columns: 1fr; }
+  .booking-list { max-height: 360px; }
+}
+
+@media (max-width: 640px) {
+  .topbar { padding: 12px 14px; }
+  .layout { padding: 14px; }
+  .detail-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="btn" onclick="goBackToHost()">Back to Host Portal</button>
+    <div>
+      <div class="topbar-title">Manage Bookings</div>
+      <div class="topbar-sub">View bookings and confirm pending reservations</div>
+    </div>
+  </div>
+  <button class="btn" onclick="loadBookings()">Refresh</button>
+</header>
+
+<main class="layout">
+  <section class="card">
+    <div class="card-header">
+      <span class="card-title">Booking List</span>
+      <span id="booking-count" style="font-size:12px;color:var(--text-muted)">0 records</span>
+    </div>
+    <div class="search-wrap">
+      <input id="search-input" type="text" placeholder="Search by booking code, guest, status..." oninput="renderBookingList()">
+    </div>
+    <div id="booking-list" class="booking-list">
+      <div class="empty">Loading bookings...</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-header">
+      <span class="card-title">Booking Detail</span>
+      <span id="detail-status"></span>
+    </div>
+    <div id="detail-body" class="detail-body">
+      <div class="empty">Select a booking to view details</div>
+    </div>
+  </section>
+</main>
+
+<script>
+const SUPABASE_URL = 'https://tjsycqpwxutseencwlzr.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqc3ljcXB3eHV0c2VlbmN3bHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5OTMyNjYsImV4cCI6MjA4OTU2OTI2Nn0.8wEuX9k4m1LaIHd6TONec7L9VByuF1aTzAxkmp6sgzs';
+const REST_BASE = SUPABASE_URL + '/rest/v1';
+const SESSION_KEY = 'sb_session';
+const LOGIN_PAGE = 'login.html';
+
+const state = {
+  bookings: [],
+  selectedId: null,
+  loading: false,
+};
+
+function goBackToHost() {
+  window.location.href = 'host-add-hotel.html';
+}
+
+function getSession() {
+  try {
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    const session = JSON.parse(raw);
+    if (session?.expires_at && Date.now() / 1000 > session.expires_at - 60) return null;
+    return session;
+  } catch (_) {
+    return null;
+  }
+}
+
+function requireAuth() {
+  const session = getSession();
+  if (!session) {
+    window.location.href = LOGIN_PAGE;
+    return null;
+  }
+  return session;
+}
+
+function getAuthToken() {
+  const session = getSession();
+  return session?.access_token || SUPABASE_ANON;
+}
+
+function authHeaders() {
+  return {
+    'apikey': SUPABASE_ANON,
+    'Authorization': 'Bearer ' + getAuthToken(),
+    'Content-Type': 'application/json',
+  };
+}
+
+function getBookingIdField(booking) {
+  if (Object.prototype.hasOwnProperty.call(booking, 'id')) return 'id';
+  if (Object.prototype.hasOwnProperty.call(booking, 'booking_id')) return 'booking_id';
+  if (Object.prototype.hasOwnProperty.call(booking, 'bookingId')) return 'bookingId';
+  return 'id';
+}
+
+function getBookingId(booking) {
+  return booking.id ?? booking.booking_id ?? booking.bookingId ?? null;
+}
+
+function getCustomerId(booking) {
+  return booking.customer_id ?? booking.customerId ?? null;
+}
+
+function getStatusField(booking) {
+  if (Object.prototype.hasOwnProperty.call(booking, 'status_code')) return 'status_code';
+  if (Object.prototype.hasOwnProperty.call(booking, 'status')) return 'status';
+  if (Object.prototype.hasOwnProperty.call(booking, 'booking_status')) return 'booking_status';
+  return 'status_code';
+}
+
+function getBookingStatus(booking) {
+  const raw = booking.status_code ?? booking.status ?? booking.booking_status ?? 'UNKNOWN';
+  return String(raw).toUpperCase();
+}
+
+function statusBadge(status) {
+  const s = String(status || '').toUpperCase();
+  if (s === 'PENDING') return '<span class="badge badge-pending">PENDING</span>';
+  if (s === 'CONFIRMED') return '<span class="badge badge-confirmed">CONFIRMED</span>';
+  return '<span class="badge badge-other">' + s + '</span>';
+}
+
+function firstValue(obj, keys, fallback = '-') {
+  for (const k of keys) {
+    if (obj[k] !== undefined && obj[k] !== null && obj[k] !== '') return obj[k];
+  }
+  return fallback;
+}
+
+function formatDate(v) {
+  if (!v) return '-';
+  const d = new Date(v);
+  if (isNaN(d.getTime())) return String(v);
+  return d.toLocaleString('vi-VN');
+}
+
+function formatPrice(v) {
+  if (v === null || v === undefined || v === '') return '-';
+  const n = Number(v);
+  if (Number.isNaN(n)) return String(v);
+  return n.toLocaleString('vi-VN') + ' VND';
+}
+
+function setListLoading() {
+  document.getElementById('booking-list').innerHTML = '<div class="empty">Loading bookings...</div>';
+}
+
+function showDetailMessage(text, type) {
+  const body = document.getElementById('detail-body');
+  const current = body.querySelector('#detail-msg');
+  if (current) current.remove();
+  const div = document.createElement('div');
+  div.id = 'detail-msg';
+  div.className = 'msg show ' + type;
+  div.textContent = text;
+  body.appendChild(div);
+}
+
+async function loadBookings() {
+  if (state.loading) return;
+  state.loading = true;
+  setListLoading();
+
+  try {
+    const session = requireAuth();
+    if (!session) return;
+
+    const res = await fetch(REST_BASE + '/bookings?select=*&order=created_at.desc.nullslast', {
+      method: 'GET',
+      headers: authHeaders(),
+    });
+
+    if (res.status === 401) {
+      sessionStorage.removeItem(SESSION_KEY);
+      window.location.href = LOGIN_PAGE;
+      return;
+    }
+
+    const body = await res.json().catch(() => []);
+    if (!res.ok) {
+      const msg = body?.message || body?.error_description || body?.error || ('HTTP ' + res.status);
+      throw new Error(msg);
+    }
+
+    state.bookings = Array.isArray(body) ? body : [];
+    document.getElementById('booking-count').textContent = state.bookings.length + ' records';
+
+    if (state.bookings.length && !state.selectedId) {
+      const firstId = getBookingId(state.bookings[0]);
+      state.selectedId = firstId;
+    }
+
+    renderBookingList();
+    renderBookingDetail();
+  } catch (e) {
+    document.getElementById('booking-list').innerHTML = '<div class="empty" style="color:var(--danger)">Failed to load bookings: ' + e.message + '</div>';
+    document.getElementById('booking-count').textContent = '0 records';
+  } finally {
+    state.loading = false;
+  }
+}
+
+function renderBookingList() {
+  const wrap = document.getElementById('booking-list');
+  const q = (document.getElementById('search-input').value || '').trim().toLowerCase();
+
+  let rows = state.bookings;
+  if (q) {
+    rows = rows.filter(b => {
+      const text = [
+        firstValue(b, ['booking_code', 'code'], ''),
+        firstValue(b, ['guest_name', 'customer_fullname', 'name'], ''),
+        firstValue(b, ['guest_email', 'customer_email'], ''),
+        getBookingStatus(b),
+      ].join(' ').toLowerCase();
+      return text.includes(q);
+    });
+  }
+
+  if (!rows.length) {
+    wrap.innerHTML = '<div class="empty">No bookings found</div>';
+    return;
+  }
+
+  wrap.innerHTML = rows.map(b => {
+    const id = getBookingId(b);
+    const isActive = id === state.selectedId;
+    const code = firstValue(b, ['booking_code', 'code'], '#' + String(id ?? 'N/A'));
+    const guest = firstValue(b, ['guest_name', 'customer_fullname', 'name'], 'Unknown guest');
+    const checkin = firstValue(b, ['checkin_date', 'check_in_date'], '-');
+    const checkout = firstValue(b, ['checkout_date', 'check_out_date'], '-');
+    const created = firstValue(b, ['created_at', 'createdAt'], null);
+    const status = getBookingStatus(b);
+
+    return '<div class="booking-item ' + (isActive ? 'active' : '') + '" onclick="selectBooking(\'' + String(id).replace(/'/g, "\\'") + '\')">' +
+      '<div class="booking-top">' +
+        '<div class="booking-code">' + code + '</div>' +
+        statusBadge(status) +
+      '</div>' +
+      '<div class="booking-meta">' +
+        'Guest: ' + guest + '<br>' +
+        'Stay: ' + checkin + ' -> ' + checkout + '<br>' +
+        'Created: ' + formatDate(created) +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function selectBooking(id) {
+  state.selectedId = id;
+  renderBookingList();
+  renderBookingDetail();
+}
+
+function getSelectedBooking() {
+  return state.bookings.find(b => String(getBookingId(b)) === String(state.selectedId));
+}
+
+function renderBookingDetail() {
+  const statusWrap = document.getElementById('detail-status');
+  const body = document.getElementById('detail-body');
+  const booking = getSelectedBooking();
+
+  if (!booking) {
+    statusWrap.innerHTML = '';
+    body.innerHTML = '<div class="empty">Select a booking to view details</div>';
+    return;
+  }
+
+  const status = getBookingStatus(booking);
+  const id = getBookingId(booking);
+  const bookingCode = firstValue(booking, ['booking_code', 'code'], '#' + String(id ?? 'N/A'));
+  const guestName = firstValue(booking, ['guest_name', 'customer_fullname', 'name'], 'Unknown guest');
+  const guestEmail = firstValue(booking, ['guest_email', 'customer_email'], '-');
+  const hotelId = firstValue(booking, ['hotel_id'], '-');
+  const roomTypeId = firstValue(booking, ['room_type_id'], '-');
+  const guests = firstValue(booking, ['guest_count', 'guests', 'number_of_guests'], '-');
+  const checkin = firstValue(booking, ['checkin_date', 'check_in_date'], '-');
+  const checkout = firstValue(booking, ['checkout_date', 'check_out_date'], '-');
+  const totalAmount = firstValue(booking, ['total_amount', 'amount_total', 'total_price'], null);
+  const createdAt = firstValue(booking, ['created_at', 'createdAt'], null);
+
+  statusWrap.innerHTML = statusBadge(status);
+
+  const canConfirm = status === 'PENDING';
+  body.innerHTML =
+    '<div class="detail-grid">' +
+      '<div class="field"><div class="field-label">Booking Code</div><div class="field-value">' + bookingCode + '</div></div>' +
+      '<div class="field"><div class="field-label">Status</div><div class="field-value">' + status + '</div></div>' +
+      '<div class="field"><div class="field-label">Guest Name</div><div class="field-value">' + guestName + '</div></div>' +
+      '<div class="field"><div class="field-label">Guest Email</div><div class="field-value">' + guestEmail + '</div></div>' +
+      '<div class="field"><div class="field-label">Check-in</div><div class="field-value">' + checkin + '</div></div>' +
+      '<div class="field"><div class="field-label">Check-out</div><div class="field-value">' + checkout + '</div></div>' +
+      '<div class="field"><div class="field-label">Guests</div><div class="field-value">' + guests + '</div></div>' +
+      '<div class="field"><div class="field-label">Total Amount</div><div class="field-value">' + formatPrice(totalAmount) + '</div></div>' +
+      '<div class="field"><div class="field-label">Hotel ID</div><div class="field-value">' + hotelId + '</div></div>' +
+      '<div class="field"><div class="field-label">Room Type ID</div><div class="field-value">' + roomTypeId + '</div></div>' +
+      '<div class="field" style="grid-column:1/-1"><div class="field-label">Created At</div><div class="field-value">' + formatDate(createdAt) + '</div></div>' +
+    '</div>' +
+    '<div class="action-row">' +
+      '<button class="btn-confirm" ' + (canConfirm ? '' : 'disabled') + ' onclick="confirmSelectedBooking()">Confirm Booking</button>' +
+      '<span style="font-size:12px;color:var(--text-muted)">' + (canConfirm ? 'This will update status to CONFIRMED.' : 'Only PENDING bookings can be confirmed.') + '</span>' +
+    '</div>';
+}
+
+async function confirmSelectedBooking() {
+  const booking = getSelectedBooking();
+  if (!booking) return;
+
+  const status = getBookingStatus(booking);
+  if (status !== 'PENDING') {
+    showDetailMessage('Only PENDING bookings can be confirmed.', 'error');
+    return;
+  }
+
+  const statusField = getStatusField(booking);
+  const bookingId = getBookingId(booking);
+  const customerId = getCustomerId(booking);
+  if (!bookingId) {
+    showDetailMessage('Cannot update booking because ID is missing.', 'error');
+    return;
+  }
+
+  const btn = document.querySelector('.btn-confirm');
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'Updating...';
+  }
+
+  try {
+    const idField = getBookingIdField(booking);
+    const endpoint = REST_BASE + '/bookings?' + encodeURIComponent(idField) + '=eq.' + encodeURIComponent(String(bookingId));
+    const payload = {};
+    payload[statusField] = 'CONFIRMED';
+
+    const res = await fetch(endpoint, {
+      method: 'PATCH',
+      headers: {
+        ...authHeaders(),
+        'Prefer': 'return=representation',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (res.status === 401) {
+      sessionStorage.removeItem(SESSION_KEY);
+      window.location.href = LOGIN_PAGE;
+      return;
+    }
+
+    const body = await res.json().catch(() => []);
+    if (!res.ok) {
+      const msg = body?.message || body?.error_description || body?.error || ('HTTP ' + res.status);
+      throw new Error(msg);
+    }
+
+    const updated = Array.isArray(body) && body.length ? body[0] : null;
+    if (updated) {
+      const idx = state.bookings.findIndex(b => String(getBookingId(b)) === String(bookingId));
+      if (idx >= 0) state.bookings[idx] = updated;
+    } else {
+      const idx = state.bookings.findIndex(b => String(getBookingId(b)) === String(bookingId));
+      if (idx >= 0) state.bookings[idx][statusField] = 'CONFIRMED';
+    }
+
+    // Save a notification record for the customer (Supabase-only flow)
+    if (customerId) {
+      const saveRes = await fetch(SUPABASE_URL + '/functions/v1/save-notification', {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify({
+          customer_id: customerId,
+          title: 'Booking Confirmed',
+          content: 'Your booking #' + bookingId + ' has been confirmed by the hotel.',
+          type: 'booking_confirmed',
+        }),
+      });
+
+      if (!saveRes.ok) {
+        const saveBody = await saveRes.json().catch(() => ({}));
+        console.warn('Failed to save notification history:', saveBody?.error || saveRes.status);
+      }
+    }
+
+    renderBookingList();
+    renderBookingDetail();
+    showDetailMessage('Booking has been confirmed successfully. Notification history updated.', 'success');
+  } catch (e) {
+    showDetailMessage('Update failed: ' + e.message, 'error');
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = 'Confirm Booking';
+    }
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const session = requireAuth();
+  if (!session) return;
+  loadBookings();
+});
+</script>
+</body>
+</html>

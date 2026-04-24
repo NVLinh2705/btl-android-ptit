@@ -30,6 +30,43 @@ public class SessionManager {
     private final SharedPreferences prefs;
     private SelectedHotelBrief selectedHotelBrief;
 
+    private String checkinDate;
+    private String checkoutDate;
+
+    private int numAdults, numChildren;
+
+    public int getNumAdults() {
+        return numAdults == 0? 1 : numAdults;
+    }
+
+    public void setNumAdults(int numAdults) {
+        this.numAdults = numAdults;
+    }
+
+    public int getNumChildren() {
+        return numChildren == 0? 1 : numChildren;
+    }
+
+    public void setNumChildren(int numChildren) {
+        this.numChildren = numChildren;
+    }
+
+    public String getCheckinDate() {
+        return checkinDate== null || checkinDate.isEmpty() ? "2026-04-28" : checkinDate;
+    }
+
+    public void setCheckinDate(String checkinDate) {
+        this.checkinDate = checkinDate;
+    }
+
+    public String getCheckoutDate() {
+        return checkoutDate==null || checkoutDate.isEmpty() ? "2026-04-30" : checkoutDate;
+    }
+
+    public void setCheckoutDate(String checkoutDate) {
+        this.checkoutDate = checkoutDate;
+    }
+
     private SessionManager() {
         this.prefs = MyApplication.getAppContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
@@ -109,8 +146,8 @@ public class SessionManager {
         clearSelectedHotelBrief();
     }
 
-    public void saveSelectedHotelBrief(String hotelName, String hotelAddress, double avgRating) {
-        selectedHotelBrief = new SelectedHotelBrief(hotelName, hotelAddress, avgRating);
+    public void saveSelectedHotelBrief(int hotelId, String hotelName, String hotelAddress, double avgRating) {
+        selectedHotelBrief = new SelectedHotelBrief(hotelId, hotelName, hotelAddress, avgRating);
     }
 
     @Nullable
@@ -125,6 +162,7 @@ public class SessionManager {
     @Data
     @AllArgsConstructor
     public static final class SelectedHotelBrief {
+        private int hotelId;
         private final String hotelName;
         private final String hotelAddress;
         private final double avgRating;
