@@ -63,15 +63,15 @@
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/txtMyLocation"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:drawablePadding="4dp"
-                            android:text="San Diego, CA"
-                            android:textColor="#888888"
-                            android:textSize="11sp"
-                            app:drawableStartCompat="@drawable/outline_location_on_24" />
+<!--                        <TextView-->
+<!--                            android:id="@+id/txtMyLocation"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:drawablePadding="4dp"-->
+<!--                            android:text="San Diego, CA"-->
+<!--                            android:textColor="#888888"-->
+<!--                            android:textSize="11sp"-->
+<!--                            app:drawableStartCompat="@drawable/outline_location_on_24" />-->
                     </LinearLayout>
 
                     <LinearLayout
@@ -424,7 +424,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:text="@string/see_all"
+                        android:text=""
                         android:textSize="12sp"
                         android:textColor="@color/md_theme_primaryFixedDim_mediumContrast" />
                 </RelativeLayout>
@@ -472,7 +472,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:text="@string/see_all"
+                        android:text=""
                         android:textSize="12sp"
                         android:textColor="@color/md_theme_primaryFixedDim_mediumContrast" />
                 </RelativeLayout>
