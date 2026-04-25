@@ -61,7 +61,7 @@ public class MyMapViewModel extends ViewModel {
                 }
                 )
                 .doOnNext(params -> isLoading.postValue(true))
-                .switchMapSingle(params -> mMyMapRepository.fetchHotelsInBounds(params.getBounds(), params.getZoom(), params.getPage(), params.getLimit())) // Nếu có yêu cầu mới, hủy yêu cầu cũ
+                .switchMapSingle(params -> mMyMapRepository.fetchHotelsInBounds(params.getBounds(), params.getZoom(), 1, params.getLimit())) // Nếu có yêu cầu mới, hủy yêu cầu cũ
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     hotelList::setValue,
