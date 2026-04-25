@@ -92,13 +92,13 @@ public class SearchActivity extends AppCompatActivity {
         mActivitySearchBinding.btnBack.setOnClickListener(view -> {
             finish();
         });
-        mActivitySearchBinding.btnInnerFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FilterBottomSheet filterSheet = new FilterBottomSheet();
-                filterSheet.show(getSupportFragmentManager(), "Filter");
-            }
-        });
+//        mActivitySearchBinding.btnInnerFilter.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                FilterBottomSheet filterSheet = new FilterBottomSheet();
+//                filterSheet.show(getSupportFragmentManager(), "Filter");
+//            }
+//        });
     }
 
     private void initRecommendedHotels() {
