@@ -49,6 +49,7 @@ import com.btl_ptit.hotelbooking.view.adapter.HotelAdapter;
 import com.btl_ptit.hotelbooking.view.adapter.LoadStateAdapter;
 import com.btl_ptit.hotelbooking.view.adapter.PopularDestinationAdapter;
 import com.btl_ptit.hotelbooking.view_model.OccupancyViewModel;
+import com.btl_ptit.hotelbooking.view_model.factory.OccupancyViewModelFactory;
 import com.btl_ptit.hotelbooking.view_model.paging.HotelViewModel;
 import com.btl_ptit.hotelbooking.view_model.paging.HotelViewModelFactory;
 import com.btl_ptit.hotelbooking.view_model.paging.PopularDestinationViewModel;
@@ -115,7 +116,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate called");
         initDefaultDates();
-        initOccupancyViewModel();
     }
 
     @Override
@@ -136,13 +136,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             }
             rebindAdapters();
         }
+        initOccupancyViewModel();
         observeOccupancyViewModel();
         setupMap();
         return rootView;
     }
 
     private void initOccupancyViewModel() {
-        occupancyViewModel = new ViewModelProvider(requireActivity()).get(OccupancyViewModel.class);
+        occupancyViewModel = new ViewModelProvider(requireActivity(), new OccupancyViewModelFactory(mMyHotelRepository)).get(OccupancyViewModel.class);
     }
 
     private void observeOccupancyViewModel() {
@@ -184,6 +185,18 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 mFragmentHomeBinding.tvLocationSelected.setText(location);
             } else {
                 mFragmentHomeBinding.tvLocationSelected.setText(R.string.where_to_go_label);
+            }
+        });
+
+        occupancyViewModel.getCheckInDate().observe(getViewLifecycleOwner(), date -> {
+            if (date != null && !date.isEmpty()) {
+                mFragmentHomeBinding.tvCheckInDate.setText(MyUtils.formatToViewDate(date));
+            }
+        });
+
+        occupancyViewModel.getCheckOutDate().observe(getViewLifecycleOwner(), date -> {
+            if (date != null && !date.isEmpty()) {
+                mFragmentHomeBinding.tvCheckOutDate.setText(MyUtils.formatToViewDate(date));
             }
         });
     }
@@ -274,7 +287,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                     checkInDate = selection.first;
                     checkOutDate = selection.second;
                     SessionManager.getInstance().setCheckinDate(MyUtils.myFormatDateForSessionManager(checkInDate));
-                    SessionManager.getInstance().setCheckoutDate(MyUtils.myFormatDateForSessionManager(checkInDate));
+                    SessionManager.getInstance().setCheckoutDate(MyUtils.myFormatDateForSessionManager(checkOutDate));
+                    occupancyViewModel.setCheckInDate(MyUtils.myFormatDateForSessionManager(checkInDate));
+                    occupancyViewModel.setCheckOutDate(MyUtils.myFormatDateForSessionManager(checkOutDate));
                     mFragmentHomeBinding.tvCheckInDate.setText(MyUtils.myFormatDate(checkInDate));
                     mFragmentHomeBinding.tvCheckOutDate.setText(MyUtils.myFormatDate(checkOutDate));
                 });
@@ -301,6 +316,29 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, ListDestinationActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mFragmentHomeBinding.btnMainSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, SearchActivity.class);
+                intent.putExtra(Constants.KEY_PROVINCE, occupancyViewModel.getSelectedProvinceName().getValue());
+                intent.putExtra(Constants.KEY_DISTRICT, occupancyViewModel.getSelectedDistrictName().getValue()); // Có thể là null
+                intent.putExtra(Constants.KEY_CHECKIN, occupancyViewModel.getCheckInDate().getValue());
+                intent.putExtra(Constants.KEY_CHECKOUT, occupancyViewModel.getCheckOutDate().getValue());
+                intent.putExtra(Constants.KEY_NUM_ROOM, occupancyViewModel.getRooms().getValue());
+                intent.putExtra(Constants.KEY_NUM_ADULT, occupancyViewModel.getDoubleBed().getValue());
+                intent.putExtra(Constants.KEY_NUM_CHILDREN, occupancyViewModel.getSingleBed().getValue());
+                Log.d("TAG1", "province: " + occupancyViewModel.getSelectedProvinceName().getValue());
+                Log.d("TAG1", "district: " + occupancyViewModel.getSelectedDistrictName().getValue());
+                Log.d("TAG1", "checkin: " + occupancyViewModel.getCheckInDate().getValue());
+                Log.d("TAG1", "checkout: " + occupancyViewModel.getCheckOutDate().getValue());
+                Log.d("TAG1", "numRoom: " + occupancyViewModel.getRooms().getValue());
+                Log.d("TAG1", "numAdult: " + occupancyViewModel.getDoubleBed().getValue());
+                Log.d("TAG1", "numChildren: " + occupancyViewModel.getSingleBed().getValue());
+
                 startActivity(intent);
             }
         });

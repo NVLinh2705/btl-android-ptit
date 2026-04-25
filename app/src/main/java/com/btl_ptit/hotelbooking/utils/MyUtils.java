@@ -172,6 +172,23 @@ public class MyUtils {
         return sdf.format(new Date(timeInMillis));
     }
 
+    public static String formatToViewDate(String inputDate) {
+        // Định dạng đầu vào khớp với database/API
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        // Định dạng đầu ra để hiển thị cho người dùng
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+
+        try {
+            Date date = inputFormat.parse(inputDate);
+            if (date != null) {
+                return outputFormat.format(date);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return inputDate;
+    }
+
     public static void setupBottomSheet(Dialog dialog, FragmentActivity fragmentActivity) {
         if (dialog != null) {
             View bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);

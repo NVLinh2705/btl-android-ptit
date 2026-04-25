@@ -23,4 +23,12 @@ public class Constants {
 
     public static final String HOTEL_ID = "hotel_id";
     public static final String HOTEL_NAME = "hotel_name";
+
+    public static final String KEY_PROVINCE = "p_province";
+    public static final String KEY_DISTRICT = "p_district";
+    public static final String KEY_CHECKIN = "p_checkin_date";
+    public static final String KEY_CHECKOUT = "p_checkout_date";
+    public static final String KEY_NUM_ROOM = "p_num_room";
+    public static final String KEY_NUM_ADULT = "p_num_adult";
+    public static final String KEY_NUM_CHILDREN = "p_num_children";
 }
