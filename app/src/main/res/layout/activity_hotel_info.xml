@@ -246,7 +246,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Giờ nhận phòng / trả phòng"
+                    android:text="Ngày nhận phòng / trả phòng"
                     android:textColor="#111111"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -262,7 +262,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Nhận phòng\n15:00 - 23:00"
+                        android:text="Nhận phòng\n"
                         android:textColor="#3D3D3D"
                         android:textSize="13sp" />
 
@@ -271,7 +271,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Trả phòng\nTrước 11:00"
+                        android:text="Trả phòng\n"
                         android:textColor="#3D3D3D"
                         android:textSize="13sp" />
 

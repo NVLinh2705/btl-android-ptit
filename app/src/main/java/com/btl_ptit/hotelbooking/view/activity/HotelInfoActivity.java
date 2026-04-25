@@ -176,20 +176,9 @@ public class HotelInfoActivity extends AppCompatActivity implements OnMapReadyCa
         b.txtRatingCount.setText(String.format("(%d đánh giá)", totalReviews));
         b.txtAddress.setText(hotelResponse.getAddress());
 
-        String checkin = "N/A";
-        String checkout = "N/A";
-        if (hotelResponse.getPolicies() != null) {
-            checkin = hotelResponse.getPolicies().stream()
-                    .filter(p -> "CHECKIN".equalsIgnoreCase(p.getTypeCode()))
-                    .map(p -> p.getContent())
-                    .findFirst()
-                    .orElse("N/A");
-            checkout = hotelResponse.getPolicies().stream()
-                    .filter(p -> "CHECKOUT".equalsIgnoreCase(p.getTypeCode()))
-                    .map(p -> p.getContent())
-                    .findFirst()
-                    .orElse("N/A");
-        }
+        String checkin = formatDisplayDate(sessionManager.getCheckinDate());
+        String checkout = formatDisplayDate(sessionManager.getCheckoutDate());
+
 
         b.txtCheckin.setText(String.format("Nhận phòng:\n%s", checkin));
         b.txtCheckout.setText(String.format("Trả phòng:\n%s", checkout));
@@ -417,15 +406,15 @@ public class HotelInfoActivity extends AppCompatActivity implements OnMapReadyCa
                     avgRating
             );
 
-            LocalDate today = LocalDate.now();
+
             String checkinDate = getIntent().getStringExtra(ListRoomTypeActivity.EXTRA_CHECKIN_DATE);
             String checkoutDate = getIntent().getStringExtra(ListRoomTypeActivity.EXTRA_CHECKOUT_DATE);
 
             if (checkinDate == null || checkinDate.trim().isEmpty()) {
-                checkinDate = today.format(apiDateFormatter);
+                checkinDate = sessionManager.getCheckinDate();
             }
             if (checkoutDate == null || checkoutDate.trim().isEmpty()) {
-                checkoutDate = today.plusDays(1).format(apiDateFormatter);
+                checkoutDate = sessionManager.getCheckoutDate();
             }
 
             Intent intent = new Intent(this, ListRoomTypeActivity.class);

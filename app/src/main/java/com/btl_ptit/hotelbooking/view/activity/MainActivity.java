@@ -17,6 +17,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.btl_ptit.hotelbooking.R;
 import com.btl_ptit.hotelbooking.data.session.SessionManager;
 import com.btl_ptit.hotelbooking.databinding.ActivityMainBinding;
+import com.btl_ptit.hotelbooking.view.fragment.MyBookingFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,6 +40,12 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
         requestNotificationPermissionIfNeeded();
+
+        String fragment = getIntent().getStringExtra("OPEN_FRAGMENT");
+
+        if (savedInstanceState == null && "my_booking".equals(fragment)) {
+            bottomNavigationView.setSelectedItemId(R.id.navigation_my_booking_fragment);
+        }
 
         // Xử lý back press
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
