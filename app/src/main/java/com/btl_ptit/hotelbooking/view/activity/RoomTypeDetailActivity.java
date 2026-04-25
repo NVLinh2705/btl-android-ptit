@@ -25,6 +25,7 @@ import com.btl_ptit.hotelbooking.data.model.RoomType;
 import com.btl_ptit.hotelbooking.data.remote.SupabaseClient;
 import com.btl_ptit.hotelbooking.data.remote.api_services.SupabaseRestService;
 import com.btl_ptit.hotelbooking.data.session.RoomSelectionStore;
+import com.btl_ptit.hotelbooking.data.session.SessionManager;
 import com.btl_ptit.hotelbooking.utils.CurrencyUtils;
 import com.btl_ptit.hotelbooking.view.adapter.FacilitiesGroupedAdapter;
 import com.btl_ptit.hotelbooking.view.adapter.HotelReviewsAdapter;
@@ -72,6 +73,8 @@ public class RoomTypeDetailActivity extends AppCompatActivity {
     private String checkoutDisplay;
     private String checkinApi;
     private String checkoutApi;
+
+    private SessionManager sessionManager = SessionManager.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

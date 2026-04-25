@@ -217,13 +217,9 @@ public class ListRoomTypeActivity extends AppCompatActivity
 
         String checkinDate = sessionManager.getCheckinDate();
         String checkoutDate = sessionManager.getCheckoutDate();
-        checkinApi = !TextUtils.isEmpty(checkinFromIntent)
-                ? checkinFromIntent
-                : checkinDate;
+        checkinApi = checkinDate;
 
-        checkoutApi = !TextUtils.isEmpty(checkoutFromIntent)
-                ? checkoutFromIntent
-                : checkoutDate;
+        checkoutApi = checkoutDate;
 
         roomQuantity = getIntent().getIntExtra(EXTRA_ROOM_QUANTITY, 1);
         adults = getIntent().getIntExtra(EXTRA_ADULTS, 2);

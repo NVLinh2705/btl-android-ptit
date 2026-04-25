@@ -115,6 +115,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate called");
         initDefaultDates();
+        initSessionValues();
         initOccupancyViewModel();
     }
 
@@ -274,7 +275,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                     checkInDate = selection.first;
                     checkOutDate = selection.second;
                     SessionManager.getInstance().setCheckinDate(MyUtils.myFormatDateForSessionManager(checkInDate));
-                    SessionManager.getInstance().setCheckoutDate(MyUtils.myFormatDateForSessionManager(checkInDate));
+                    SessionManager.getInstance().setCheckoutDate(MyUtils.myFormatDateForSessionManager(checkOutDate));
                     mFragmentHomeBinding.tvCheckInDate.setText(MyUtils.myFormatDate(checkInDate));
                     mFragmentHomeBinding.tvCheckOutDate.setText(MyUtils.myFormatDate(checkOutDate));
                 });
@@ -551,6 +552,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         calendar.add(Calendar.DAY_OF_YEAR, 1);
 
         checkOutDate = calendar.getTimeInMillis();
+    }
+    private void initSessionValues() {
+        SessionManager sessionManager = SessionManager.getInstance();
+        sessionManager.setCheckinDate(MyUtils.myFormatDateForSessionManager(checkInDate));
+        sessionManager.setCheckoutDate(MyUtils.myFormatDateForSessionManager(checkOutDate));
+        sessionManager.setNumAdults(1);
+        sessionManager.setNumChildren(1);
     }
 
     @Override
