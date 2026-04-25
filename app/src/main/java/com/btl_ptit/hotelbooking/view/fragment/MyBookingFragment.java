@@ -155,7 +155,6 @@ public class MyBookingFragment extends Fragment {
         bookingAdapter = new BookingAdapter(new MyComparator<MyBooking>(), requireContext(), new OnBookingClickListener(){
             @Override
             public void onBookingClick(MyBooking myBooking) {
-                Toast.makeText(mContext, "Booking clicked", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(mContext, BookingHistoryDetailActivity.class);
                 intent.putExtra("bookingId", myBooking.getId());
                 startActivity(intent);

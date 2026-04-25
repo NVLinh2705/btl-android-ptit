@@ -24,6 +24,7 @@ import com.btl_ptit.hotelbooking.data.remote.api_services.BookingRestService;
 import com.btl_ptit.hotelbooking.data.remote.api_services.ReviewRestService;
 import com.btl_ptit.hotelbooking.databinding.ActivityBookingHistoryDetailBinding;
 import com.btl_ptit.hotelbooking.view.adapter.BookingHistoryDetailAdapter;
+import com.btl_ptit.hotelbooking.view.fragment.MyBookingFragment;
 import com.bumptech.glide.Glide;
 import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
@@ -138,7 +139,7 @@ public class BookingHistoryDetailActivity extends AppCompatActivity {
                 binding.txtStatus.setText("Đang chờ duyệt");
                 binding.reviewCard.setVisibility(View.GONE);
                 binding.qrCard.setVisibility(View.GONE);
-                if(ChronoUnit.DAYS.between(LocalDate.now(),checkinDate)<1&&LocalDate.now().isBefore(checkinDate)){
+                if(ChronoUnit.DAYS.between(LocalDate.now(),checkinDate)>1&&LocalDate.now().isBefore(checkinDate)){
                     binding.cancelCard.setVisibility(View.VISIBLE);
                     binding.btnCancelBooking.setOnClickListener(v -> {
                         cancelBooking();
@@ -159,7 +160,7 @@ public class BookingHistoryDetailActivity extends AppCompatActivity {
                 binding.qrCard.setOnClickListener(v -> {
                     showQrDialog(qrCode);
                 });
-                if(ChronoUnit.DAYS.between(LocalDate.now(),checkinDate)<1&&LocalDate.now().isBefore(checkinDate)){
+                if(ChronoUnit.DAYS.between(LocalDate.now(),checkinDate)>1&&LocalDate.now().isBefore(checkinDate)){
                     binding.cancelCard.setVisibility(View.VISIBLE);
                     binding.btnCancelBooking.setOnClickListener(v -> {
                         cancelBooking();
@@ -393,7 +394,12 @@ public class BookingHistoryDetailActivity extends AppCompatActivity {
             getSupportActionBar().setHomeButtonEnabled(true);
         }
 
-        toolbar.setNavigationOnClickListener(v -> finish());
+        toolbar.setNavigationOnClickListener(v -> {
+            Intent intent = new Intent(BookingHistoryDetailActivity.this, MainActivity.class);
+            intent.putExtra("OPEN_FRAGMENT", "my_booking");
+            startActivity(intent);
+            finish();
+        });
     }
 
 }

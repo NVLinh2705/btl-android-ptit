@@ -116,6 +116,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate called");
         initDefaultDates();
+        initSessionValues();
     }
 
     @Override
@@ -589,6 +590,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         calendar.add(Calendar.DAY_OF_YEAR, 1);
 
         checkOutDate = calendar.getTimeInMillis();
+    }
+    private void initSessionValues() {
+        SessionManager sessionManager = SessionManager.getInstance();
+        sessionManager.setCheckinDate(MyUtils.myFormatDateForSessionManager(checkInDate));
+        sessionManager.setCheckoutDate(MyUtils.myFormatDateForSessionManager(checkOutDate));
+        sessionManager.setNumAdults(1);
+        sessionManager.setNumChildren(1);
     }
 
     @Override
