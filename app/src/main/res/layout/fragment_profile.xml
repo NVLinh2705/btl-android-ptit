@@ -17,7 +17,7 @@
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Profile"
+            android:text="@string/profile_title"
             android:textColor="@color/md_theme_onBackground"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -79,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="Setting"
+            android:text="@string/settings"
             android:textColor="#9E9E9E"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -96,27 +96,27 @@
             app:layout_constraintTop_toBottomOf="@id/tvSettingLabel">
 
             <!-- Item: Your Card -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:paddingVertical="16dp">
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_share"
-                    app:tint="@color/md_theme_onBackground" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_weight="1"
-                    android:text="Your Card"
-                    android:textColor="@color/md_theme_onBackground"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F5F5F5" />
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:paddingVertical="16dp">-->
+<!--                <ImageView-->
+<!--                    android:layout_width="24dp"-->
+<!--                    android:layout_height="24dp"-->
+<!--                    android:src="@drawable/ic_share"-->
+<!--                    app:tint="@color/md_theme_onBackground" />-->
+<!--                <TextView-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="16dp"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:text="Your Card"-->
+<!--                    android:textColor="@color/md_theme_onBackground"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:textStyle="bold" />-->
+<!--            </LinearLayout>-->
+<!--            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F5F5F5" />-->
 
             <!-- Item: Security -->
             <LinearLayout
@@ -138,7 +138,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_weight="1"
-                    android:text="Security"
+                    android:text="@string/profile_change_password"
                     android:textColor="@color/md_theme_onBackground"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -146,28 +146,28 @@
             <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F5F5F5" />
 
             <!-- Item: Notification -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:paddingVertical="16dp">
-                <ImageView
-                    android:id="@+id/btnNotification"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/outline_notifications_read_24"
-                    app:tint="@color/md_theme_onBackground" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_weight="1"
-                    android:text="Notification"
-                    android:textColor="@color/md_theme_onBackground"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F5F5F5" />
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:paddingVertical="16dp">-->
+<!--                <ImageView-->
+<!--                    android:id="@+id/btnNotification"-->
+<!--                    android:layout_width="24dp"-->
+<!--                    android:layout_height="24dp"-->
+<!--                    android:src="@drawable/outline_notifications_read_24"-->
+<!--                    app:tint="@color/md_theme_onBackground" />-->
+<!--                <TextView-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="16dp"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:text="Notification"-->
+<!--                    android:textColor="@color/md_theme_onBackground"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:textStyle="bold" />-->
+<!--            </LinearLayout>-->
+<!--            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F5F5F5" />-->
 
         </LinearLayout>
 
@@ -178,7 +178,7 @@
             android:layout_marginTop="48dp"
             android:layout_marginBottom="32dp"
             android:padding="16dp"
-            android:text="Logout"
+            android:text="@string/logout"
             android:textColor="@color/md_theme_error"
             android:textSize="16sp"
             android:textStyle="bold"

@@ -24,6 +24,16 @@
     <!-- Activity titles -->
     <string name="choose_your_stay">Choose your stay</string>
     <string name="room_information">Room information</string>
+    <string name="favorite_title">My Favorite</string>
+    <string name="favorite_search">Search</string>
+    <string name="profile_title">My Profile</string>
+    <string name="profile_change_password">Change password</string>
+    <string name="logout">Logout</string>
+    <string name="settings">Settings</string>
+    <string name="logout_title">Are you sure?</string>
+    <string name="logout_message">Do you want to log out?</string>
+    <string name="cancel_logout">Cancel</string>
+
 
     <!-- Room card -->
     <string name="room_image_desc">Room image</string>
