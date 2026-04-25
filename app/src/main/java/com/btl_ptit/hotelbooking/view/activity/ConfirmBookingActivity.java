@@ -80,7 +80,7 @@ public class ConfirmBookingActivity extends AppCompatActivity {
          request.setGuestEmail(b.tvGuestEmailValue.getText().toString());
          request.setGuestName(b.tvGuestFullNameValue.getText().toString());
          request.setGuestPhone(b.tvGuestPhoneValue.getText().toString());
-         request.setSpecialRequests(b.tvSpecialRequestNote.getText().toString());
+         request.setSpecialRequests(b.etSpecialRequest.getText() == null? "" : b.etSpecialRequest.getText().toString());
          request.setRoomSelections(RoomSelectionStore.getSelectionItems().stream().map(item -> {
              CreateBookingRequest.RoomSelection selection = new CreateBookingRequest.RoomSelection();
              selection.setRoomTypeId(item.getRoomType().getId());

@@ -7,7 +7,8 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 
 public class MapServiceClient {
-    private static final String BASE_URL = "https://69e7577e68208c1debe8b4f6.mockapi.io/api/android-ptit/";
+//    private static final String BASE_URL = "https://69e7577e68208c1debe8b4f6.mockapi.io/api/android-ptit/";
+    private static final String BASE_URL = com.btl_ptit.hotelbooking.BuildConfig.SUPABASE_URL;
     private static volatile Retrofit retrofit;
 
     private static Retrofit getRetrofit() {

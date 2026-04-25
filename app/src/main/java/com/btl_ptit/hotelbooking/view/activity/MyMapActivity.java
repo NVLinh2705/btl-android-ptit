@@ -38,6 +38,7 @@ import com.btl_ptit.hotelbooking.data.repository.MyMapRepository;
 import com.btl_ptit.hotelbooking.databinding.ActivityMyMapBinding;
 import com.btl_ptit.hotelbooking.listener.OnLikeHotelListener;
 import com.btl_ptit.hotelbooking.utils.Constants;
+import com.btl_ptit.hotelbooking.utils.CurrencyUtils;
 import com.btl_ptit.hotelbooking.utils.MyUtils;
 import com.btl_ptit.hotelbooking.view.adapter.HotelsInBoundAdapter;
 import com.btl_ptit.hotelbooking.view.fragment.FilterBottomSheet;
@@ -286,6 +287,7 @@ public class MyMapActivity extends AppCompatActivity implements OnMapReadyCallba
             float zoom = googleMap.getCameraPosition().zoom;
 
             Log.d(TAG, "onCameraIdle called: " + bounds.toString() + " zoom level: " + zoom);
+            Log.d(TAG, "THUC SU DI CHUYEN: SW=" + bounds.southwest + " NE=" + bounds.northeast);
 
             mMyMapViewModel.onMapChanged(new MapInBoundsParams(bounds, zoom, cnt, 10));
         });
@@ -392,16 +394,19 @@ public class MyMapActivity extends AppCompatActivity implements OnMapReadyCallba
             HotelInBoundResponse currentHotel = hotels.get(i);
 
             // 3. Tạo vị trí ngẫu nhiên dựa trên tâm
-            double randomLat = centerPos.latitude + getRandomOffset(range);
-            double randomLng = centerPos.longitude + getRandomOffset(range);
-            LatLng randomPos = new LatLng(randomLat, randomLng);
+//            double randomLat = centerPos.latitude + getRandomOffset(range);
+//            double randomLng = centerPos.longitude + getRandomOffset(range);
+//            LatLng randomPos = new LatLng(randomLat, randomLng);
+
+            LatLng hotelPos = new LatLng(currentHotel.getLatitude(), currentHotel.getLongitude());
 
             // 4. Định dạng giá tiền (Ví dụ: 1.2M)
-            String priceLabel = "₫ " + (currentHotel.getAveragePrice() * 100000);
+//            String priceLabel = "₫ " + (currentHotel.getAveragePrice() * 100000);
+            String priceLabel = CurrencyUtils.formatVnd(currentHotel.getAveragePrice());
 
             // 5. Thêm Marker vào bản đồ
             Marker marker = googleMap.addMarker(new MarkerOptions()
-                    .position(randomPos)
+                    .position(hotelPos)
                     .icon(MyUtils.createMarkerIcon(mContext, priceLabel, false, currentHotel.isLiked()))
                     .anchor(0.5f, 1.0f)
                     .zIndex(1.0f));
@@ -502,7 +507,7 @@ public class MyMapActivity extends AppCompatActivity implements OnMapReadyCallba
 //        String formattedPrice = "₫ " + hotel.getAveragePrice();
 //
         // Tạo icon mới dựa trên trạng thái
-        marker.setIcon(MyUtils.createMarkerIcon(mContext, "₫ " + hotel.getAveragePrice() * 100000, isSelected, isFavourite));
+        marker.setIcon(MyUtils.createMarkerIcon(mContext, CurrencyUtils.formatVnd(hotel.getAveragePrice()), isSelected, isFavourite));
 
         if (isSelected) {
             marker.setZIndex(10.0f); // Đưa lên trên cùng
@@ -514,6 +519,6 @@ public class MyMapActivity extends AppCompatActivity implements OnMapReadyCallba
     private void likeMarker(Marker marker) {
         HotelInBoundResponse hotel = (HotelInBoundResponse) marker.getTag();
         if (hotel == null) return;
-        marker.setIcon(MyUtils.createMarkerIcon(mContext, "₫ " + hotel.getAveragePrice() * 100000, true, true));
+        marker.setIcon(MyUtils.createMarkerIcon(mContext, CurrencyUtils.formatVnd(hotel.getAveragePrice()), true, true));
     }
 }

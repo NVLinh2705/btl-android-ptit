@@ -20,6 +20,7 @@ import com.btl_ptit.hotelbooking.databinding.HotelItemMapBinding;
 import com.btl_ptit.hotelbooking.listener.OnHotelClickListener;
 import com.btl_ptit.hotelbooking.listener.OnLikeHotelListener;
 import com.btl_ptit.hotelbooking.utils.Constants;
+import com.btl_ptit.hotelbooking.utils.CurrencyUtils;
 import com.btl_ptit.hotelbooking.utils.HotelDiffCallback;
 import com.btl_ptit.hotelbooking.utils.MyUtils;
 import com.btl_ptit.hotelbooking.view.activity.HotelInfoActivity;
@@ -63,7 +64,7 @@ public class HotelsInBoundAdapter extends RecyclerView.Adapter<HotelsInBoundAdap
             Glide.with(holder.mHotelItemBinding.imgHotel.getContext())
                     .load(hotel.getAvatar())
                     .into(holder.mHotelItemBinding.imgHotel);
-            holder.mHotelItemBinding.tvPrice.setText(hotel.getAveragePrice() * 100000 + "₫ " + context.getString(R.string.perNight));
+            holder.mHotelItemBinding.tvPrice.setText(CurrencyUtils.formatVnd(hotel.getAveragePrice())  + context.getString(R.string.perNight));
             holder.mHotelItemBinding.tvHotelName.setText(hotel.getName());
             holder.mHotelItemBinding.tvRating.setText(String.valueOf(hotel.getRating()));
             holder.mHotelItemBinding.tvAddress.setText(hotel.getLocation());

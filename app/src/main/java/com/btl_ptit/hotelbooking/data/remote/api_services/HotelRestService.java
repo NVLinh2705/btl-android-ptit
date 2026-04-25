@@ -24,6 +24,20 @@ public interface HotelRestService {
         @Query("page_size") int limit
     );
 
+    @Headers("Auth: True")
+    @GET("rest/v1/rpc/search_hotels_by_num_person")
+    Single<List<MyHotel>> searchHotelsByNumPerson(
+        @Query("p_province") String province,
+        @Query("p_district") String district, // Có thể truyền null hoặc ""
+        @Query("p_checkin_date") String checkin,
+        @Query("p_checkout_date") String checkout,
+        @Query("p_num_room") int numRoom,
+        @Query("p_num_adult") int numAdult,
+        @Query("p_num_children") int numChildren,
+        @Query("page_num") int page,
+        @Query("page_size") int limit
+    );
+
     @GET("hotels/nearby")
     Single<List<HotelInBoundResponse>> getHotelsInBounds(
         @Query("sw_lat") double swLat,

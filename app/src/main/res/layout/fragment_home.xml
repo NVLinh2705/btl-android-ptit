@@ -99,22 +99,6 @@
                                 android:layout_gravity="center"
                                 android:src="@drawable/ic_search" />
                         </com.google.android.material.card.MaterialCardView>
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            app:cardBackgroundColor="#FFFFFF"
-                            app:cardCornerRadius="24dp"
-                            app:cardElevation="2dp"
-                            app:strokeColor="#EEEEEE"
-                            app:strokeWidth="1dp">
-                            <ImageView
-                                android:id="@+id/btnNotification"
-                                android:layout_width="26dp"
-                                android:layout_height="26dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/outline_notifications_read_24" />
-                        </com.google.android.material.card.MaterialCardView>
                     </LinearLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

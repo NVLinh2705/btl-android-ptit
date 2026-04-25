@@ -59,10 +59,10 @@ public class ProfileFragment extends Fragment {
             Intent intent = new Intent(getContext(), EditProfileActivity.class);
             startActivity(intent);
         });
-        binding.btnNotification.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), NotificationActivity.class);
-            startActivity(intent);
-        });
+//        binding.btnNotification.setOnClickListener(v -> {
+//            Intent intent = new Intent(getContext(), NotificationActivity.class);
+//            startActivity(intent);
+//        });
         binding.btnSecurity.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), ChangePasswordActivity.class);
             startActivity(intent);
@@ -71,15 +71,15 @@ public class ProfileFragment extends Fragment {
 
     private void showLogoutDialog() {
         new MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Are You Sure?")
-                .setMessage("Do you want to log out?")
-                .setPositiveButton("Log Out", (dialog, which) -> {
+                .setTitle(R.string.logout_title)
+                .setMessage(R.string.logout_message)
+                .setPositiveButton(R.string.logout, (dialog, which) -> {
                     SessionManager.getInstance().clear();
                     Intent intent = new Intent(getContext(), LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(R.string.cancel_logout, null)
                 .show();
     }
 
