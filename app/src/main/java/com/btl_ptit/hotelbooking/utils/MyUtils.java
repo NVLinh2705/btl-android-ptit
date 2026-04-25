@@ -91,16 +91,19 @@ public class MyUtils {
             if (isFavourite) {
                 // Trái tim màu trắng khi nền marker màu xanh
                 ImageViewCompat.setImageTintList(imgHeart, ColorStateList.valueOf(Color.WHITE));
+                imgHeart.setVisibility(View.VISIBLE);
             } else {
                 // Trái tim màu xanh khi nền marker màu trắng
                 ImageViewCompat.setImageTintList(imgHeart, ColorStateList.valueOf(Color.parseColor("#3F51B5")));
+                imgHeart.setVisibility(View.GONE);
             }
-        }
-
-        if (isFavourite) {
-            imgHeart.setVisibility(View.VISIBLE);
         } else {
-            imgHeart.setVisibility(View.GONE);
+            if (isFavourite) {
+                ImageViewCompat.setImageTintList(imgHeart, ColorStateList.valueOf(Color.parseColor("#3F51B5")));
+                imgHeart.setVisibility(View.VISIBLE);
+            } else {
+                imgHeart.setVisibility(View.GONE);
+            }
         }
 
 

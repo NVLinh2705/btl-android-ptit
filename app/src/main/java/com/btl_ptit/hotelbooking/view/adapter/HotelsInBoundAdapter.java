@@ -80,7 +80,8 @@ public class HotelsInBoundAdapter extends RecyclerView.Adapter<HotelsInBoundAdap
                                 case 0:
                                     Log.d("MyMapActivityTAG", "onItemClick: Like");
                                     if (SessionManager.getInstance().getUser() == null) return;
-                                    mOnLikeHotelListener.onLikeHotelClick(SessionManager.getInstance().getUser().getId(), new Random().nextInt(4) +1, currentPosition);
+                                    hotelList.get(currentPosition).setLiked(true);
+                                    mOnLikeHotelListener.onLikeHotelClick(SessionManager.getInstance().getUser().getId(), Integer.parseInt(hotel.getId()), currentPosition);
                                     break;
                                 case 1:
                                     Log.d("MyMapActivityTAG", "onItemClick: Directions");
@@ -89,7 +90,7 @@ public class HotelsInBoundAdapter extends RecyclerView.Adapter<HotelsInBoundAdap
                                 case 2:
                                     Log.d("MyMapActivityTAG", "onItemClick: Detail");
                                     Intent intent = new Intent(context, HotelInfoActivity.class);
-                                    intent.putExtra(Constants.HOTEL_ID, new Random().nextInt(4) +1);
+                                    intent.putExtra(Constants.HOTEL_ID, Integer.parseInt(hotel.getId()));
                                     context.startActivity(intent);
                                     break;
                             }
@@ -104,7 +105,7 @@ public class HotelsInBoundAdapter extends RecyclerView.Adapter<HotelsInBoundAdap
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(context, HotelInfoActivity.class);
-                    intent.putExtra(Constants.HOTEL_ID, new Random().nextInt(4) +1);
+                    intent.putExtra(Constants.HOTEL_ID, Integer.parseInt(hotelList.get(position).getId()));
                     context.startActivity(intent);
                 }
             });
