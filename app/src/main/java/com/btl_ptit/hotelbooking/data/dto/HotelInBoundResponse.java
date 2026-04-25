@@ -1,13 +1,17 @@
 package com.btl_ptit.hotelbooking.data.dto;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Objects;
 
 public class HotelInBoundResponse {
     private String id;
     private String name, avatar, location;
     private double rating;
+    @SerializedName("average_price")
     private int averagePrice;
     private float latitude, longitude;
+    @SerializedName("is_liked")
     private boolean isLiked;
 
     public HotelInBoundResponse() {

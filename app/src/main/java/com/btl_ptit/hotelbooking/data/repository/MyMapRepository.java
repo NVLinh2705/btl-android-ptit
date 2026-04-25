@@ -21,7 +21,7 @@ public class MyMapRepository {
     public Single<List<HotelInBoundResponse>> fetchHotelsInBounds(LatLngBounds bounds, float zoom, int page, int limit) {
         Log.d("MyMapActivityTAG", "fetchHotelsInBounds called: " + bounds.toString() + " zoom level: " + zoom + " page: " + page + " limit: " + limit);
         return myMapService.getHotelsInBounds(
-                bounds.southwest.latitude, bounds.northeast.longitude,
+                bounds.southwest.latitude, bounds.southwest.longitude,
                 bounds.northeast.latitude, bounds.northeast.longitude, zoom, page, limit, SessionManager.getInstance().getUser().getId()
         ).subscribeOn(Schedulers.io());
     }
