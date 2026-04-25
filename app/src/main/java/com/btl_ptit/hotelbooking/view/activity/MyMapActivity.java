@@ -196,10 +196,10 @@ public class MyMapActivity extends AppCompatActivity implements OnMapReadyCallba
             public void onLikeHotelClick(String userId, int hotelId, int position) {
                 mFavoriteViewModel.toggleLike(userId, hotelId);
                 HotelInBoundResponse hotel = mHotelsInBoundAdapter.getItems().get(position);
-                hotel.setLiked(true);
+//                hotel.setLiked(true);
                 Marker targetMarker = markerMap.get(hotel.getId());
 
-                if (targetMarker != null) {
+                if (targetMarker != null ) {
                     likeMarker(targetMarker);
                 }
             }
@@ -519,6 +519,6 @@ public class MyMapActivity extends AppCompatActivity implements OnMapReadyCallba
     private void likeMarker(Marker marker) {
         HotelInBoundResponse hotel = (HotelInBoundResponse) marker.getTag();
         if (hotel == null) return;
-        marker.setIcon(MyUtils.createMarkerIcon(mContext, CurrencyUtils.formatVnd(hotel.getAveragePrice()), true, true));
+        marker.setIcon(MyUtils.createMarkerIcon(mContext, CurrencyUtils.formatVnd(hotel.getAveragePrice()), true, hotel.isLiked()));
     }
 }

@@ -316,8 +316,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         mFragmentHomeBinding.tvViewDestinationsSeeAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext, ListDestinationActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(mContext, ListDestinationActivity.class);
+//                startActivity(intent);
             }
         });
 
@@ -381,8 +381,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             mPopularDestinationAdapter = new PopularDestinationAdapter(new MyComparator<MyPopularDestination>(), requireContext(), new OnDestinationClickListener() {
                 @Override
                 public void onDestinationClick(MyPopularDestination destination) {
-                    Intent intent = new Intent(mContext, ListDestinationActivity.class);
-                    startActivity(intent);
+//                    Intent intent = new Intent(mContext, ListDestinationActivity.class);
+//                    startActivity(intent);
                 }
             });
         }

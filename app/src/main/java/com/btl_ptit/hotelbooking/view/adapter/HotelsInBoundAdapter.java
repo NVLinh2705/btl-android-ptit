@@ -80,7 +80,7 @@ public class HotelsInBoundAdapter extends RecyclerView.Adapter<HotelsInBoundAdap
                                 case 0:
                                     Log.d("MyMapActivityTAG", "onItemClick: Like");
                                     if (SessionManager.getInstance().getUser() == null) return;
-                                    hotelList.get(currentPosition).setLiked(true);
+                                    hotelList.get(currentPosition).setLiked(!hotelList.get(currentPosition).isLiked());
                                     mOnLikeHotelListener.onLikeHotelClick(SessionManager.getInstance().getUser().getId(), Integer.parseInt(hotel.getId()), currentPosition);
                                     break;
                                 case 1:
